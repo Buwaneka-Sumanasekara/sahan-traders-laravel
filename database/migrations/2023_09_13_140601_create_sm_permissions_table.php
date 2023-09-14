@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('sm_permissions', function (Blueprint $table) {
             $table->string('id', 5)->primary()->unique();
             $table->string('name', 150);
+            $table->string('tab_name', 60);
+            $table->boolean('is_ui')->default(true);
+            $table->boolean('is_display_menu')->default(true);
+            $table->string('url_path', 100)->default('');
             $table->string('parent_id', 5)->nullable();
         });
 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('sm_permissions_id', 5);
             $table->foreign('sm_permissions_id')->references('id')->on('sm_permissions');
             $table->foreign('um_user_role_id')->references('id')->on('um_user_role');
+            $table->timestamps();
         });
     }
 

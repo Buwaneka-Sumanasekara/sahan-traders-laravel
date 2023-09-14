@@ -10,8 +10,6 @@
 
         <div class="carousel-item @if($loop->first) active @endif">
             <img class="img-fluid" alt="{{ $slider->id }}" src="{{asset('images/sliders/'.$slider->img_path)}}">
-
-
             <div class="carousel-caption d-none d-md-block">
                 @if($slider->title)
                 <h5>{{$slider->title}}</h5>
