@@ -31,3 +31,9 @@ sail yarn dev
 ```
 
 for ui changes reload
+
+
+if port already in use
+```
+sudo kill `sudo lsof -t -i:3306`
+```
