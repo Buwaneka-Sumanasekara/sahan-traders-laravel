@@ -20,4 +20,13 @@ return [
     'user_role_admin' => 1,
     'user_role_buyer' => 2,
 
+    //session attributes
+    'session_user_obj' => "logged_user_object",
+    'session_permissions' => "permissions",
+    'session_permissions_tabs' => "permissions_tabs",
+
+    //alerts
+    'flash_success' => 'alert-success',
+    'flash_error' => 'alert-danger',
+
 ];

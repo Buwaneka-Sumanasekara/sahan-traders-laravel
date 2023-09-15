@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('is_display_menu')->default(true);
             $table->string('url_path', 100)->default('');
             $table->string('parent_id', 5)->nullable();
+            $table->integer('order_no')->default(0);
         });
 
         Schema::table('sm_permissions', function (Blueprint $table) {

@@ -5,6 +5,8 @@
 
 @section('content')
 
+
+
 <div class="row">
     <div class="col-md-6  d-flex align-items-center justify-content-center">
 
@@ -12,14 +14,19 @@
             <h2>Log in</h2>
             <p>Log in to your account to continue.</p>
 
-            <form>
+            <form action="action/login" method="POST">
+
+                <x-organisms.alert type="danger" />
+
+                {{ csrf_field() }}
                 <div class="form-group mb-3">
                     <label for="email">Email address</label>
-                    <input type="email" id="email" placeholder="Enter email" class="form-control">
+                    <input type="email" id="email" name="email" placeholder="Enter email" class="form-control">
                 </div>
                 <div class="form-group mb-3">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter password" class="form-control">
+                    <input type="password" id="password" name="password" placeholder="Enter password"
+                        class="form-control">
                 </div>
                 <div class="form-group d-grid gap-2">
                     <button type="submit" class="btn btn-primary">Log in</button>

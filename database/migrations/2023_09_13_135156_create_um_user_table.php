@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('first_name', 100);
             $table->string('last_name', 100);
             $table->string('email', 150)->unique();
+
             $table->integer('um_user_status_id');
             $table->integer('um_user_role_id');
             $table->foreign('um_user_status_id')->references('id')->on('um_user_status');

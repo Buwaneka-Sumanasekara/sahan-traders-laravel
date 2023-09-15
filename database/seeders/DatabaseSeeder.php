@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UmUserStatusSeeder::class);
         $this->call(SmPermissionsSeeder::class);
         $this->call(UmUserRoleHasSmPermissionsSeeder::class);
+        $this->call(UmUserSeeder::class);
     }
 }

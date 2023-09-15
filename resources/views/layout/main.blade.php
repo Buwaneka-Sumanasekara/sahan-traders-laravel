@@ -32,7 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                @include('include.header')
+                <x-organisms.header />
             </div>
         </div>
         @yield('content')
