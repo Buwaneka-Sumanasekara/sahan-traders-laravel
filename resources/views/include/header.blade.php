@@ -9,16 +9,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"> <a class="nav-link" href="#">Home </a> </li>
-                <li class="nav-item"><a class="nav-link" href="#"> Products </a></li>
-                <li class="nav-item"><a class="nav-link" href="#"> About </a></li>
+                <li class="nav-item active"> <a class="nav-link" href="/">Home </a> </li>
+                <li class="nav-item"><a class="nav-link" href="/products"> Products </a></li>
+                <li class="nav-item"><a class="nav-link" href="/about"> About </a></li>
                 <li class="nav-item dropdown" id="myDropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"> Services </a>
+                    <a class="nav-link dropdown-toggle" href="/services" data-bs-toggle="dropdown"> Services </a>
                     <ul class="dropdown-menu">
 
                         <li> <a class="dropdown-item" href="#"> Auction &raquo; </a>
                             <ul class="submenu dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Auction Bidding</a></li>
+                                <li><a class="dropdown-item" href="/auction-bidding">Auction Bidding</a></li>
                                 <li><a class="dropdown-item" href="#">Auction Service Review</a></li>
                                 <li><a class="dropdown-item" href="#">Auction Related Costs</a></li>
                                 <li><a class="dropdown-item" href="#">Auction VIP Tips</a></li>
@@ -26,16 +26,16 @@
                                 <li><a class="dropdown-item" href="#">Vehicle Auctions</a></li>
                             </ul>
                         </li>
-                        <li> <a class="dropdown-item" href="#"> Warranty </a></li>
+                        <li> <a class="dropdown-item" href="/warranty"> Warranty </a></li>
                     </ul>
                 </li>
             </ul>
 
         </div>
         <div class="float-right">
-            <a class="btn btn-link" type="button" href="/login">Login</a>
+            <a class="btn btn-link link-primary" type="button" href="/login">Login</a>
             |
-            <a class="btn btn-link" type="button" href="/register">Register</a>
+            <a class="btn btn-link link-primary" type="button" href="/register">Register</a>
         </div>
     </div>
 </nav>

@@ -1,6 +1,5 @@
 $theme-colors: (
-    primary: #00719c,
-    danger: #ff4136
+    primary: #022770,
 );
 
 // Body
@@ -10,3 +9,8 @@ $body-bg: #f8fafc;
 $font-family-sans-serif: 'Nunito', sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+
+
+// Customize Bootstrap variables
+$btn-border-radius: 2px;
+$input-border-radius: 2px;
