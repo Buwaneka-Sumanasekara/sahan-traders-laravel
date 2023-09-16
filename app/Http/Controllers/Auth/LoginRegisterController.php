@@ -21,7 +21,7 @@ class LoginRegisterController extends Controller
         $this->middleware('guest')->except([
             'logout', 'homePage', 'verify'
         ]);
-        $this->middleware('auth')->only('logout', 'homePage', 'verify');
+        $this->middleware('auth')->only('logout', 'verify');
         // $this->middleware('verified')->only('homePage');
     }
 
