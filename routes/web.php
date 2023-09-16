@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,5 +21,13 @@ Route::controller(LoginRegisterController::class)->group(function () {
     Route::post('/store', 'store')->name('store');
     Route::get('/login', 'loginPage')->name('login');
     Route::post('/authenticate', 'authenticate')->name('authenticate');
-    Route::post('/logout', 'logout')->name('logout');
+    Route::get('/logout', 'logout')->name('logout');
+});
+
+
+// Define Custom Verification Routes
+Route::controller(VerificationController::class)->group(function () {
+    Route::get('/email/verify', 'notice')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', 'verify')->name('verification.verify');
+    Route::post('/email/resend', 'resend')->name('verification.resend');
 });

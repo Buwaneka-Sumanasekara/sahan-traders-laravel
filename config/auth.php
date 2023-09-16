@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\SmUserLogin::class,
+            'model' => App\Models\UmUser::class,
         ],
 
         // 'users' => [

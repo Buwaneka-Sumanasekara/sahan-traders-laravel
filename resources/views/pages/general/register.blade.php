@@ -12,26 +12,32 @@
             <h2>Register</h2>
             <p>Register your account here</p>
 
-            <form>
+            <form action="/store" method="POST">
+
+                <x-organisms.alert type="danger" />
+
+                {{ csrf_field() }}
                 <div class="form-group mb-3">
                     <label for="email">First Name</label>
-                    <input type="text" id="fname" placeholder="Enter First Name" class="form-control">
+                    <input type="text" id="fname" name="first_name" placeholder="Enter First Name" class="form-control">
                 </div>
                 <div class="form-group mb-3">
                     <label for="email">Last Name</label>
-                    <input type="text" id="lname" placeholder="Enter Last Name" class="form-control">
+                    <input type="text" id="lname" name="last_name" placeholder="Enter Last Name" class="form-control">
                 </div>
                 <div class="form-group mb-3">
                     <label for="email">Email address</label>
-                    <input type="email" id="email" placeholder="Enter email" class="form-control">
+                    <input type="email" id="email" name="email" placeholder="Enter email" class="form-control">
                 </div>
                 <div class="form-group mb-3">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter password" class="form-control">
+                    <input type="password" id="password" name="password" placeholder="Enter password"
+                        class="form-control">
                 </div>
                 <div class="form-group mb-3">
                     <label for="password">Re-type Password</label>
-                    <input type="password" id="password" placeholder="Enter password" class="form-control">
+                    <input type="password" id="password_confirmation" name="password_confirmation"
+                        placeholder="Enter password" class="form-control">
                 </div>
                 <div class="form-group d-grid gap-2">
                     <button type="submit" class="btn btn-primary">Register</button>

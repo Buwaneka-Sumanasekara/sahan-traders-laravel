@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class UmUser extends Authenticatable implements MustVerifyEmail
 {
-    use  HasFactory, Notifiable;
+    use HasFactory, Notifiable;
     protected $table = 'um_user';
 
 
@@ -20,10 +20,13 @@ class UmUser extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'first_name',
         'last_name',
         'email',
         'password',
+        'um_user_status_id',
+        'um_user_role_id',
     ];
 
 

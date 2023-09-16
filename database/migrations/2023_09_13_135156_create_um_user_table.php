@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('email', 150)->unique();
             $table->string('password', 255);
             $table->boolean('email_verified')->default(false);
-            $table->dateTime('email_verified_at')->nullable();
-            $table->string('remember_token', 200)->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
 
             $table->integer('um_user_status_id');
             $table->integer('um_user_role_id');

@@ -5,20 +5,24 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\UmUser;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Traits\UserTrait;
+use Illuminate\Auth\Events\Registered;
 
 class LoginRegisterController extends Controller
 {
+    use userTrait;
     /**
      * Instantiate a new LoginRegisterController instance.
      */
     public function __construct()
     {
         $this->middleware('guest')->except([
-            'logout'
+            'logout', 'homePage', 'verify'
         ]);
+        $this->middleware('auth')->only('logout', 'homePage', 'verify');
+        // $this->middleware('verified')->only('homePage');
     }
 
     /**
@@ -40,21 +44,30 @@ class LoginRegisterController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+            'first_name' => 'required|string|max:250',
+            'last_name' => 'required|string|max:250',
+            'email' => 'required|email|max:250|unique:um_user,email',
+            'password' => 'required|min:3|confirmed'
         ]);
 
-        UmUser::create([
-            'name' => $request->name,
+        $userId = $this->getNextUserId();
+        $user = UmUser::create([
+            'id' => $userId,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            "um_user_status_id" => config("global.user_status_active"),
+            "um_user_role_id" => config("global.user_role_buyer"),
         ]);
+        $user->id = $userId;
+        event(new Registered($user));
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
+
         $request->session()->regenerate();
-        return redirect()->route('dashboard')
+        return redirect()->route('home')
             ->withSuccess('You have successfully registered & logged in!');
     }
 
@@ -83,7 +96,7 @@ class LoginRegisterController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard')
+            return redirect()->route('home')
                 ->withSuccess('You have successfully logged in!');
         }
 

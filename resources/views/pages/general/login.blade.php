@@ -14,7 +14,7 @@
             <h2>Log in</h2>
             <p>Log in to your account to continue.</p>
 
-            <form action="action/login" method="POST">
+            <form action="/authenticate" method="POST">
 
                 <x-organisms.alert type="danger" />
 

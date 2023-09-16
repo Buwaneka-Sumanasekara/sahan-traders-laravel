@@ -3,13 +3,19 @@
 namespace App\Http\Traits;
 
 use App;
-
+use App\Models\UmUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 trait UserTrait
 {
 
+
+    public function getNextUserId()
+    {
+        $next_id =  UmUser::max("id") + 1;
+        return $next_id;
+    }
 
     public function user_role_getUserRolePermissions($user_role)
     {

@@ -42,14 +42,26 @@
 
             @else
 
-            <div class="btn btn link-primary"> {{ Auth::user()->name }}</div>
-
+            <div class="btn btn link-primary"> {{ Auth::user()->first_name }}</div>
+            |
+            <a class="btn btn-link link-primary" type="button" href="/logout">Logout</a>
 
             @endguest
 
         </div>
     </div>
 </nav>
+
+@guest
+
+@else
+@if(!Auth::user()->hasVerifiedEmail())
+
+<x-organisms.not-verified-message />
+
+@endif
+
+@endguest
 
 @if(!App::environment('production'))
 
