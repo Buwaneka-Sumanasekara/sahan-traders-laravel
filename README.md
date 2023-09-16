@@ -37,3 +37,23 @@ if port already in use
 ```
 sudo kill `sudo lsof -t -i:3306`
 ```
+
+refresh DB
+
+``
+sail artisan migrate:refresh --seed
+``
+
+To prod
+```
+
+sail -f docker-compose-prod.yml build --no-cache
+
+sail -f docker-compose-prod.yml up
+```
+
+To dev
+```
+sail  build --no-cache
+sail  up
+```

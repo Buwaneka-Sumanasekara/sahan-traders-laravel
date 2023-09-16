@@ -1,5 +1,5 @@
 services:
-    sahan.laravel.dev:
+    sahan.laravel.prod:
         build:
             context: ./vendor/laravel/sail/runtimes/8.2
             dockerfile: Dockerfile
@@ -10,8 +10,8 @@ services:
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-8000}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '${APP_PORT:-9000}:80'
+            - '${VITE_PORT:-5174}:${VITE_PORT:-5174}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -25,7 +25,6 @@ services:
         depends_on:
             - mysql
             - redis
-            - mailpit
             - selenium
     mysql:
         image: 'mysql/mysql-server:8.0'
@@ -54,7 +53,7 @@ services:
     redis:
         image: 'redis:alpine'
         ports:
-            - '${FORWARD_REDIS_PORT:-6378}:6378'
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
             - 'sail-redis:/data'
         networks:
@@ -66,13 +65,6 @@ services:
                 - ping
             retries: 3
             timeout: 5s
-    mailpit:
-        image: 'axllent/mailpit:latest'
-        ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        networks:
-            - sail
     selenium:
         image: seleniarm/standalone-chromium
         extra_hosts:
@@ -84,7 +76,7 @@ services:
     phpmyadmin:
         image: 'phpmyadmin/phpmyadmin'
         ports:
-            - 8001:80
+            - 9001:80
         environment:
             - PMA_HOST=mysql
             - PMA_PORT=3306

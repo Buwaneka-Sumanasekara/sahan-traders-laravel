@@ -34,25 +34,18 @@
         </div>
         <div class="float-right">
 
-            @if ($has_user)
-
-            <div class="btn btn link-primary">{{ $user->first_name }}</div>
-
-            @if($is_admin)
-            | <a class="btn btn-link link-secondary" type="button" href="/admin">Admin-Portal</a>
-            @else
-            | <a class="btn btn-link link-secondary" type="button" href="/cart">Cart ()</a>
-            @endif
-            | <a class="btn btn-link link-secondary" type="button" href="/orders">My Profile</a>
-            <a class="btn btn-link link-secondary" type="button" href="/action/logout">Logout</a>
-
-            @else
+            @guest
 
             <a class="btn btn-link link-primary" type="button" href="/login">Login</a>
             |
             <a class="btn btn-link link-primary" type="button" href="/register">Register</a>
 
-            @endif
+            @else
+
+            <div class="btn btn link-primary"> {{ Auth::user()->name }}</div>
+
+
+            @endguest
 
         </div>
     </div>
