@@ -51,6 +51,16 @@
     </div>
 </nav>
 
+@if(!App::environment('production'))
+
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle-fill h4"></i><strong> Warning! </strong> This is a testing environment , Do not
+    use real data.
+</div>
+
+@endif
+
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

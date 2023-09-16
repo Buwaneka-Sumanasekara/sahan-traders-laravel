@@ -4,56 +4,89 @@
 ## How to setup
 
 - Set up docker and start docker
-- Check out from repo
-- run following command
+- Check out from repo (checkout `main` branch for dev and checkout `prod` branch for production changes)
+
+
+## run this very first time (soon after checkout)
+
+```
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
+    composer install --ignore-platform-reqs
+```
+
+## change env settings
+
+- replace .env file config based on relevant environment
+
+
+### Dev Env
 
 ```
 ./vendor/bin/sail up
-
 ```
 or add it to env
 
 https://laravel.com/docs/10.x/sail#configuring-a-shell-alias
 
 
-
-composer installs
-
-```
-sail composer require laravel/sanctum
-
-```
-
-must run 
+run this command separate cmd line to dev mode watch js files
 
 ```
 sail yarn dev 
 ```
 
-for ui changes reload
 
+### Prod env
+
+```
+./vendor/bin/sail -f docker-compose-prod.yml up
+```
+or add it to env
+
+https://laravel.com/docs/10.x/sail#configuring-a-shell-alias
+
+
+run this command separate cmd line to build js and css files
+
+```
+sail yarn build 
+```
+
+
+
+### Common for all env , Initial
+
+refresh DB and add default data to tables
+
+``
+sail artisan migrate:refresh --seed
+``
+
+### Run every time
+
+update table changes
+
+``
+sail artisan migrate
+``
+
+Update default data
+
+``
+sail artisan db:seed --force
+``
+
+
+
+## Additional (If need)
 
 if port already in use
 ```
 sudo kill `sudo lsof -t -i:3306`
 ```
 
-refresh DB
 
-``
-sail artisan migrate:refresh --seed
-``
-
-To prod
-```
-
-sail -f docker-compose-prod.yml build --no-cache
-
-sail -f docker-compose-prod.yml up
-```
-
-To dev
-```
-sail  build --no-cache
-sail  up
-```
