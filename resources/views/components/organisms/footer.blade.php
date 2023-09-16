@@ -13,7 +13,7 @@
             <small>909-910-1-3- Koya, Sosa City, Chiba, Japan 289-2135</small>
         </div>
         <div class="col-6 col-md">
-            <strong>Subsidiary (UAE)</strong>
+            <strong>Subsidiary Company (UAE)</strong>
             <p>HALA KHABIR ALSAYAARAT</p>
             <small>#806, Elite 7 Sport Residence, Sport City, Dubai, United Arab Emirates</small>
         </div>
