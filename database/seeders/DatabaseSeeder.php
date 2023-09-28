@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SmPermissionsSeeder::class);
         $this->call(UmUserRoleHasSmPermissionsSeeder::class);
         $this->call(UmUserSeeder::class);
+        $this->call(PmUnitSeeder::class);
+        $this->call(PmGroupSeeder::class);
+        $this->call(PmProductSeeder::class);
     }
 }

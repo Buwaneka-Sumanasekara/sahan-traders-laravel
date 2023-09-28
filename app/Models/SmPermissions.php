@@ -9,5 +9,13 @@ class SmPermissions extends Model
 {
     use HasFactory;
     protected $table = 'sm_permissions';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
     public $timestamps = false;
 }

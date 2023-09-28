@@ -13,6 +13,13 @@ class UmUser extends Authenticatable implements MustVerifyEmail
     use HasFactory, Notifiable;
     protected $table = 'um_user';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
 
     /**
      * The attributes that are mass assignable.

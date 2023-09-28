@@ -11,6 +11,14 @@ return [
     |
     */
 
+
+    //default user id
+    'default_admin_user_id' => 0,
+
+    //default units
+    'default_unit_id' => 0,
+    'default_unit_group_id' => 0,
+
     //user status
     'user_status_pending' => 0,
     'user_status_active' => 1,
