@@ -9,7 +9,7 @@
         @foreach($sliders as $slider)
 
         <div class="carousel-item @if($loop->first) active @endif">
-            <img class="img-fluid" alt="{{ $slider->id }}" src="{{asset('images/sliders/'.$slider->img_path)}}">
+            <img class="img-fluid" alt="{{ $slider->id }}" src="{{$slider->getImageUrl()}}">
             <div class="carousel-caption d-none d-md-block">
                 @if($slider->title)
                 <h5>{{$slider->title}}</h5>

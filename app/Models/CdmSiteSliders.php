@@ -26,4 +26,11 @@ class CdmSiteSliders extends Model
         'link_text',
         'link_target'
     ];
+
+    public function getImageUrl()
+    {
+
+        $image_path = 'images/sliders/';
+        return  url($image_path . $this->img_path);
+    }
 }

@@ -21,7 +21,12 @@ return [
             "height" => 600,
         ],
     ],
-
+    "slider_image_sizes" => [
+        "home" => [
+            "width" => 1320,
+            "height" => 440,
+        ],
+    ],
 
 
     //default user id
