@@ -8,8 +8,14 @@ use Illuminate\Support\Str;
 use App\Models\PmProduct;
 use App\Models\PmProductStock;
 use App\Models\PmUnitHasPmUnitGroup;
+use App\Models\PmProductImages;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\File as FileFacade;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
+use Intervention\Image\Facades\Image;
 
 class CusModel_Product extends Model
 {
@@ -36,6 +42,9 @@ class CusModel_Product extends Model
         'note_html',
         'note',
     ];
+
+
+    /*===========================Helper functions===========================================*/
 
     private function generateNextId()
     {
@@ -80,6 +89,112 @@ class CusModel_Product extends Model
     }
 
 
+    private function saveDefaultBulkImages($prodId)
+    {
+        $path = 'img_defaults/products/' . $prodId . '_*';
+        $filtered_file_names = glob(public_path($path));
+        $ar_prod_images = [];
+        $i = 0;
+        foreach ($filtered_file_names as $file_path) {
+            $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
+            $file_name = $prodId . "_" . time() . "." . $file_extension;
+            $ar_prod_images[] = [
+                "file_name" => $file_name,
+                "is_primary" => ($i == 0 ? 1 : 0),
+                "file_path" => $file_path
+            ];
+            $i++;
+        }
+
+        if (!empty($ar_prod_images)) {
+            $this->uploadProductImages($prodId, $ar_prod_images);
+        }
+    }
+
+
+    private function uploadProductImages($prodId, array $images = [])
+    {
+        /*
+        expected format
+         [
+            is_primary => 1, or 0
+            file_name => "image1.jpg"
+         ]
+        
+        */
+
+        foreach ($images as $image) {
+            $file_name = $image['file_name'];
+            $file_path = $image['file_path'];
+
+
+            $product_path = 'public/images/products/' . $prodId;
+            $product_thumbnails_path = 'public/images/products/' . $prodId . "/thumbnails";
+            $img = Image::make($file_path);
+
+            //save thumbnail
+            $img->resize(config("global.product_image_sizes.thumbnail.width"), config("global.product_image_sizes.thumbnail.height"), function ($constraint) {
+                $constraint->aspectRatio();
+            });
+
+            Storage::put($product_thumbnails_path . "/" . $file_name, $img->stream());
+
+            //save medium images
+
+            $img->resize(config("global.product_image_sizes.medium.width"), config("global.product_image_sizes.medium.height"), function ($constraint) {
+                $constraint->aspectRatio();
+            })->insert(public_path('img/water_mark.png'), 'bottom-right', 10, 10);
+
+            Storage::put($product_path . "/" . $file_name, $img->stream());
+        }
+
+        $this->saveProductImagesToTable($prodId, $images);
+    }
+
+    private function saveProductImagesToTable(string $prodId, array $images = [])
+    {
+
+        /*
+        expected format
+         [
+            is_primary => 1, or 0
+            file_name => "image1.jpg"
+         ]
+        
+        */
+
+        foreach ($images as $image) {
+            $file_name = $image['file_name'];
+            $images = [
+                'id' => PmProductImages::where("pm_product_id", $prodId)->max("id") + 1,
+                'pm_product_id' => $prodId,
+                'name' => $file_name,
+                'path' => 'products/' . $prodId . "/" . $file_name, //not needed
+                'active' => 1,
+                'cr_by_user_id' => $this->cr_by_user_id,
+                'md_by_user_id' => $this->md_by_user_id,
+                'is_primary' => $image['is_primary'],
+            ];
+
+
+
+            PmProductImages::create($images);
+        }
+    }
+
+
+    /*============================Get product==============================================*/
+
+    public  static function getProducts($limit = 10)
+    {
+        return PmProductStock::where("active", true)->paginate($limit);
+    }
+    public  static function getFeaturedProducts($limit = 10)
+    {
+        return PmProductStock::whereHas('product', function ($query) {
+            $query->where('is_featured_product', true);
+        })->paginate($limit);
+    }
 
 
 
@@ -88,7 +203,16 @@ class CusModel_Product extends Model
 
 
 
-    // Override the save method
+
+
+
+
+
+
+
+
+
+    /*============================Save /Update product==============================================*/
     public function save(array $options = [])
     {
         DB::beginTransaction();
@@ -100,7 +224,7 @@ class CusModel_Product extends Model
                 'id' => $genId,
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
-                'active' =>  $this->active || 1,
+                'active' => isset($this->active) ? $this->active : 1,
                 'note' => $this->note,
                 'note_html' => $this->note_html,
                 'pm_group1_id' => $this->pm_group1_id,
@@ -110,22 +234,31 @@ class CusModel_Product extends Model
                 'pm_group5_id' => $this->pm_group5_id,
                 'cr_by_user_id' => $this->cr_by_user_id,
                 'md_by_user_id' => $this->md_by_user_id,
-                'en_batch' => $this->en_batch || config('setup.en_batch'),
+                'en_batch' => isset($this->en_batch) ? $this->en_batch : config('setup.en_batch'),
                 'pm_unit_group_id' => $this->pm_unit_group_id,
-                'is_inquiry_item' => $this->is_inquiry_item,
+                'is_inquiry_item' => (isset($this->is_inquiry_item) ? $this->is_inquiry_item : 0),
+                'is_featured_product' => (isset($this->is_featured_product) ? $this->is_featured_product : 0),
             ];
 
             $product = PmProduct::create($prod);
 
+            /*==========================*/
+            /*  Save Product Images     */
 
-
-
+            if (isset($this->is_from_seeds)) {
+                $this->saveDefaultBulkImages($genId);
+            } else {
+                if (isset($this->images)) {
+                    $this->uploadProductImages($genId, $this->images);
+                }
+            }
+            /*==========================*/
 
             $prodStock = [
                 'pm_product_id' => $genId,
                 'batch' => $this->getCurrentStockId($genId),
-                'sell_price' => $this->sell_price || 0,
-                'cost_price' => $this->sell_price || 0,
+                'sell_price' => $this->sell_price ? $this->sell_price : 0,
+                'cost_price' => $this->sell_price ? $this->sell_price : 0,
                 'pm_unit_group_id' => $product->pm_unit_group_id,
                 'qty' => config('setup.en_auto_add_stock') ? 1 : 0,
                 'pm_unit_id' => $this->getBaseUnitId($product->pm_unit_group_id),
