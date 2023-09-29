@@ -97,7 +97,7 @@ class CusModel_Product extends Model
         $i = 0;
         foreach ($filtered_file_names as $file_path) {
             $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
-            $file_name = $prodId . "_" . time() . "." . $file_extension;
+            $file_name = $prodId . "_" . $i . "_" . time() . "." . $file_extension;
             $ar_prod_images[] = [
                 "file_name" => $file_name,
                 "is_primary" => ($i == 0 ? 1 : 0),
@@ -133,19 +133,19 @@ class CusModel_Product extends Model
             $img = Image::make($file_path);
 
             //save thumbnail
-            $img->resize(config("global.product_image_sizes.thumbnail.width"), config("global.product_image_sizes.thumbnail.height"), function ($constraint) {
+            $image_thumbnail = $img->resize(config("global.product_image_sizes.thumbnail.width"), config("global.product_image_sizes.thumbnail.height"), function ($constraint) {
                 $constraint->aspectRatio();
             });
 
-            Storage::put($product_thumbnails_path . "/" . $file_name, $img->stream());
+            Storage::put($product_thumbnails_path . "/" . $file_name, $image_thumbnail->stream());
 
             //save medium images
 
-            $img->resize(config("global.product_image_sizes.medium.width"), config("global.product_image_sizes.medium.height"), function ($constraint) {
+            $image_medium = $img->resize(config("global.product_image_sizes.medium.width"), config("global.product_image_sizes.medium.height"), function ($constraint) {
                 $constraint->aspectRatio();
             })->insert(public_path('img/water_mark.png'), 'bottom-right', 10, 10);
 
-            Storage::put($product_path . "/" . $file_name, $img->stream());
+            Storage::put($product_path . "/" . $file_name, $image_medium->stream());
         }
 
         $this->saveProductImagesToTable($prodId, $images);
@@ -187,15 +187,18 @@ class CusModel_Product extends Model
 
     public  static function getProducts($limit = 10)
     {
-        return PmProductStock::where("active", true)->paginate($limit);
+        return PmProduct::where("active", true)->paginate($limit);
     }
     public  static function getFeaturedProducts($limit = 10)
     {
-        return PmProductStock::whereHas('product', function ($query) {
-            $query->where('is_featured_product', true);
-        })->paginate($limit);
+        return PmProduct::where('is_featured_product', true)->where('active', true)->paginate($limit);
     }
 
+
+    public static function getProductBySlug($slug = "")
+    {
+        return PmProduct::where("slug", $slug)->first();
+    }
 
 
 

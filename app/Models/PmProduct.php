@@ -55,6 +55,50 @@ class PmProduct extends Model
 
     public function stocks()
     {
-        return $this->hasMany(PmProductStock::class, 'pm_product_id', 'id');
+        return $this->hasMany(PmProductStock::class, 'pm_product_id', 'id')->where('active', true);
+    }
+
+    public function getFIFOStock()
+    {
+        return $this->stocks()->where("qty", ">", 0)->orderBy('batch', 'asc')->first();
+    }
+
+    public function getAvailableStockQty()
+    {
+        $total = 0;
+        foreach ($this->stocks as $stock) {
+            $total += $stock->qty;
+        }
+        return $total;
+    }
+
+    public function getAvailableStockQtyByBatch($batch)
+    {
+        $stock = $this->stocks()->where("batch", $batch)->first();
+        return $stock ? $stock->qty : 0;
+    }
+
+    public function getFIFOStockId()
+    {
+        $stock = $this->getFIFOStock();
+        return $stock ? $stock->batch : "";
+    }
+
+    public function getFIFOStockQty()
+    {
+        $stock = $this->getFIFOStock();
+        return $stock ? $stock->qty : 0;
+    }
+
+    public function getFIFOStockPrice()
+    {
+        $stock = $this->getFIFOStock();
+        return $stock ? $stock->sell_price : 0;
+    }
+
+    public function getDisplayPrice()
+    {
+        $price = $this->getFIFOStockPrice() ? $this->getFIFOStockPrice() : 0;
+        return money($price, config('setup.base_country_id'));
     }
 }
