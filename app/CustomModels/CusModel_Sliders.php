@@ -58,6 +58,7 @@ class CusModel_Sliders extends Model
             $ar_sliders[] = [
                 "file_name" => $file_name,
                 "file_path" => $file_path,
+                "order" => $i
             ];
             $i++;
         }
@@ -74,7 +75,8 @@ class CusModel_Sliders extends Model
         expected format
          [
              "file_name" => "slider_1.jpg",
-             "file_path" => "path/to/slider_1.jpg"
+             "file_path" => "path/to/slider_1.jpg",
+             "order" => 1
          ]
         
         */
@@ -98,8 +100,8 @@ class CusModel_Sliders extends Model
             $status = Storage::put($generated_path, $img->stream());
 
             if ($status) {
-                $slider["img_path"] =  $file_name;
-                $uploaded_sliders[] = $slider;
+                $slide["img_path"] =  $file_name;
+                $uploaded_sliders[] = $slide;
             }
         }
 
@@ -126,7 +128,8 @@ class CusModel_Sliders extends Model
         foreach ($sliders as $slider) {
             $img_path = $slider['img_path'];
 
-            $slider = [
+
+            $sliderUp = [
                 'id' => $this->generateNextId(),
                 'title' => isset($slider['title']) ? $slider['title'] : "",
                 'subtitle' => isset($slider['subtitle']) ? $slider['subtitle'] : "",
@@ -138,7 +141,7 @@ class CusModel_Sliders extends Model
                 'link_target' => isset($slider['link_target']) ? $slider['link_target'] : "",
             ];
 
-            CdmSiteSliders::create($slider);
+            CdmSiteSliders::create($sliderUp);
         }
     }
 
