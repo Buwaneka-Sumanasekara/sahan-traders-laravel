@@ -60,6 +60,7 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 16342,
                 "cost_price" => 10000,
+                "is_featured_product" => true
             ],
             [
                 "name" => "Suzuki Genuine Front Brake Pad",
@@ -92,6 +93,7 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => true,
                 "sell_price" => 10118370,
                 "cost_price" => 10015250,
+                'is_featured_product' => true
             ],
             [
                 "name" => "22 - 35T Medium Excavator",
@@ -108,6 +110,7 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => true,
                 "sell_price" => 20118370,
                 "cost_price" => 20015250,
+                'is_featured_product' => true
             ],
             [
                 "name" => "SAMSUNG GALAXY A21 (2020) (UNLOCKED)",
@@ -156,6 +159,7 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 48000,
                 "cost_price" => 30000,
+                'is_featured_product' => true
             ],
             [
                 "name" => "Sauran 900W 100mm Angle Grinder with Accessories, MP-AG900 4.4",
@@ -207,6 +211,9 @@ class PmProductSeeder extends Seeder
             $prodObj->is_inquiry_item = $prod["is_inquiry_item"];
             $prodObj->sell_price = $prod["sell_price"];
             $prodObj->cost_price = $prod["cost_price"];
+            $prodObj->is_featured_product = isset($prod["is_featured_product"]) ? $prod["is_featured_product"] : false;
+
+            $prodObj->is_from_seeds = true; //only for seeds
 
             $prodObj->save();
         }

@@ -19,7 +19,7 @@ class LoginRegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except([
-            'logout', 'homePage', 'verify'
+            'logout', 'verify'
         ]);
         $this->middleware('auth')->only('logout', 'verify');
         // $this->middleware('verified')->only('homePage');
@@ -105,15 +105,7 @@ class LoginRegisterController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Display a dashboard to authenticated users.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function homePage()
-    {
-        return view('pages.general.home');
-    }
+
 
     /**
      * Log out the user from application.

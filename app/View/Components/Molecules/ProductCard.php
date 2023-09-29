@@ -1,0 +1,34 @@
+<?php
+
+namespace App\View\Components\Molecules;
+
+use App\Models\PmProduct;
+use App\Models\PmProductStock;
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+class ProductCard extends Component
+{
+    /**
+     * Create a new component instance.
+     */
+    public function __construct(
+        public string $productName,
+        public string $productImage,
+        public string $productStockBatch,
+        public string $productPrice,
+        public string $productId,
+        public string $productSlug,
+        public string $productIsInqItem,
+    ) {
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.molecules.product-card');
+    }
+}

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->bigInteger('md_by_user_id');
             $table->boolean('en_batch')->default(true);
             $table->integer('pm_unit_group_id');
+            $table->boolean('is_featured_product')->default(false);
 
             $table->foreign('pm_group1_id')->references('id')->on('pm_group1');
             $table->foreign('pm_group2_id')->references('id')->on('pm_group2');

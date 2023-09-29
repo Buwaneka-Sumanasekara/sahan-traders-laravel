@@ -50,6 +50,8 @@ or add it to env
 https://laravel.com/docs/10.x/sail#configuring-a-shell-alias
 
 
+https://www.itsolutionstuff.com/post/laravel-9-resize-image-before-upload-exampleexample.html
+
 run this command separate cmd line to build js and css files
 
 ```
@@ -90,3 +92,9 @@ sudo kill `sudo lsof -t -i:3306`
 ```
 
 
+
+# sample UI sites
+
+https://demo74.leotheme.com/prestashop/at_autozpro_demo/en/home-3.html
+
+https://demo74.leotheme.com/prestashop/at_autozpro_demo/en/home-1.html

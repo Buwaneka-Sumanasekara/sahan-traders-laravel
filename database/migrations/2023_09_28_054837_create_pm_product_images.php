@@ -12,15 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pm_product_images', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->integer('id');
             $table->string('name', 60);
             $table->string('path', 500);
             $table->boolean('active')->default(true);
             $table->boolean('is_primary')->default(true);
-            $table->string('pm_product_id', 10);
+            $table->string('pm_product_id', 60);
+            $table->bigInteger('cr_by_user_id');
+            $table->bigInteger('md_by_user_id');
             $table->timestamps();
 
             $table->foreign('pm_product_id')->references('id')->on('pm_product');
+            $table->foreign('cr_by_user_id')->references('id')->on('um_user');
+            $table->foreign('md_by_user_id')->references('id')->on('um_user');
+
+            $table->primary(['id', 'pm_product_id']);
         });
     }
 

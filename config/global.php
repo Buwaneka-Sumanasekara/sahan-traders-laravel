@@ -11,6 +11,18 @@ return [
     |
     */
 
+    "product_image_sizes" => [
+        "thumbnail" => [
+            "width" => 400,
+            "height" => 300,
+        ],
+        "medium" => [
+            "width" => 800,
+            "height" => 600,
+        ],
+    ],
+
+
 
     //default user id
     'default_admin_user_id' => 0,

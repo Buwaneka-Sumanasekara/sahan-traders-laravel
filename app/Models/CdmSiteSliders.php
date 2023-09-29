@@ -15,6 +15,7 @@ class CdmSiteSliders extends Model
      * @var string
      */
     protected $table = 'cdm_site_sliders';
+    public $incrementing = false;
     protected $fillable = [
         'title',
         'subtitle',

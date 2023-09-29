@@ -28,7 +28,7 @@ return [
     'base_currency_id' => env('COMMON_SETUP_BASE_CUR_ID', "YEN"), //this will use for transactions
     'base_currency_name' => env('COMMON_SETUP_BASE_CUR_NAME', "Yen"),
     'base_currency_symbol' => env('COMMON_SETUP_BASE_CUR_SYMBOL', "¥"),
-
+    'base_country_id' => env('COMMON_SETUP_BASE_COUNTRY_ID', "JPY"),
 
 
 
