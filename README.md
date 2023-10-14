@@ -98,3 +98,14 @@ sudo kill `sudo lsof -t -i:3306`
 https://demo74.leotheme.com/prestashop/at_autozpro_demo/en/home-3.html
 
 https://demo74.leotheme.com/prestashop/at_autozpro_demo/en/home-1.html
+
+
+### For development
+
+create component
+
+```
+sail artisan make:component Molecules/ProductDisplayRight
+
+```
+

@@ -12,6 +12,37 @@ class PmProductSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $item_specifics_html = '
+        <div class="item-specifics">
+          <h2>Item Specifics</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <ul>
+                <li><strong>Condition:</strong> Used: An item that has been previously used. The item may have some signs of cosmetic wear, but is ... <a href="#">Read more about the condition</a></li>
+                <li><strong>Maker:</strong> DAIHATSU</li>
+                <li><strong>Brand:</strong> DAIHATSU</li>
+                <li><strong>Model Code:</strong> DBA-L650S</li>
+                <li><strong>Transmission:</strong> 4FT</li>
+                <li><strong>Engine Model:</strong> EF-VE</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul>
+                <li><strong>Engine Size:</strong> 660</li>
+                <li><strong>Fuel:</strong> Gasoline / Petrol</li>
+                <li><strong>Genuine Parts No:</strong> 87910B2240000</li>
+                <li><strong>Body Type:</strong> 5HB</li>
+                <li><strong>Trim No:</strong> FB10</li>
+                <li><strong>Ext Color No:</strong> G37</li>
+                <li><strong>Type Classification No:</strong> 4</li>
+                <li><strong>Registered Month/Year:</strong> 1/2004</li>
+                <li><strong>Mileage:</strong> 171373</li>
+              </ul>
+            </div>
+          </div>
+        </div>';
+
         $ar_prods = [
             [
                 "name" => "Left Tail Light SUBARU Impreza 2012 DBA-GJ7 84912FJ010",
@@ -48,7 +79,7 @@ class PmProductSeeder extends Seeder
             [
                 "name" => "Right Side Mirror DAIHATSU 2007 DBA-L650S 87910B2240",
                 "note" => "Elevate the functionality and style of your 2007 DAIHATSU DBA-L650S with the Right Side Mirror (Part Number: 87910B2240). Designed to fit your vehicle flawlessly, this mirror provides not just an accurate fit but also enhances visibility and safety on the road. It's meticulously crafted for precision and meets or exceeds OEM standards, ensuring unwavering reliability and enduring performance. Seize the opportunity to enhance your vehicle's aesthetics and safety. Place your order now and enjoy improved vision and a rejuvenated appearance for your DAIHATSU!",
-                "note_html" => "",
+                "note_html" => $item_specifics_html,
                 "pm_group1_id" => "G1001",
                 "pm_group2_id" => "G2010",
                 "pm_group3_id" => "G3002",

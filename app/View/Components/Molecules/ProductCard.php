@@ -17,10 +17,11 @@ class ProductCard extends Component
         public string $productName,
         public string $productImage,
         public string $productStockBatch,
-        public string $productPrice,
+        public string $productPrice, //display price
         public string $productId,
         public string $productSlug,
-        public string $productIsInqItem,
+        public bool $productIsInqItem,
+        public bool $isOutOfStock,
     ) {
     }
 
