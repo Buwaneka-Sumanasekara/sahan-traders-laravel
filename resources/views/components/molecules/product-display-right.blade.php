@@ -13,7 +13,10 @@
                 </div>
             </div>
             <hr />
-            <h4 class="py-3">{{$product->getDisplayPrice()}}</h4>
+            <div class="text-center text-md-start">
+                <h3 class="py-3 ">{{$product->getDisplayPrice()}}</h3>
+            </div>
+
         </div>
     </div>
 
@@ -25,7 +28,7 @@
                     <div class="me-auto">
                         <x-atoms.qty-input-v1 :initialQty="1" :minQty="1" :maxQty="$product->getFIFOStockQty()" />
                     </div>
-                    <!--Qty component-->
+                    <!--Add to cart-->
                     <div class="">
                         <x-atoms.add-to-cart-button :productId="$product->id" :stockBatchId="$product->getFIFOStockId()"
                             :isInqItem="$product->is_inquiry_item" :qty="1" :isOutOfStock="$product->isOutOfStock()"
