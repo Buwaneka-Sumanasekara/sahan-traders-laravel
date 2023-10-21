@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\UserTrait;
 use Illuminate\Auth\Events\Registered;
+use App\CustomModels\CusModel_Product;
+use App\Models\PmProduct;
 
 class LoginRegisterController extends Controller
 {
@@ -76,8 +78,13 @@ class LoginRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function loginPage()
+    public function loginPage(Request $request)
     {
+        $RedirectToProdId = $request->query('redirect-to-item');
+
+        if (!session()->has('redirect_to_product_id')) {
+            session()->put('redirect_to_product_id', $RedirectToProdId);
+        }
         return view('pages.general.login');
     }
 
@@ -95,9 +102,14 @@ class LoginRegisterController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('home')
-                ->withSuccess('You have successfully logged in!');
+            if (session()->has('redirect_to_product_id')) {
+                $productId = session()->pull('redirect_to_product_id');
+                $product = CusModel_Product::getProductById($productId);
+                $request->session()->regenerate();
+                return redirect('/product/' . $product->slug);
+            } else {
+                return redirect()->route("home");
+            }
         }
 
         return back()->withErrors([

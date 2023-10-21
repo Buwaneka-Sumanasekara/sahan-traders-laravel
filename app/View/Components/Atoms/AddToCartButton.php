@@ -17,8 +17,8 @@ class AddToCartButton extends Component
         public bool $isInqItem,
         public float $qty = 1,
         public bool $isOutOfStock = false,
-        public bool $isDisplayFullWidth = true
-
+        public bool $isDisplayFullWidth = true,
+        public string $qtyElemId = ""
     ) {
         //
     }

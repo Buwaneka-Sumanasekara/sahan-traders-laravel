@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Exceptions\AuthenticationException;
+use App\Exceptions\EmailNotVerifiedException;
 use App\Exceptions\UserNotFoundException;
 use Illuminate\Validation\ValidationException;
 
@@ -49,6 +50,8 @@ class ErrorResource extends JsonResource
             $response->setStatusCode(401);
         } else if ($this->resource instanceof ValidationException) {
             $response->setStatusCode(502);
+        } else if ($this->resource instanceof EmailNotVerifiedException) {
+            $response->setStatusCode(403);
         } else {
             $response->setStatusCode(500);
         }

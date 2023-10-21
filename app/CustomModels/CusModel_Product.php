@@ -200,6 +200,11 @@ class CusModel_Product extends Model
         return PmProduct::where("slug", $slug)->first();
     }
 
+    public static function getProductById($id)
+    {
+        return PmProduct::find($id);
+    }
+
 
 
 

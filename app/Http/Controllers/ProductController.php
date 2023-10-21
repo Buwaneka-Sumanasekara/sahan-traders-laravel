@@ -16,8 +16,6 @@ class ProductController extends Controller
      */
     public function specificProductBySlugPage(Request $request, $slug)
     {
-
-
         $product = CusModel_Product::getProductBySlug($slug);
         if ($product == null) {
             return redirect()->route('home');

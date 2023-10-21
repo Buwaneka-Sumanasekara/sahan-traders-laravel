@@ -26,14 +26,17 @@
                 <div class="d-flex  mb-3">
                     <!--Qty component-->
                     <div class="me-auto">
-                        <x-atoms.qty-input-v1 :initialQty="1" :minQty="1" :maxQty="$product->getFIFOStockQty()" />
+                        <x-atoms.qty-input-v1 :id="'product_view_'.$product->id" :initialQty="1" :minQty="1"
+                            :maxQty="$product->getFIFOStockQty()" />
                     </div>
                     <!--Add to cart-->
                     <div class="">
                         <x-atoms.add-to-cart-button :productId="$product->id" :stockBatchId="$product->getFIFOStockId()"
-                            :isInqItem="$product->is_inquiry_item" :qty="1" :isOutOfStock="$product->isOutOfStock()"
-                            :isDisplayFullWidth="false" />
+                            :isInqItem="$product->is_inquiry_item" :qty="0" :isOutOfStock="$product->isOutOfStock()"
+                            :isDisplayFullWidth="false" :qtyElemId="'quantity_product_view_'.$product->id" />
                     </div>
+
+
                 </div>
                 <p class="d-inline-flex p-1 bg-body-secondary fs-6 fw-lighter">Available Qty:
                     {{$product->getFIFOStockQty()}}

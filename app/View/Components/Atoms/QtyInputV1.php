@@ -15,10 +15,12 @@ class QtyInputV1 extends Component
         public float $initialQty = 1,
         public float $minQty = 1,
         public float $maxQty = 10,
+        public string $id = "" //suffix to document id
     ) {
         $this->initialQty = $initialQty;
         $this->minQty = $minQty;
         $this->maxQty = $maxQty;
+        $this->id = $id;
     }
 
     /**
@@ -30,6 +32,7 @@ class QtyInputV1 extends Component
             'initialQty' => $this->initialQty,
             'minQty' => $this->minQty,
             'maxQty' => $this->maxQty,
+            'id' => $this->id
         ]);
     }
 }

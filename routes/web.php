@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CartController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,4 +38,12 @@ Route::controller(VerificationController::class)->group(function () {
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/product/{slug}', 'specificProductBySlugPage')->name('product.public.display');
+});
+
+
+//ajax actions
+Route::prefix('action')->group(function () {
+    Route::controller(CartController::class)->group(function () {
+        Route::post('/cart/add', 'addToCart')->name('cart.action.add');
+    });
 });
