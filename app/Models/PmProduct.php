@@ -32,7 +32,11 @@ class PmProduct extends Model
         'is_inquiry_item',
         'note_html',
         'note',
-        'is_featured_product'
+        'is_featured_product',
+        'prop_width',
+        'prop_height',
+        'prop_depth',
+        'prop_weight',
     ];
 
 

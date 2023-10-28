@@ -29,6 +29,10 @@ return new class extends Migration
             $table->boolean('en_batch')->default(true);
             $table->integer('pm_unit_group_id');
             $table->boolean('is_featured_product')->default(false);
+            $table->double('prop_width')->nullable();
+            $table->double('prop_height')->nullable();
+            $table->double('prop_depth')->nullable();
+            $table->double('prop_weight')->nullable();
 
             $table->foreign('pm_group1_id')->references('id')->on('pm_group1');
             $table->foreign('pm_group2_id')->references('id')->on('pm_group2');

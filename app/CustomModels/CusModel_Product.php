@@ -41,6 +41,10 @@ class CusModel_Product extends Model
         'is_inquiry_item',
         'note_html',
         'note',
+        'prop_width',
+        'prop_height',
+        'prop_depth',
+        'prop_weight'
     ];
 
 
@@ -246,6 +250,10 @@ class CusModel_Product extends Model
                 'pm_unit_group_id' => $this->pm_unit_group_id,
                 'is_inquiry_item' => (isset($this->is_inquiry_item) ? $this->is_inquiry_item : 0),
                 'is_featured_product' => (isset($this->is_featured_product) ? $this->is_featured_product : 0),
+                'prop_width' => $this->prop_width,
+                'prop_height' => $this->prop_height,
+                'prop_depth' => $this->prop_depth,
+                'prop_weight' => $this->prop_weight
             ];
 
             $product = PmProduct::create($prod);

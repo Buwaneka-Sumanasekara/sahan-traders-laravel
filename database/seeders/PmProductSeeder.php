@@ -59,6 +59,10 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 16342,
                 "cost_price" => 10000,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
+                'prop_weight' => 0
             ],
             [
                 "name" => "Right Tail Light SUBARU Impreza 2012 DBA-GJ7 84912FJ000",
@@ -75,6 +79,9 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 16342,
                 "cost_price" => 10000,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "Right Side Mirror DAIHATSU 2007 DBA-L650S 87910B2240",
@@ -91,7 +98,11 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 16342,
                 "cost_price" => 10000,
-                "is_featured_product" => true
+                "is_featured_product" => true,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
+                'prop_weight' => 0
             ],
             [
                 "name" => "Suzuki Genuine Front Brake Pad",
@@ -108,6 +119,9 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 16342,
                 "cost_price" => 10000,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "Mini excavator 12VXE",
@@ -124,7 +138,10 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => true,
                 "sell_price" => 10118370,
                 "cost_price" => 10015250,
-                'is_featured_product' => true
+                'is_featured_product' => true,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "22 - 35T Medium Excavator",
@@ -141,7 +158,10 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => true,
                 "sell_price" => 20118370,
                 "cost_price" => 20015250,
-                'is_featured_product' => true
+                'is_featured_product' => true,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "SAMSUNG GALAXY A21 (2020) (UNLOCKED)",
@@ -158,6 +178,9 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 20118370,
                 "cost_price" => 20015250,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "SAMSUNG GALAXY A21 (2020) (UNLOCKED)",
@@ -174,6 +197,9 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 24500,
                 "cost_price" => 15000,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "Geepas Kitchen Machine - 2 In 1 Electric Hand & Stand Mixer",
@@ -190,7 +216,10 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 48000,
                 "cost_price" => 30000,
-                'is_featured_product' => true
+                'is_featured_product' => true,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "Sauran 900W 100mm Angle Grinder with Accessories, MP-AG900 4.4",
@@ -207,6 +236,9 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 5500,
                 "cost_price" => 3000,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
             ],
             [
                 "name" => "Black+Decker 6.5mm 400W VSR Orange Rotary Drill, BD65RD-IN",
@@ -223,6 +255,10 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 4263.63,
                 "cost_price" => 3200.63,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
+                'prop_weight' => 0
             ],
         ];
 
@@ -243,6 +279,11 @@ class PmProductSeeder extends Seeder
             $prodObj->sell_price = $prod["sell_price"];
             $prodObj->cost_price = $prod["cost_price"];
             $prodObj->is_featured_product = isset($prod["is_featured_product"]) ? $prod["is_featured_product"] : false;
+
+            $prodObj->prop_width = isset($prod["prop_width"]) ? $prod["prop_width"] : null;
+            $prodObj->prop_height = isset($prod["prop_height"]) ? $prod["prop_height"] : null;
+            $prodObj->prop_depth = isset($prod["prop_depth"]) ? $prod["prop_depth"] : null;
+            $prodObj->prop_weight = isset($prod["prop_weight"]) ? $prod["prop_weight"] : null;
 
             $prodObj->is_from_seeds = true; //only for seeds
 
