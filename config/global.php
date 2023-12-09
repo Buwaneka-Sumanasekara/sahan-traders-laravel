@@ -54,4 +54,36 @@ return [
     'flash_success' => 'alert-success',
     'flash_error' => 'alert-danger',
 
+    //calculation mode
+    "cal_mode" => [
+        "cost_price" => "C",
+        "sell_price" => "S",
+    ],
+    "cart_status" => [
+        "pending" => 0,
+        "payment_pending" => 1,
+        "payment_rejected" => 2,
+        "payment_done" => 3,
+        "order_processing" => 4,
+        "hand_over_to_delivery" => 5,
+        "completed" => 6,
+    ],
+
+    "stk_trn_status" => [
+        "pending" => 0,
+        "processed" => 1,
+        "hold" => 2,
+        "cancelled" => 3,
+    ],
+    "cart_pay_status" => [
+        "pending" => 0,
+        "success" => 1,
+        "rejected" => 2,
+    ],
+    "trn_setup_types" => [
+        "Cart" => "CART", //Cart
+        "Grn" => "GRN",
+        "Return" => "RET",
+        "Invoice" => "INV",
+    ],
 ];

@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PmUnitSeeder::class);
         $this->call(PmGroupSeeder::class);
         $this->call(PmProductSeeder::class);
+        $this->call(CmCartStatusSeeder::class);
+        $this->call(StkmTrnStatusSeeder::class);
+        $this->call(CdmCountrySeeder::class);
     }
 }

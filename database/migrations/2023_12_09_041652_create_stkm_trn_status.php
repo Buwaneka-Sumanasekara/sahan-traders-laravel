@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdm_country', function (Blueprint $table) {
+        Schema::create('stkm_trn_status', function (Blueprint $table) {
             $table->integer('id')->primary();
-            $table->string('name', 60);
-            $table->string('courier_code', 10);
-            $table->string('payment_code', 10);
-            $table->boolean('active')->default(false);
+            $table->string('name');
+            $table->boolean('active')->default(true);
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cdm_country');
+        Schema::dropIfExists('stkm_trn_status');
     }
 };
