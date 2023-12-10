@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('stkm_trn_out_hed_id', 100);
             $table->string('product_id', 60);
             $table->string('stk_batch_id', 5);
+            $table->bigInteger('cr_by_user_id');
+            $table->bigInteger('md_by_user_id');
             $table->timestamps();
 
 
@@ -36,6 +38,8 @@ return new class extends Migration
             $table->foreign('pm_unit_id')->references('id')->on('pm_unit');
             $table->foreign('stkm_trn_out_hed_id')->references('id')->on('stkm_trn_out_hed');
             $table->foreign('product_id')->references('id')->on('pm_product');
+            $table->foreign('cr_by_user_id')->references('id')->on('um_user');
+            $table->foreign('md_by_user_id')->references('id')->on('um_user');
         });
     }
 

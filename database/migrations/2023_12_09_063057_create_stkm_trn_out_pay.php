@@ -21,6 +21,8 @@ return new class extends Migration
 
             $table->string('cdm_pay_hed_id', 5);
             $table->string('cdm_pay_det_id', 5);
+            $table->bigInteger('cr_by_user_id');
+            $table->bigInteger('md_by_user_id');
 
             $table->timestamps();
 
@@ -30,6 +32,8 @@ return new class extends Migration
             $table->foreign('stkm_trn_out_hed_id')->references('id')->on('stkm_trn_out_hed');
             $table->foreign('cdm_pay_hed_id')->references('id')->on('cdm_pay_hed');
             $table->foreign('cdm_pay_det_id')->references('id')->on('cdm_pay_det');
+            $table->foreign('cr_by_user_id')->references('id')->on('um_user');
+            $table->foreign('md_by_user_id')->references('id')->on('um_user');
         });
     }
 

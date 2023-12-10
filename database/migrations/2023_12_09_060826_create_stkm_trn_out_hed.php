@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('stkm_trn_setup_id', 10);
             $table->string('trn_ref_no', 100);
             $table->double('tax_per', 10, 2);
-            $table->double('shipping_cost', 20, 2);
             $table->bigInteger('cr_by_user_id');
             $table->bigInteger('md_by_user_id');
 

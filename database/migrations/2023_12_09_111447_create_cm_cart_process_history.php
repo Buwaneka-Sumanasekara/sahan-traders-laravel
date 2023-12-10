@@ -17,10 +17,12 @@ return new class extends Migration
             $table->integer('cm_cart_status_id');
             $table->string('ref_no', 100);
             $table->mediumText('note');
+            $table->bigInteger('cr_by_user_id');
             $table->timestamps();
 
             $table->foreign('cm_cart_hed_id')->references('id')->on('cm_cart_hed');
             $table->foreign('cm_cart_status_id')->references('id')->on('cm_cart_status');
+            $table->foreign('cr_by_user_id')->references('id')->on('um_user');
         });
     }
 
