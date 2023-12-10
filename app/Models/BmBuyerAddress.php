@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UmUserStatus extends Model
+class BmBuyerAddress extends Model
 {
     use HasFactory;
-    protected $table = 'um_user_status';
-
+    protected $table = 'bm_buyer_addresses';
     /**
      * The primary key associated with the table.
      *
@@ -17,5 +16,4 @@ class UmUserStatus extends Model
      */
     protected $primaryKey = 'id';
     public $incrementing = false;
-    public $timestamps = false;
 }

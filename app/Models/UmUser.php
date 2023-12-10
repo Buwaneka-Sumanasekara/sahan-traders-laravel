@@ -55,4 +55,10 @@ class UmUser extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function isBuyer()
+    {
+        return $this->um_user_role_id == config('app.user_role_buyer');
+    }
 }

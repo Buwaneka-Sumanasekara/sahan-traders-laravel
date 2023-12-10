@@ -18,6 +18,7 @@ class PmProduct extends Model
      * @var string
      */
     protected $primaryKey = 'id';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id',
@@ -143,9 +144,24 @@ class PmProduct extends Model
         return strtoupper(config("setup.product_group4_name"));
     }
 
+
+
     public function isOutOfStock(): bool
     {
+
         $qty = $this->getFIFOStockQty();
         return $qty <= 0;
+    }
+
+    public function isQtyAvailableInStock($checkQty = 1): bool
+    {
+        $qty = $this->getFIFOStockQty();
+        return  $checkQty <= $qty;
+    }
+
+    public function getDefaultSalesUnitId()
+    {
+        return PmUnitHasPmUnitGroup::where("pm_unit_group_id", $this->pm_unit_group_id)
+            ->where("active", true)->where("is_sales_unit", true)->first()->pm_unit_id;
     }
 }

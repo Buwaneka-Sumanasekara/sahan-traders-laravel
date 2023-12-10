@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('stkm_trn_setup', function (Blueprint $table) {
             $table->string('id', 10)->primary();
+            $table->string('type', 5);
             $table->string('name');
             $table->integer('mode')->default(0);
             $table->boolean('en_cprice')->default(true);
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->boolean('en_line_dis_per')->default(false);
             $table->boolean('en_line_dis_amt')->default(false);
             $table->boolean('en_display')->default(false);
+            $table->boolean('en_check_qty')->default(false);
         });
     }
 

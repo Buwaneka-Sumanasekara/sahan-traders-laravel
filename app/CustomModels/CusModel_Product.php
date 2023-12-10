@@ -204,9 +204,16 @@ class CusModel_Product extends Model
         return PmProduct::where("slug", $slug)->first();
     }
 
-    public static function getProductById($id)
+    public static function getProductById($id, $activeOnly = false): PmProduct
     {
+        if ($activeOnly) {
+            return PmProduct::where("id", $id)->where("active", true)->first();
+        }
         return PmProduct::find($id);
+    }
+    public static function getCartProductById($id): PmProduct
+    {
+        return PmProduct::where("id", $id)->where("active", true)->where("is_featured_product", false)->first();
     }
 
 

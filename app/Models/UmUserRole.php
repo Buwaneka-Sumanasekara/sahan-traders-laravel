@@ -16,6 +16,7 @@ class UmUserRole extends Model
      * @var string
      */
     protected $primaryKey = 'id';
+    public $incrementing = false;
 
     public $timestamps = false;
 }
