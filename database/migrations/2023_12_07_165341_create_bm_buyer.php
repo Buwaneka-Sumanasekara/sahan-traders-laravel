@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('contact_2', 45);
 
             $table->bigInteger('user_id');
-            $table->integer('address_ship_id');
-            $table->integer('address_bill_id');
+            $table->integer('address_ship_id')->nullable();
+            $table->integer('address_bill_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('um_user');
