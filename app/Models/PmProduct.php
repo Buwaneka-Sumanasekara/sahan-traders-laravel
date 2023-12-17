@@ -68,6 +68,9 @@ class PmProduct extends Model
         return $this->hasMany(PmProductVarient::class, 'product_id', 'id')->where('active', true);
     }
 
+    public function hasMultipleVarients(){
+        return sizeof($this->productVarients())>1;
+    }
 
 
 
@@ -75,8 +78,11 @@ class PmProduct extends Model
         return $this->productVarients()->first();
     }
 
-    public function getFIFOStock()
+    public function getFIFOStock($varientId)
     {
+        if(isset($varientId)){
+            return $this->stocks()->where("qty", ">", 0)->where("pm_product_varient_id",$varientId)->orderBy('batch', 'asc')->first();     
+        }
         $productDefaultVarient=$this->getDefaultProductVarient();
         return $this->stocks()->where("qty", ">", 0)->where("pm_product_varient_id",$productDefaultVarient->id)->orderBy('batch', 'asc')->first();
     }
@@ -105,44 +111,44 @@ class PmProduct extends Model
 
     //Other getters
 
-    public function getAvailableStockQty()
+    public function getAvailableStockQty($varientId)
     { //oldest stock
-        return $this->getFIFOStock()->qty;
+        return $this->getFIFOStock($varientId)->qty;
     }
 
-    public function getAvailableStockQtyByBatch($batch)
+    public function getAvailableStockQtyByBatch($batch,$varientId)
     {
-        $stock = $this->stocks()->where("batch", $batch)->first();
+        $stock = $this->stocks()->where("batch", $batch)->where("pm_product_varient_id",$varientId)->first();
         return $stock ? $stock->qty : 0;
     }
 
-    public function getFIFOStockId()
+    public function getFIFOStockId($varientId)
     {
-        $stock = $this->getFIFOStock();
+        $stock = $this->getFIFOStock($varientId);
         return $stock ? $stock->batch : "";
     }
 
-    public function getFIFOStockQty(): float
+    public function getFIFOStockQty($varientId): float
     {
-        $stock = $this->getFIFOStock();
+        $stock = $this->getFIFOStock($varientId);
         return $stock ? $stock->qty : 0;
     }
 
-    public function getFIFOStockPrice()
+    public function getFIFOStockPrice($varientId)
     {
-        $stock = $this->getFIFOStock();
+        $stock = $this->getFIFOStock($varientId);
         return $stock ? $stock->sell_price : 0;
     }
 
-    public function getDisplayPrice()
+    public function getDisplayPrice($varientId)
     {
-        $price = $this->getFIFOStockPrice() ? $this->getFIFOStockPrice() : 0;
+        $price = $this->getFIFOStockPrice($varientId) ? $this->getFIFOStockPrice($varientId) : 0;
         return money($price, config('setup.base_country_id'));
     }
 
-    public function getDisplaySKU()
+    public function getDisplaySKU($varientId=1)
     {
-        $stock = $this->getFIFOStock();
+        $stock = $this->getFIFOStock($varientId);
         return $stock ? $this->id . "-" . $stock->batch : "";
     }
 
@@ -158,16 +164,16 @@ class PmProduct extends Model
 
 
 
-    public function isOutOfStock(): bool
+    public function isOutOfStock($varientId): bool
     {
 
-        $qty = $this->getFIFOStockQty();
+        $qty = $this->getFIFOStockQty($varientId);
         return $qty <= 0;
     }
 
-    public function isQtyAvailableInStock($checkQty = 1): bool
+    public function isQtyAvailableInStock($checkQty = 1,$varientId): bool
     {
-        $qty = $this->getFIFOStockQty();
+        $qty = $this->getFIFOStockQty($varientId);
         return  $checkQty <= $qty;
     }
 
