@@ -63,10 +63,22 @@ class PmProduct extends Model
     {
         return $this->hasMany(PmProductStock::class, 'pm_product_id', 'id')->where('active', true);
     }
+    public function productVarients()
+    {
+        return $this->hasMany(PmProductVarient::class, 'product_id', 'id')->where('active', true);
+    }
+
+
+
+
+    public function getDefaultProductVarient(){
+        return $this->productVarients()->first();
+    }
 
     public function getFIFOStock()
     {
-        return $this->stocks()->where("qty", ">", 0)->orderBy('batch', 'asc')->first();
+        $productDefaultVarient=$this->getDefaultProductVarient();
+        return $this->stocks()->where("qty", ">", 0)->where("pm_product_varient_id",$productDefaultVarient->id)->orderBy('batch', 'asc')->first();
     }
 
     public function group1(): BelongsTo

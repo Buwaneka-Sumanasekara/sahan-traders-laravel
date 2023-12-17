@@ -86,4 +86,8 @@ return [
         "Return" => "RET",
         "Invoice" => "INV",
     ],
+    "promo_types" => [
+        "discount_amt" => 0,
+        "discount_per" => 1,
+    ],
 ];

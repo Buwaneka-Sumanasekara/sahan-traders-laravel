@@ -82,6 +82,7 @@ class PmGroupSeeder extends Seeder
             ["id" => "G4014", "name" => "Geepas", "active" => true],
             ["id" => "G4015", "name" => "Sauran", "active" => true],
             ["id" => "G4016", "name" => "Black+Decker", "active" => true],
+            ["id" => "G4017", "name" => "Oppo", "active" => true],
         ];
         foreach ($ar_group4 as $group4) {
             \App\Models\PmGroup4::create($group4);

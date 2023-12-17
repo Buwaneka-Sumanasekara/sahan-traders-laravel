@@ -18,11 +18,13 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->boolean('is_primary')->default(true);
             $table->string('pm_product_id', 60);
+            $table->integer('pm_product_varient_id');
             $table->bigInteger('cr_by_user_id');
             $table->bigInteger('md_by_user_id');
             $table->timestamps();
 
             $table->foreign('pm_product_id')->references('id')->on('pm_product');
+            $table->foreign('pm_product_varient_id')->references('id')->on('pm_product_varient');
             $table->foreign('cr_by_user_id')->references('id')->on('um_user');
             $table->foreign('md_by_user_id')->references('id')->on('um_user');
 

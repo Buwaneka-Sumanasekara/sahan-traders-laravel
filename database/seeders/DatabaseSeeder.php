@@ -25,7 +25,12 @@ class DatabaseSeeder extends Seeder
         $this->call(UmUserSeeder::class);
         $this->call(PmUnitSeeder::class);
         $this->call(PmGroupSeeder::class);
+        $this->call(PromoPromotionTypeSeeder::class);
+        
         $this->call(PmProductSeeder::class);
+
+
+        
         $this->call(CmCartStatusSeeder::class);
         $this->call(StkmTrnStatusSeeder::class);
         $this->call(StkmTrnSetupSeeder::class);

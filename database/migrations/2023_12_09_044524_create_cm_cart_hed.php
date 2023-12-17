@@ -28,6 +28,10 @@ return new class extends Migration
             $table->integer('cm_cart_status_id');
             $table->string('tracking_no', 200);
 
+           
+            $table->bigInteger('cr_by_user_id');
+            $table->bigInteger('md_by_user_id');
+
             $table->timestamps();
 
 
@@ -38,6 +42,8 @@ return new class extends Migration
             $table->foreign('ship_address_id')->references('id')->on('cm_cart_addresses');
             $table->foreign('bill_address_id')->references('id')->on('cm_cart_addresses');
             $table->foreign('cm_cart_status_id')->references('id')->on('cm_cart_status');
+            $table->foreign('cr_by_user_id')->references('id')->on('um_user');
+            $table->foreign('md_by_user_id')->references('id')->on('um_user');
         });
     }
 

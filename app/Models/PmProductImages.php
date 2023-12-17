@@ -14,6 +14,7 @@ class PmProductImages extends Model
     protected $fillable = [
         'id',
         'pm_product_id',
+        'pm_product_varient_id',
         "path"
     ];
 

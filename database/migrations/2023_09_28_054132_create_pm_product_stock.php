@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('pm_product_stock', function (Blueprint $table) {
             $table->string('pm_product_id', 60);
+            $table->integer('pm_product_varient_id');
             $table->string('batch', 5);
-            $table->double('qty');
-            $table->double('sell_price');
             $table->double('cost_price');
+            $table->double('sell_price');
+            $table->double('qty');
+         
             $table->boolean('active')->default(true);
             $table->bigInteger('cr_by_user_id');
             $table->bigInteger('md_by_user_id');
@@ -26,10 +28,11 @@ return new class extends Migration
             $table->foreign('pm_unit_id')->references('id')->on('pm_unit');
             $table->foreign('pm_unit_group_id')->references('id')->on('pm_unit_group');
             $table->foreign('pm_product_id')->references('id')->on('pm_product');
+            $table->foreign('pm_product_varient_id')->references('id')->on('pm_product_varient');
             $table->foreign('cr_by_user_id')->references('id')->on('um_user');
             $table->foreign('md_by_user_id')->references('id')->on('um_user');
 
-            $table->primary(['pm_product_id', 'batch']);
+            $table->primary(['pm_product_id', 'batch','pm_product_varient_id']);
             $table->timestamps();
         });
     }

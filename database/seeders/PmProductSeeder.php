@@ -43,6 +43,24 @@ class PmProductSeeder extends Seeder
           </div>
         </div>';
 
+        $html2="<ul>
+        <li><strong>OS:</strong> ColorOS 13 (based on Android 13)</li>
+        <li><strong>CPU:</strong> Snapdragon 778G 5G 2.4GHz+1.8GHz (octa core)</li>
+        <li><strong>RAM:</strong> 8GB</li>
+        <li><strong>ROM:</strong> 256GB</li>
+        <li><strong>Display:</strong> Approximately 6.7 inches (2412x1080)</li>
+        <li><strong>Camera:</strong> Main approximately 50 million + 32 million + 8 million pixels / Approximately 32 million sub pixels</li>
+        <li><strong>Wifi:</strong> a/b/g/n/ac/ax</li>
+        <li><strong>Radio Band:</strong> 5G (n3/28/77/78)/4G (1/2/3/4/5/7/8/12/17/18/19/26/28/38/41/42)/3G (1/2/4/5/6/8/19)/GSM (850/900/1800/1900) MHz</li>
+        <li><strong>Others:</strong> Bluetooth 5.2/GPS/NFC/Mobile wallet/face recognition/Fingerprint authentication/waterproof/dustproof</li>
+        <li><strong>Size:</strong> Approximately 163(H) x 75(W) x 7.9(D)mm</li>
+        <li><strong>Weight:</strong> Approximately 185g</li>
+        <li><strong>Battery:</strong> 4600mAh</li>
+        <li><strong>SIM size:</strong> nanoSIM x 2 + eSIM</li>
+        <li><strong>External connection:</strong> Type-C</li>
+    </ul>
+    ";
+
         $ar_prods = [
             [
                 "name" => "Left Tail Light SUBARU Impreza 2012 DBA-GJ7 84912FJ010",
@@ -57,12 +75,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 16342,
-                "cost_price" => 10000,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'prop_weight' => 0
+                'prop_weight' => 0,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                ]
             ],
             [
                 "name" => "Right Tail Light SUBARU Impreza 2012 DBA-GJ7 84912FJ000",
@@ -77,11 +96,12 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 16342,
-                "cost_price" => 10000,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                ]
             ],
             [
                 "name" => "Right Side Mirror DAIHATSU 2007 DBA-L650S 87910B2240",
@@ -96,13 +116,14 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 16342,
-                "cost_price" => 10000,
                 "is_featured_product" => true,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'prop_weight' => 0
+                'prop_weight' => 0,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                ]
             ],
             [
                 "name" => "Suzuki Genuine Front Brake Pad",
@@ -117,11 +138,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 16342,
-                "cost_price" => 10000,
+   
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                ]
             ],
             [
                 "name" => "Mini excavator 12VXE",
@@ -136,12 +159,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => true,
-                "sell_price" => 10118370,
-                "cost_price" => 10015250,
                 'is_featured_product' => true,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>10118370,"cost_price"=>10015250]
+                ]
             ],
             [
                 "name" => "22 - 35T Medium Excavator",
@@ -156,12 +180,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => true,
-                "sell_price" => 20118370,
-                "cost_price" => 20015250,
                 'is_featured_product' => true,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>20118370,"cost_price"=>20015250]
+                ]
             ],
             [
                 "name" => "SAMSUNG GALAXY A21 (2020) (UNLOCKED)",
@@ -176,11 +201,12 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 20118370,
-                "cost_price" => 20015250,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>20118370,"cost_price"=>20015250]
+                ]
             ],
             [
                 "name" => "SAMSUNG GALAXY A21 (2020) (UNLOCKED)",
@@ -200,6 +226,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>24500,"cost_price"=>15000]
+                ]
             ],
             [
                 "name" => "Geepas Kitchen Machine - 2 In 1 Electric Hand & Stand Mixer",
@@ -214,12 +243,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 48000,
-                "cost_price" => 30000,
                 'is_featured_product' => true,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>48000,"cost_price"=>30000]
+                ]
             ],
             [
                 "name" => "Sauran 900W 100mm Angle Grinder with Accessories, MP-AG900 4.4",
@@ -234,11 +264,12 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 5500,
-                "cost_price" => 3000,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>5500,"cost_price"=>3000]
+                ]
             ],
             [
                 "name" => "Black+Decker 6.5mm 400W VSR Orange Rotary Drill, BD65RD-IN",
@@ -253,12 +284,39 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "sell_price" => 4263.63,
-                "cost_price" => 3200.63,
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'prop_weight' => 0
+                'prop_weight' => 0,
+                'ar_product_varients'=>[
+                    ["name"=>"Default","sell_price"=>4263.63,"cost_price"=>200.63]
+                ]
+            ],
+            [
+                "name" => "OPPO Reno10 Pro 5G SimFree Unlocked OpenLine",
+                "note" => "sample note",
+                "note_html" => $html2,
+                "pm_group1_id" => "G1003",
+                "pm_group2_id" => "G2007",
+                "pm_group3_id" => "G3000",
+                "pm_group4_id" => "G4017",
+                "pm_group5_id" => "G5002",
+                "cr_by_user_id" => config("global.default_admin_user_id"),
+                "md_by_user_id" => config("global.default_admin_user_id"),
+                "pm_unit_group_id" => config("global.default_unit_group_id"),
+                "is_inquiry_item" => false,
+                "prop_width" => 10,
+                "prop_height" => 10,
+                "prop_depth" => 10,
+                'prop_weight' => 0,
+                'ar_product_varients'=>[
+                    ["name"=>"White","sell_price"=>39500.63,"cost_price"=>32500.63],
+                    ["name"=>"Black","sell_price"=>38500.63,"cost_price"=>31500.63]
+                ],
+                'ar_additional_costs'=>[
+                    ["name"=>"Normal wrap","amount"=>0],
+                    ["name"=>"Additional wrap","amount"=>10]
+                ]
             ],
         ];
 
@@ -276,14 +334,16 @@ class PmProductSeeder extends Seeder
             $prodObj->md_by_user_id = $prod["md_by_user_id"];
             $prodObj->pm_unit_group_id = $prod["pm_unit_group_id"];
             $prodObj->is_inquiry_item = $prod["is_inquiry_item"];
-            $prodObj->sell_price = $prod["sell_price"];
-            $prodObj->cost_price = $prod["cost_price"];
             $prodObj->is_featured_product = isset($prod["is_featured_product"]) ? $prod["is_featured_product"] : false;
 
             $prodObj->prop_width = isset($prod["prop_width"]) ? $prod["prop_width"] : null;
             $prodObj->prop_height = isset($prod["prop_height"]) ? $prod["prop_height"] : null;
             $prodObj->prop_depth = isset($prod["prop_depth"]) ? $prod["prop_depth"] : null;
             $prodObj->prop_weight = isset($prod["prop_weight"]) ? $prod["prop_weight"] : null;
+
+            $prodObj->ar_product_varients=isset($prod["ar_product_varients"])?$prod["ar_product_varients"]:[];
+            $prodObj->ar_additional_costs=isset($prod["ar_additional_costs"])?$prod["ar_additional_costs"]:[];
+
 
             $prodObj->is_from_seeds = true; //only for seeds
 

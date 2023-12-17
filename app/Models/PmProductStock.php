@@ -9,10 +9,12 @@ class PmProductStock extends Model
 {
     use HasFactory;
     protected $table = 'pm_product_stock';
+    public $incrementing = false;
 
     protected $fillable = [
         'pm_product_id',
-        'batch'
+        'batch',
+        'pm_product_varient_id'
     ];
 
     public function product()
