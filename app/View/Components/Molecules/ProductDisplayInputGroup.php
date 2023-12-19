@@ -12,9 +12,9 @@ class ProductDisplayInputGroup extends Component
      /**
      * Create a new component instance.
      */
-    public function __construct(public string $productId,public int $varientId)
+    public function __construct(public PmProduct $product,public int $varientId)
     {
-        $this->productId =$productId;
+        $this->product =$product;
         $this->varientId=$varientId;
     }
 
@@ -23,9 +23,9 @@ class ProductDisplayInputGroup extends Component
      */
     public function render(): View|Closure|string
     {
-        $product = PmProduct::find($this->productId);
+        
         return view('components.molecules.product-display-input-group', [
-            'product' => $product,
+            'product' => $this->product,
             'varientId'=>$this->varientId
         ]);
     }

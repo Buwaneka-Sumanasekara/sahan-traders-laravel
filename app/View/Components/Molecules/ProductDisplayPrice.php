@@ -12,9 +12,9 @@ class ProductDisplayPrice extends Component
      /**
      * Create a new component instance.
      */
-    public function __construct(public string $productId,public string $varientId)
+    public function __construct(public PmProduct $product,public string $varientId)
     {
-        $this->productId =$productId;
+        $this->product =$product;
         $this->varientId=$varientId;
     }
 
@@ -23,11 +23,9 @@ class ProductDisplayPrice extends Component
      */
     public function render(): View|Closure|string
     {
-       // dd($this->varientId);
-        
-            $product = PmProduct::find($this->productId);
+         
             return view('components.molecules.product-display-price', [
-                'product' => $product,
+                'product' => $this->product,
                 'varientId'=>$this->varientId,
             ]);
         
