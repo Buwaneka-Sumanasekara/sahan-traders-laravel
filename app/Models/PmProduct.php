@@ -68,8 +68,16 @@ class PmProduct extends Model
         return $this->hasMany(PmProductVarient::class, 'product_id', 'id')->where('active', true);
     }
 
+    public function productAdditionalCosts()
+    {
+        return $this->hasMany(PmProductAdditionalCost::class, 'product_id', 'id')->where('active', true);
+    }
+
     public function hasMultipleVarients(){
-        return sizeof($this->productVarients())>1;
+        return $this->productVarients()->count()>1;
+    }
+    public function hasAdditionalCosts(){
+        return $this->productAdditionalCosts()->count()>0;
     }
 
 

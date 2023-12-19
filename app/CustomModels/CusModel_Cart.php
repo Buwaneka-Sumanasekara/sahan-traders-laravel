@@ -89,9 +89,9 @@ class CusModel_Cart extends Model
 
 
 
-    private function createCartItem($cartId, $product, $qty)
+    private function createCartItem($cartId, $product,$varientId, $qty)
     {
-        $price = $product->getFIFOStockPrice();
+        $price = $product->getFIFOStockPrice($varientId);
         $amount = $price * $qty;
 
         $cartItem = new CmCartDet();
@@ -109,7 +109,7 @@ class CusModel_Cart extends Model
 
         $cartItem->cm_cart_hed_id = $cartId;
         $cartItem->pm_product_id = $product->id;
-        $cartItem->stk_batch_id = $product->getFIFOStockId();
+        $cartItem->stk_batch_id = $product->getFIFOStockId($varientId);
 
         $cartItem->save();
 
@@ -138,7 +138,7 @@ class CusModel_Cart extends Model
 
 
     /*============================ Cart functionalities ==============================================*/
-    public function addItemToCart($itemId, $buyerId, $qty = 1): CmCartDet
+    public function addItemToCart( $buyerId,$itemId,$varientId=1,$qty = 1): CmCartDet
     {
         $needToCheckQty = $this->isCheckQtyInTransaction();
         $cart = $this->getCurrentCart($buyerId);
@@ -154,7 +154,7 @@ class CusModel_Cart extends Model
             return new Exception("Product is out of stock");
         }
 
-        return $this->createCartItem($cart->id, $product, $qty);
+        return $this->createCartItem($cart->id, $product,$varientId, $qty);
     }
 
     public function removeItemFromCart($itemId, $buyerId)
