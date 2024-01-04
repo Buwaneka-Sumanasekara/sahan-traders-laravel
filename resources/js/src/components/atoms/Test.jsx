@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { createRoot } from 'react-dom/client';
 import App from '../../layout/App';
+import  CustomEvents from '../../common/CustomEvents';
 
 
 export default function Test(props){
@@ -17,11 +18,11 @@ const [count, setCount] = useState("");
         };
     
         // Add event listener when the component mounts
-        window.addEventListener('jsx_event_cart', handleCustomEvent);
+        window.addEventListener(CustomEvents.EVENT_TEST, handleCustomEvent);
     
         // Remove event listener when the component unmounts
         return () => {
-          window.removeEventListener('jsx_event_cart', handleCustomEvent);
+          window.removeEventListener(CustomEvents.EVENT_TEST, handleCustomEvent);
         };
       }, []); // Empty dependency array ensures that the effect runs once on mount
     

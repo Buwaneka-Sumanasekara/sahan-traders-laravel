@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react'
 import { createRoot } from 'react-dom/client';
 import { useFetchSpecificProduct } from '../../hooks/products/useFetchProducts';
 import App from '../../layout/App';
-
+import  CustomEvents from '../../common/CustomEvents';
 
 export default function ProductInfo(props){
 
@@ -17,7 +17,7 @@ export default function ProductInfo(props){
 
     const triggerCustomEvent = () => {
         console.log("triggerr.....")
-        const customEvent = new CustomEvent('jsx_event_cart', { detail: 'Some data' });
+        const customEvent = new CustomEvent(CustomEvents.EVENT_TEST, { detail: 'Some data' });
         window.dispatchEvent(customEvent);
       };
     console.log("productPriceInfo",productPriceInfo)
