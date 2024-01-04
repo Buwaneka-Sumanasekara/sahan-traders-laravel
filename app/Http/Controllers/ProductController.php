@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
 
     /**
-     * Resent verificaiton email to user.
+     * Show the product page.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -25,4 +25,41 @@ class ProductController extends Controller
             ]);
         }
     }
+
+
+    /**
+     * api calls
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function api_getProductInfoForVarient(Request $request,$productId,$varientId)
+    {
+        
+        $product = CusModel_Product::getProductById($productId);
+        if ($product == null) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'product not found'
+            ]);
+        } else {
+             $price = $product->getDisplayPrice($varientId);
+             $stockQty=$product->getAvailableStockQty($varientId);
+             $stockBatch=$product->getFIFOStockId($varientId);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'product price for varient',
+                'data' => [
+                    'price' => $price,
+                    'available_stock_qty'=>$stockQty,
+                    'product_id' => $productId,
+                    'varient_id' => $varientId,
+                    'stock_batch'=>$stockBatch
+                ]
+            ]);
+        }
+
+    }
+
 }

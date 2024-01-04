@@ -47,3 +47,11 @@ Route::prefix('action')->group(function () {
         Route::post('/cart/add', 'addToCart')->name('cart.action.add');
     });
 });
+
+
+//local api
+Route::prefix('web-api')->group(function () {
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/product/{productId}/{varientId}', 'api_getProductInfoForVarient')->name('api.product.get-info-for-varient');
+    });
+});

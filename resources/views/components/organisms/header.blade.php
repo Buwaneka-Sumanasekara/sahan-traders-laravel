@@ -42,12 +42,12 @@
             </div>
             <div class="d-flex flex-column justify-content-center">
                 <div class="text-body-tertiary">
-                    Shopping Cart
+                    Shopping Cart2
                 </div>
                 <div>
                     Rs. 0.00
                 </div>
-
+                <div id="jsx-test"></div>
             </div>
         </div>
     </div>
@@ -151,24 +151,7 @@
 
 
 
-    //change cart values
-    window.addEventListener('load', function (event) {
-        console.log("page loaded");
-        header_cart_updateCartValues()
-    });
-
-    document.addEventListener('change_header_add_to_cart', function (event) {
-        console.log(event);
-        header_cart_updateCartValues()
-    });
-    function header_cart_updateCartValues() {
-        console.log("changed cart values.......")
-        const countSpan=document.getElementById("header_cart_items_count");
-
-        const count=countSpan.textContent;
-        countSpan.textContent=parseInt(count)+1
-
-    }
+    
 </script>
 
 <style>

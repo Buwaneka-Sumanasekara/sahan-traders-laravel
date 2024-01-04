@@ -35,7 +35,9 @@
                 <x-organisms.header />
             </div>
         </div>
+     
         @yield('content')
+     
         <div class="row">
             <div class="col-md-12">
                 <x-organisms.footer />
