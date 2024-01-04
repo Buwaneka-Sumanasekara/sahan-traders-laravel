@@ -11,8 +11,6 @@
         <div class="card-footer">
 
 
-            <x-atoms.add-to-cart-button :productId="$productId" :stockBatchId="$productStockBatch"
-                :isInqItem="$productIsInqItem" :qty="1" :isOutOfStock="$isOutOfStock" :isDisplayFullWidth="true" />
 
 
         </div>
