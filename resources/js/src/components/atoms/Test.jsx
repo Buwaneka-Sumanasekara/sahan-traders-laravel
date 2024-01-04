@@ -14,7 +14,7 @@ const [count, setCount] = useState("");
         const handleCustomEvent = (event) => {
           // Handle the custom event here
           console.log('Custom event received:', event.detail);
-          setCount(event.detail)
+          setCount(event.detail.id)
         };
     
         // Add event listener when the component mounts

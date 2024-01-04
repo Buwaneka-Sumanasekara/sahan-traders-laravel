@@ -50,6 +50,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'product price for varient',
+                'time'=>time(),
                 'data' => [
                     'price' => $price,
                     'available_stock_qty'=>$stockQty,

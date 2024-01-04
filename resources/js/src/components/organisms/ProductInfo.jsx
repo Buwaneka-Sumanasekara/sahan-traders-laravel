@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { useFetchSpecificProduct } from '../../hooks/products/useFetchProducts';
 import App from '../../layout/App';
 import  CustomEvents from '../../common/CustomEvents';
+import {triggerCustomEvent} from '../../common/CommonUtil'
 
 export default function ProductInfo(props){
 
@@ -15,16 +16,14 @@ export default function ProductInfo(props){
     const {data:productPriceInfo, isLoading, error} = useFetchSpecificProduct(id,varientId)
 
 
-    const triggerCustomEvent = () => {
-        console.log("triggerr.....")
-        const customEvent = new CustomEvent(CustomEvents.EVENT_TEST, { detail: 'Some data' });
-        window.dispatchEvent(customEvent);
+    const onPress = () => {
+        triggerCustomEvent(CustomEvents.EVENT_TEST,{id:id})
       };
     console.log("productPriceInfo",productPriceInfo)
     return (
         <div>
             <h1>hello react {props.id}</h1>
-            <button onClick={triggerCustomEvent}>Trigger custom event</button>
+            <button onClick={onPress}>Trigger custom event</button>
         </div>
     )
 }
