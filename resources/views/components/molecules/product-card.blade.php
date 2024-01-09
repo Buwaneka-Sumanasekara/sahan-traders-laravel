@@ -8,11 +8,7 @@
             <p class="card-text">{{$productPrice}}</p>
 
         </div>
-        <div class="card-footer">
-
-
-
-
+        <div class="card-footer" id="jsx-quick-add-to-cart">
         </div>
     </div>
 

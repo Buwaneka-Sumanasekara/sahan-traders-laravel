@@ -2,10 +2,10 @@
 
 
 //components
-import Org_ProductInfo from './components/organisms/ProductInfo'
-import Org_Test from './components/atoms/Test'
+import UIProductInfo from './containers/UIProductInfo'
+import UIFeatureProducts from './containers/UIFeatureProducts'
 
 export {
-    Org_ProductInfo,
-    Org_Test
+    UIProductInfo,
+    UIFeatureProducts
 }

@@ -24,7 +24,28 @@ export const useFetchSpecificProduct = (
         ()=>fetchProductPriceInfo(productId,varientId), {
       enabled:enabled,
       select: (data) => {
-        return data.data
+        return data.data.data
       },
     })
   }
+
+
+/*====================Feature products=========================*/
+
+export const fetchFeatureProducts= async (pageSize=10) => {
+  return await api.get(`/feature-products`)
+}
+
+export const useFetchFeatureProducts = (
+  pageSize,
+  enabled = true,
+) => {
+  return useQuery(
+      [QueryKeys.FEATURE_PRODUCTS,pageSize], 
+      ()=>fetchFeatureProducts(pageSize), {
+    enabled:enabled,
+    select: (data) => {
+      return data.data.data
+    },
+  })
+}

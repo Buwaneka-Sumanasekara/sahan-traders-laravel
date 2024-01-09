@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Number;
 
 class PmProduct extends Model
 {
@@ -151,7 +152,7 @@ class PmProduct extends Model
     public function getDisplayPrice($varientId)
     {
         $price = $this->getFIFOStockPrice($varientId) ? $this->getFIFOStockPrice($varientId) : 0;
-        return money($price, config('setup.base_country_id'));
+        return  Number::currency($price, config("setup.base_country_id"));
     }
 
     public function getDisplaySKU($varientId=1)
@@ -190,4 +191,16 @@ class PmProduct extends Model
         return PmUnitHasPmUnitGroup::where("pm_unit_group_id", $this->pm_unit_group_id)
             ->where("active", true)->where("is_sales_unit", true)->first()->pm_unit_id;
     }
+
+    public function getDefaultStockIdOfDefaultVarient(){
+        return $this->getFIFOStockId($this->getDefaultProductVarient()->id);
+    }
+    public function getIsDefaultQtyAvailableInTheStock($qty=1){
+        return $this->isQtyAvailableInStock($qty,$this->getDefaultProductVarient()->id);
+    }
+    public function getDefaultVarientPrice(){
+        return $this->getDisplayPrice($this->getDefaultProductVarient()->id);
+    }
+
+   
 }

@@ -1,9 +1,9 @@
 import React,{useEffect, useState} from 'react'
-import { createRoot } from 'react-dom/client';
 import { useFetchSpecificProduct } from '../../hooks/products/useFetchProducts';
-import App from '../../layout/App';
 import  CustomEvents from '../../common/CustomEvents';
 import {triggerCustomEvent} from '../../common/CommonUtil'
+import AddToCartButton from '../atoms/AddToCartButton';
+import PriceTag from '../atoms/PriceDisplay';
 
 export default function ProductInfo(props){
 
@@ -16,27 +16,21 @@ export default function ProductInfo(props){
     const {data:productPriceInfo, isLoading, error} = useFetchSpecificProduct(id,varientId)
 
 
+
     const onPress = () => {
         triggerCustomEvent(CustomEvents.EVENT_TEST,{id:id})
       };
     console.log("productPriceInfo",productPriceInfo)
+
+
+    const price=(productPriceInfo?.price ||"");
     return (
         <div>
-            <h1>hello react {props.id}</h1>
-            <button onClick={onPress}>Trigger custom event</button>
+            <PriceTag price={price} size={"md"} />
+            <AddToCartButton disabled={true} productId={id} stockId={""} varientId={varientId} onPress={onPress}/>
         </div>
     )
 }
 
 
 
-//assign to a element
-
-if(document.getElementById('jsx-product-info')){
-
-    const container = document.getElementById('jsx-product-info')
-    let props = Object.assign({},container.dataset)
-  
-    const root = createRoot(container); // createRoot(container!) if you use TypeScript
-    root.render(<App><ProductInfo {...props} /></App>);
-}

@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\CustomModels\CusModel_Product;
+use App\Http\Resources\ErrorResource;
+use App\Http\Resources\CommonResponseResource;
+use App\Http\Resources\CommonResponseCollectionResource;
+use App\Exceptions\ResourceNotFoundException;
+use App\Http\Resources\ProductCollectionResource;
 
 class ProductController extends Controller
 {
@@ -36,31 +41,44 @@ class ProductController extends Controller
 
     public function api_getProductInfoForVarient(Request $request,$productId,$varientId)
     {
-        
-        $product = CusModel_Product::getProductById($productId);
-        if ($product == null) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'product not found'
-            ]);
-        } else {
-             $price = $product->getDisplayPrice($varientId);
-             $stockQty=$product->getAvailableStockQty($varientId);
-             $stockBatch=$product->getFIFOStockId($varientId);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'product price for varient',
-                'time'=>time(),
-                'data' => [
-                    'price' => $price,
-                    'available_stock_qty'=>$stockQty,
-                    'product_id' => $productId,
-                    'varient_id' => $varientId,
-                    'stock_batch'=>$stockBatch
-                ]
-            ]);
+        try {
+            $product = CusModel_Product::getProductById($productId);
+            if ($product == null) {
+                throw new ResourceNotFound("Product");
+            } else {
+                 $price = $product->getDisplayPrice($varientId);
+                 $stockQty=$product->getAvailableStockQty($varientId);
+                 $stockBatch=$product->getFIFOStockId($varientId);
+                return new CommonResponseResource((object)array(
+                        'product_id' => $product->id,
+                        'product_name' => $product->name,
+                        'product_price' => $price,
+                        'product_stock_qty' => $stockQty,
+                        'product_stock_batch' => $stockBatch,
+                ));
+               
+            }
+        }  catch (\Exception $e) {
+            return (new ErrorResource($e));
         }
+        
+       
 
+    }
+
+    public function api_getFeatureProducts(Request $request)
+    {
+        try {
+            $pageSize = 10;
+            if($request->has('page-size')) {
+                $pageSize=$request->input('page-size');
+            }
+            $featuredProducts=CusModel_Product::getFeaturedProducts($pageSize);
+            return new ProductCollectionResource($featuredProducts);
+        } catch (\Exception $e) {
+            return (new ErrorResource($e));
+        }
+        
     }
 
 }

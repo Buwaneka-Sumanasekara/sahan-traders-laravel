@@ -53,5 +53,6 @@ Route::prefix('action')->group(function () {
 Route::prefix('web-api')->group(function () {
     Route::controller(ProductController::class)->group(function () {
         Route::get('/product/{productId}/{varientId}', 'api_getProductInfoForVarient')->name('api.product.get-info-for-varient');
+        Route::get('/feature-products', 'api_getFeatureProducts')->name('api.product.get-feature-products');
     });
 });
