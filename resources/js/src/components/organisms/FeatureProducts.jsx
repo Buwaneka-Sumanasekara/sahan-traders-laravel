@@ -11,17 +11,19 @@ export default function FeatureProducts(props){
 
 
 
-    const onPressAddToCart = (item) => {
-    console.log("AddToCartButton",item)
+    
+
+    const onPressProduct = (product)=>{
+        console.log("onPressProduct",product)
+        window.open(`/product/${product.slug}`,'_self');
     }
 
-
     const products=featureProducts || [];
-    console.log(products)
+   
     return (
        <React.Fragment>
         {products.map((product,index)=>(
-            <div className={"col"} key={`feature_prod${index}`}>
+            <div className={"col"} key={`feature_prod${index}`} onClick={()=>onPressProduct(product)}>
                 <div className="card" style={{height:400}}>
                     <img src={product.mainThumbnailImageUrl} 
                         className="card-img-top img-responsive" 
@@ -36,7 +38,12 @@ export default function FeatureProducts(props){
                       disabled={!product.isQtyAvailableInStock} 
                       productId={product.id} 
                       stockId={product.stockId} 
-                      varientId={product.varientId} onPress={onPressAddToCart}/>
+                      varientId={product.varientId} 
+                      isInqueryItem={product.isInquiryItem}
+                      qty={1}
+                      unitGroupId={product.unitGroupId}
+                      unitId={product.unitId}
+                      />
                     </div>
                 </div>
                 

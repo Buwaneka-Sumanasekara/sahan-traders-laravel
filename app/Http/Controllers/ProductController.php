@@ -55,6 +55,9 @@ class ProductController extends Controller
                         'product_price' => $price,
                         'product_stock_qty' => $stockQty,
                         'product_stock_batch' => $stockBatch,
+                        'is_inquiry_item'=>$product->is_inquiry_item,
+                        'unit_group_id'=>$product->pm_unit_group_id,
+                        'unit_id'=>$product->getDefaultSalesUnitId(),
                 ));
                
             }

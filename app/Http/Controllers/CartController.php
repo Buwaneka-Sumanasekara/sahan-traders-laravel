@@ -20,6 +20,8 @@ class CartController extends Controller
     {
         if ($request->user()->hasVerifiedEmail()) {
             $productId = $request->string('product_id')->trim();
+            $stockId = $request->string('stock_id')->trim();
+            $varientId = $request->string('varient_id')->trim();
             $qty = $request->float('qty');
 
             return response()

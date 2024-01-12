@@ -27,6 +27,8 @@ class ProductCollectionResource extends ResourceCollection
                 'price'=>$prod->getDefaultVarientPrice(),
                 'varientId'=>$prod->getDefaultProductVarient()->id,
                 'stockId'=>$prod->getDefaultStockIdOfDefaultVarient(),
+                'unitId'=>$prod->getDefaultSalesUnitId(),
+                'unitGroupId'=>$prod->pm_unit_group_id,
            ])
         ];
     }

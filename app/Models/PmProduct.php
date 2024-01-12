@@ -39,6 +39,7 @@ class PmProduct extends Model
         'prop_height',
         'prop_depth',
         'prop_weight',
+        'pm_unit_group_id'
     ];
 
 
@@ -116,6 +117,10 @@ class PmProduct extends Model
     {
         return $this->belongsTo(PmGroup5::class, 'pm_group5_id', "id");
     }
+    public function unitGroup(): BelongsTo
+    {
+        return $this->belongsTo(PmUnitGroup::class, 'pm_unit_group_id', "id");
+    }
 
 
     //Other getters
@@ -170,9 +175,6 @@ class PmProduct extends Model
     {
         return strtoupper(config("setup.product_group4_name"));
     }
-
-
-
     public function isOutOfStock($varientId): bool
     {
 
@@ -186,12 +188,14 @@ class PmProduct extends Model
         return  $checkQty <= $qty;
     }
 
+
+    /* ================== Default values ======================================= */
+
     public function getDefaultSalesUnitId()
     {
         return PmUnitHasPmUnitGroup::where("pm_unit_group_id", $this->pm_unit_group_id)
             ->where("active", true)->where("is_sales_unit", true)->first()->pm_unit_id;
     }
-
     public function getDefaultStockIdOfDefaultVarient(){
         return $this->getFIFOStockId($this->getDefaultProductVarient()->id);
     }
@@ -201,6 +205,6 @@ class PmProduct extends Model
     public function getDefaultVarientPrice(){
         return $this->getDisplayPrice($this->getDefaultProductVarient()->id);
     }
-
+    
    
 }

@@ -4,6 +4,8 @@ export function triggerCustomEvent(eventName, data) {
   var event = new CustomEvent(eventName, {
     detail: data
   });
-  window.dispatchEvent(event);
+ 
+  const state=window.dispatchEvent(event);
+  console.log("triggerCustomEvent call", event,"state:",state)
 }
 
