@@ -36,4 +36,6 @@ class CusModel_ShipAndCoRates extends Model
         'price',
         'surcharges' //json
     ];
+
+    
 }

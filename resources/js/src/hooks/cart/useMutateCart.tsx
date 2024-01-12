@@ -22,6 +22,7 @@ type addToCartProps={
   additionalCostId?:string,
 }
 const addToCart = async (data:addToCartProps) => {
+  console.log("data",data)
     return await api.post(`/action/cart/add`,data)
 }
   

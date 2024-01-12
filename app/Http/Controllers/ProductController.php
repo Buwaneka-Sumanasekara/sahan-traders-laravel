@@ -9,6 +9,7 @@ use App\Http\Resources\CommonResponseResource;
 use App\Http\Resources\CommonResponseCollectionResource;
 use App\Exceptions\ResourceNotFoundException;
 use App\Http\Resources\ProductCollectionResource;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
@@ -46,19 +47,23 @@ class ProductController extends Controller
             if ($product == null) {
                 throw new ResourceNotFound("Product");
             } else {
-                 $price = $product->getDisplayPrice($varientId);
-                 $stockQty=$product->getAvailableStockQty($varientId);
-                 $stockBatch=$product->getFIFOStockId($varientId);
-                return new CommonResponseResource((object)array(
-                        'product_id' => $product->id,
-                        'product_name' => $product->name,
-                        'product_price' => $price,
-                        'product_stock_qty' => $stockQty,
-                        'product_stock_batch' => $stockBatch,
-                        'is_inquiry_item'=>$product->is_inquiry_item,
-                        'unit_group_id'=>$product->pm_unit_group_id,
-                        'unit_id'=>$product->getDefaultSalesUnitId(),
-                ));
+                //  $price = $product->getDisplayPrice($varientId);
+                //  $stockQty=$product->getAvailableStockQty($varientId);
+                //  $stockBatch=$product->getFIFOStockId($varientId);
+                // return new CommonResponseResource((object)array(
+                //         'product_id' => $product->id,
+                //         'product_name' => $product->name,
+                //         'product_price' => $price,
+                //         'product_stock_qty' => $stockQty,
+                //         'product_stock_batch' => $stockBatch,
+                //         'is_inquiry_item'=>$product->is_inquiry_item,
+                //         'unit_group_id'=>$product->pm_unit_group_id,
+                //         'unit_id'=>$product->getDefaultSalesUnitId(),
+                // ));
+
+                $product->varientId=$varientId;
+
+                return (new ProductResource($product));
                
             }
         }  catch (\Exception $e) {

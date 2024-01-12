@@ -15,21 +15,26 @@ class ProductCollectionResource extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
+        // return [
+        //     'time'=>time(),
+        //     'data'=> $this->collection->map(fn (PmProduct $prod) => [
+        //         'id' => $prod->id,
+        //         'name' => $prod->name,
+        //         'slug' => $prod->slug,
+        //         'isInquiryItem' => $prod->is_inquiry_item,
+        //         'isQtyAvailableInStock'=>$prod->getIsDefaultQtyAvailableInTheStock(1),//default varient id is 1
+        //         'mainThumbnailImageUrl' => $prod->mainThumbnailImageUrl(),
+        //         'price'=>$prod->getDefaultVarientPrice(),
+        //         'varientId'=>$prod->getDefaultProductVarient()->id,
+        //         'stockId'=>$prod->getDefaultStockIdOfDefaultVarient(),
+        //         'unitId'=>$prod->getDefaultSalesUnitId(),
+        //         'unitGroupId'=>$prod->pm_unit_group_id,
+        //    ])
+        // ];
+
         return [
             'time'=>time(),
-            'data'=> $this->collection->map(fn (PmProduct $prod) => [
-                'id' => $prod->id,
-                'name' => $prod->name,
-                'slug' => $prod->slug,
-                'isInquiryItem' => $prod->is_inquiry_item,
-                'isQtyAvailableInStock'=>$prod->getIsDefaultQtyAvailableInTheStock(1),//default varient id is 1
-                'mainThumbnailImageUrl' => $prod->mainThumbnailImageUrl(),
-                'price'=>$prod->getDefaultVarientPrice(),
-                'varientId'=>$prod->getDefaultProductVarient()->id,
-                'stockId'=>$prod->getDefaultStockIdOfDefaultVarient(),
-                'unitId'=>$prod->getDefaultSalesUnitId(),
-                'unitGroupId'=>$prod->pm_unit_group_id,
-           ])
+            'data'=> $this->collection->map(fn (PmProduct $prod) => new ProductResource($prod))
         ];
     }
 

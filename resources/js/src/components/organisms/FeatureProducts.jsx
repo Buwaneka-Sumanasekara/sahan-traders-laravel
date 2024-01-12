@@ -23,15 +23,16 @@ export default function FeatureProducts(props){
     return (
        <React.Fragment>
         {products.map((product,index)=>(
-            <div className={"col"} key={`feature_prod${index}`} onClick={()=>onPressProduct(product)}>
+            <div className={"col"} key={`feature_prod${index}`}>
                 <div className="card" style={{height:400}}>
                     <img src={product.mainThumbnailImageUrl} 
                         className="card-img-top img-responsive" 
                         style={{ width:'100%',height:230}} alt={product.name}
+                        onClick={()=>onPressProduct(product)}
                     />
                     <div className="card-body">
                         <h5 className="card-title">{product.name}</h5>
-                        <p className="card-text">{product.price}</p>
+                        <p className="card-text">{product.displayPrice}</p>
                     </div>
                     <div className="card-footer">
                       <AddToCartButton 

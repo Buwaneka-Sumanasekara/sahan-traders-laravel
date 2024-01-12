@@ -14,7 +14,7 @@ export default function ProductInfo(props){
     const [stockId, setStockId] = useState("");
     const [price, setPrice] = useState(0);
     const [isInqueryItem, setIsInqueryItem] = useState(false);
-    const [qty, setQty] = useState(1);
+    const [qty, setQty] = useState(2);
     const [additionalCostId, setAdditionalCostId] = useState("")
     const [unitGroupId,setUnitGroupId]=useState("");
     const [unitId,setUnitId]=useState("");
@@ -23,15 +23,15 @@ export default function ProductInfo(props){
     const {data:productPriceInfo, isLoading, error} = useFetchSpecificProduct(id,varientId)
 
  
-    
+    console.log("productPriceInfo",productPriceInfo)
 
     useEffect(() => {
         if(productPriceInfo){
-            setPrice(productPriceInfo.product_price)
-            setIsInqueryItem(productPriceInfo.is_inquiry_item)
-            setStockId(productPriceInfo.stock_id)
-            setUnitGroupId(productPriceInfo.unit_group_id)
-            setUnitId(productPriceInfo.unit_id)
+            setPrice(productPriceInfo.displayPrice)
+            setIsInqueryItem(productPriceInfo.isInquiryItem)
+            setStockId(productPriceInfo.stockId)
+            setUnitGroupId(productPriceInfo.unitGroupId)
+            setUnitId(productPriceInfo.unitId)
         }
     }
     ,[productPriceInfo])
@@ -52,8 +52,8 @@ export default function ProductInfo(props){
             isInqueryItem={isInqueryItem} 
             qty={qty}
             additionalCostId={additionalCostId}
-            unitGroupId={productPriceInfo.unitGroupId}
-            unitId={productPriceInfo.unitId}
+            unitGroupId={unitGroupId}
+            unitId={unitId}
             />
         </div>
     )
