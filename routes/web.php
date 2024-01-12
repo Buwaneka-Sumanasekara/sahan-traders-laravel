@@ -41,9 +41,19 @@ Route::controller(ProductController::class)->group(function () {
 });
 
 
-//ajax actions
-Route::prefix('action')->group(function () {
-    Route::controller(CartController::class)->group(function () {
-        Route::post('/cart/add', 'addToCart')->name('cart.action.add');
+
+
+//local api
+Route::prefix('web-api')->group(function () {
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/product/{productId}/{varientId}', 'api_getProductInfoForVarient')->name('api.product.get-info-for-varient');
+        Route::get('/feature-products', 'api_getFeatureProducts')->name('api.product.get-feature-products');
+    });
+    Route::prefix('action')->group(function () {
+        Route::prefix('cart')->group(function () {
+            Route::controller(CartController::class)->group(function () {
+                Route::post('/add', 'addToCart')->name('cart.action.add');
+            });
+        });
     });
 });

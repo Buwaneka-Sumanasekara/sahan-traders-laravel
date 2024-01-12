@@ -8,13 +8,7 @@
             <p class="card-text">{{$productPrice}}</p>
 
         </div>
-        <div class="card-footer">
-
-
-            <x-atoms.add-to-cart-button :productId="$productId" :stockBatchId="$productStockBatch"
-                :isInqItem="$productIsInqItem" :qty="1" :isOutOfStock="$isOutOfStock" :isDisplayFullWidth="true" />
-
-
+        <div class="card-footer" id="jsx-quick-add-to-cart">
         </div>
     </div>
 

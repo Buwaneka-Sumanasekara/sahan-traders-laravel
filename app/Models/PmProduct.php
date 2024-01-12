@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Number;
 
 class PmProduct extends Model
 {
@@ -38,6 +39,7 @@ class PmProduct extends Model
         'prop_height',
         'prop_depth',
         'prop_weight',
+        'pm_unit_group_id'
     ];
 
 
@@ -115,6 +117,10 @@ class PmProduct extends Model
     {
         return $this->belongsTo(PmGroup5::class, 'pm_group5_id', "id");
     }
+    public function unitGroup(): BelongsTo
+    {
+        return $this->belongsTo(PmUnitGroup::class, 'pm_unit_group_id', "id");
+    }
 
 
     //Other getters
@@ -151,7 +157,7 @@ class PmProduct extends Model
     public function getDisplayPrice($varientId)
     {
         $price = $this->getFIFOStockPrice($varientId) ? $this->getFIFOStockPrice($varientId) : 0;
-        return money($price, config('setup.base_country_id'));
+        return  Number::currency($price, config("setup.base_country_id"));
     }
 
     public function getDisplaySKU($varientId=1)
@@ -169,9 +175,6 @@ class PmProduct extends Model
     {
         return strtoupper(config("setup.product_group4_name"));
     }
-
-
-
     public function isOutOfStock($varientId): bool
     {
 
@@ -185,9 +188,23 @@ class PmProduct extends Model
         return  $checkQty <= $qty;
     }
 
+
+    /* ================== Default values ======================================= */
+
     public function getDefaultSalesUnitId()
     {
         return PmUnitHasPmUnitGroup::where("pm_unit_group_id", $this->pm_unit_group_id)
             ->where("active", true)->where("is_sales_unit", true)->first()->pm_unit_id;
     }
+    public function getDefaultStockIdOfDefaultVarient(){
+        return $this->getFIFOStockId($this->getDefaultProductVarient()->id);
+    }
+    public function getIsDefaultQtyAvailableInTheStock($qty=1){
+        return $this->isQtyAvailableInStock($qty,$this->getDefaultProductVarient()->id);
+    }
+    public function getDefaultVarientPrice(){
+        return $this->getDisplayPrice($this->getDefaultProductVarient()->id);
+    }
+    
+   
 }

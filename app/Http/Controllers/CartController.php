@@ -19,11 +19,22 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            $productId = $request->string('product_id')->trim();
+            $productId = $request->string('productId')->trim();
+            $stockId = $request->string('stockId')->trim();
+            $varientId = $request->string('varientId')->trim();
             $qty = $request->float('qty');
+            $unitGroupId=$request->string('unitGroupId')->trim();
+            $unitId=$request->string('unitId')->trim();
+            $additionalCostId=$request->string('additionalCostId')->trim();
 
             return response()
-                ->json(['name' => $productId, 'qty' => $qty]);
+                ->json(['id' => $productId, 
+                'qty' => $qty,
+                'unitGroupId'=>$unitGroupId,
+                'unitId'=>$unitId,
+                'stockId'=>$stockId,
+                'varientId'=>$varientId,
+                'additionalCostId'=>$additionalCostId]);
         } else {
             $errorResponse = new ErrorResource(new EmailNotVerifiedException());
             return $errorResponse;
