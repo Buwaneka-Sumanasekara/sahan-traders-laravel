@@ -19,7 +19,7 @@ export default function FeatureProducts(props){
     }
 
     const products=featureProducts || [];
-   
+   console.log("FeatureProducts",products)
     return (
        <React.Fragment>
         {products.map((product,index)=>(
@@ -34,12 +34,12 @@ export default function FeatureProducts(props){
                         <h5 className="card-title">{product.name}</h5>
                         <p className="card-text">{product.displayPrice}</p>
                     </div>
-                    <div className="card-footer">
+                    <div className="card-footer d-grid">
                       <AddToCartButton 
                       disabled={!product.isQtyAvailableInStock} 
                       productId={product.id} 
                       stockId={product.stockId} 
-                      varientId={product.varientId} 
+                      variantId={product.variantId} 
                       isInqueryItem={product.isInquiryItem}
                       qty={1}
                       unitGroupId={product.unitGroupId}

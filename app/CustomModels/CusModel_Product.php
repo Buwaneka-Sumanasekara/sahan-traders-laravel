@@ -47,7 +47,8 @@ class CusModel_Product extends Model
         'prop_height',
         'prop_depth',
         'prop_weight',
-        'ar_product_varients',
+        'varinat_group_id',
+        'ar_product_variants',
         'ar_additional_costs'
     ];
 
@@ -65,15 +66,7 @@ class CusModel_Product extends Model
         }
     }
 
-    private function generateNextProdVarientId($prodId)
-    {
-        $lastId = PmProductVarient::where("product_id",$prodId)->max("id");
-        if ($lastId) {
-            return  $lastId + 1;
-        } else {
-            return 1;
-        }
-    }
+    
     private function generateNextProdAdditionalCostId($prodId)
     {
         $lastId = PmProductAdditionalCost::where("product_id",$prodId)->max("id");
@@ -94,9 +87,9 @@ class CusModel_Product extends Model
             return "001";
         }
     }
-    private function getCurrentStockId($proId,$varientId)
+    private function getCurrentStockId($proId,$variantId)
     {
-        $lastId = PmProductStock::where("pm_product_id", $proId)->where("pm_product_varient_id",$varientId)->max("batch");
+        $lastId = PmProductStock::where("pm_product_id", $proId)->where("pm_product_variant_id",$variantId)->max("batch");
         if ($lastId) {
             return "" . $lastId;
         } else {
@@ -129,7 +122,7 @@ class CusModel_Product extends Model
                 "file_name" => $file_name,
                 "is_primary" => ($i == 0 ? 1 : 0),
                 "file_path" => $file_path,
-                'pm_product_varient_id'=>isset($ar_productVarient_ids[$i])?$ar_productVarient_ids[$i]:1
+                'pm_product_variant_id'=>isset($ar_productVarient_ids[$i])?$ar_productVarient_ids[$i]:1
             ];
             $i++;
         }
@@ -202,7 +195,7 @@ class CusModel_Product extends Model
                 'cr_by_user_id' => $this->cr_by_user_id,
                 'md_by_user_id' => $this->md_by_user_id,
                 'is_primary' => $image['is_primary'],
-                'pm_product_varient_id'=>$image['pm_product_varient_id']
+                'pm_product_variant_id'=>$image['pm_product_variant_id']
             ];
 
 
@@ -264,6 +257,7 @@ class CusModel_Product extends Model
 
             $genId = "" . $this->generateNextProdId();
 
+            $variantGroupId=isset($this->variant_group_id)?$this->variant_group_id:1;
             $prod = [
                 'id' => $genId,
                 'name' => $this->name,
@@ -285,30 +279,28 @@ class CusModel_Product extends Model
                 'prop_width' => $this->prop_width,
                 'prop_height' => $this->prop_height,
                 'prop_depth' => $this->prop_depth,
-                'prop_weight' => isset($this->prop_weight)?$this->prop_weight:0
+                'prop_weight' => isset($this->prop_weight)?$this->prop_weight:0,
+                'pm_product_variant_group_id' => $variantGroupId,
             ];
 
             $product = PmProduct::create($prod);
 
 
              /*==========================*/
-            /*  Save Product varients     */
+            /*  Save Product variants     */
 
-            $ar_product_varients=isset($this->ar_product_varients)?$this->ar_product_varients:[];
+            $ar_product_variants=isset($this->ar_product_variants)?$this->ar_product_variants:[];
 
-            $ar_product_varient_id=[];
-            foreach ($ar_product_varients as $prodV) {
-                $varientId=$this->generateNextProdVarientId($genId);
-                $productVarient = PmProductVarient::create([
-                    'id'=>$varientId,
-                    'product_id'=>$genId,
-                    'name'=>$prodV["name"],
-                ]);
+            $ar_product_variant_id=[];
+            foreach ($ar_product_variants as $prodV) {
+                $variantId=$prodV["variant_id"];
+                
 
                 $prodStock = [
                     'pm_product_id' => $genId,
-                    'pm_product_varient_id'=>$varientId,
-                    'batch' => $this->getCurrentStockId($genId,$varientId),
+                    'pm_product_variant_id'=>$variantId,
+                    'pm_product_variant_group_id'=>$variantGroupId,
+                    'batch' => $this->getCurrentStockId($genId,$variantId),
                     'sell_price' => isset($prodV["sell_price"]) ? $prodV["sell_price"] : 0,
                     'cost_price' => isset($prodV["cost_price"]) ? $prodV["cost_price"] : 0,
                     'pm_unit_group_id' => $product->pm_unit_group_id,
@@ -319,7 +311,7 @@ class CusModel_Product extends Model
                     'md_by_user_id' => $product->md_by_user_id,
                 ];
     
-                array_push($ar_product_varient_id,$varientId);
+                array_push($ar_product_variant_id,$variantId);
                 PmProductStock::create($prodStock);
             }
 
@@ -342,9 +334,9 @@ class CusModel_Product extends Model
             /*  Save Product Images     */
 
             if (isset($this->is_from_seeds)) {
-                $this->saveDefaultBulkImages($genId,$ar_product_varient_id);
+                $this->saveDefaultBulkImages($genId,$ar_product_variant_id);
             } else {
-                if (isset($this->images)) {
+                if (isset($this->images)) {//should include variant id
                     $this->uploadProductImages($genId, $this->images);
                 }
             }

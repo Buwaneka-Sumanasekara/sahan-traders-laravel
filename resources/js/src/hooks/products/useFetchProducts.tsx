@@ -8,21 +8,19 @@ const api=getAxios();
 
 
 type ProductPriceInfoProps={
-  id:string,
-  varientId:string
+  id:string
 }
-export const fetchProductPriceInfo= async ({id,varientId}:ProductPriceInfoProps) => {
-    return await api.get(`/product/${id}/${varientId}`)
+export const fetchProductPriceInfo= async ({id}:ProductPriceInfoProps) => {
+    return await api.get(`/product/${id}`)
 }
 
 export const useFetchSpecificProduct = (
     productId:string,
-    varientId:string,
     enabled = true
   ) => {
     return useQuery(
-        [QueryKeys.PRODUCT_PRICE_INFO,productId,varientId], 
-        ()=>fetchProductPriceInfo({id:productId,varientId}), {
+        [QueryKeys.PRODUCT_PRICE_INFO,productId], 
+        ()=>fetchProductPriceInfo({id:productId}), {
       enabled:enabled,
       select: (data) => {
         return data.data.data

@@ -7,7 +7,7 @@
                
             <div id="jsx-product-info" 
                 data-id="{{$product->id}}"
-                data-prod-varients="{{$product->productVarients}}"
+                data-prod-variants="{{$product->productVarients}}"
                 data-prod-stocks="{{$product->stocks}}"
             >
             </div>

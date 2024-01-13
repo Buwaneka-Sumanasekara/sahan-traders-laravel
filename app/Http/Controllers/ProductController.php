@@ -40,16 +40,16 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function api_getProductInfoForVarient(Request $request,$productId,$varientId)
+    public function api_getProductInfoForVarient(Request $request,$productId)
     {
         try {
             $product = CusModel_Product::getProductById($productId);
             if ($product == null) {
                 throw new ResourceNotFound("Product");
             } else {
-                //  $price = $product->getDisplayPrice($varientId);
-                //  $stockQty=$product->getAvailableStockQty($varientId);
-                //  $stockBatch=$product->getFIFOStockId($varientId);
+                //  $price = $product->getDisplayPrice($variantId);
+                //  $stockQty=$product->getAvailableStockQty($variantId);
+                //  $stockBatch=$product->getFIFOStockId($variantId);
                 // return new CommonResponseResource((object)array(
                 //         'product_id' => $product->id,
                 //         'product_name' => $product->name,
@@ -61,7 +61,7 @@ class ProductController extends Controller
                 //         'unit_id'=>$product->getDefaultSalesUnitId(),
                 // ));
 
-                $product->varientId=$varientId;
+              
 
                 return (new ProductResource($product));
                

@@ -79,8 +79,9 @@ class PmProductSeeder extends Seeder
                 "prop_height" => 10,
                 "prop_depth" => 10,
                 'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -99,8 +100,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -121,8 +123,9 @@ class PmProductSeeder extends Seeder
                 "prop_height" => 10,
                 "prop_depth" => 10,
                 'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -142,8 +145,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -163,8 +167,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>10118370,"cost_price"=>10015250]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -184,8 +189,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>20118370,"cost_price"=>20015250]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -204,8 +210,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>20118370,"cost_price"=>20015250]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -226,8 +233,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>24500,"cost_price"=>15000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -247,8 +255,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>48000,"cost_price"=>30000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -267,8 +276,9 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>5500,"cost_price"=>3000]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -288,8 +298,9 @@ class PmProductSeeder extends Seeder
                 "prop_height" => 10,
                 "prop_depth" => 10,
                 'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>4263.63,"cost_price"=>200.63]
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -309,13 +320,11 @@ class PmProductSeeder extends Seeder
                 "prop_height" => 10,
                 "prop_depth" => 10,
                 'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"White","sell_price"=>39500.63,"cost_price"=>32500.63],
-                    ["name"=>"Black","sell_price"=>38500.63,"cost_price"=>31500.63]
-                ],
-                'ar_additional_costs'=>[
-                    ["name"=>"Normal wrap","amount"=>0],
-                    ["name"=>"Additional wrap","amount"=>10]
+                "variant_group_id"=>1,
+                'ar_product_variants'=>[
+                    ["variant_id"=>1,"sell_price"=>16342,"cost_price"=>10000],
+                    ["variant_id"=>2,"sell_price"=>16442,"cost_price"=>10000],
+                    ["variant_id"=>3,"sell_price"=>16542,"cost_price"=>10000]
                 ]
             ],
         ];
@@ -341,9 +350,13 @@ class PmProductSeeder extends Seeder
             $prodObj->prop_depth = isset($prod["prop_depth"]) ? $prod["prop_depth"] : null;
             $prodObj->prop_weight = isset($prod["prop_weight"]) ? $prod["prop_weight"] : null;
 
-            $prodObj->ar_product_varients=isset($prod["ar_product_varients"])?$prod["ar_product_varients"]:[];
+            $prodObj->variant_group_id = $prod["variant_group_id"];
+            
+            $prodObj->ar_product_variants=isset($prod["ar_product_variants"])?$prod["ar_product_variants"]:[];
             $prodObj->ar_additional_costs=isset($prod["ar_additional_costs"])?$prod["ar_additional_costs"]:[];
 
+
+          
 
             $prodObj->is_from_seeds = true; //only for seeds
 

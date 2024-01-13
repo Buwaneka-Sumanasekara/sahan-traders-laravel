@@ -90,4 +90,8 @@ return [
         "discount_amt" => 0,
         "discount_per" => 1,
     ],
+    "variant_group_type" => [
+        "default" => 0,
+        "color" => 1,
+    ],
 ];

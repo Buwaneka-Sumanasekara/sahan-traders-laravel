@@ -17,13 +17,15 @@ return new class extends Migration
             $table->double('dis_per');
             $table->double('dis_amt');
             $table->string('pm_product_id', 60);
-            $table->integer('pm_product_varient_id')->nullable();
-            $table->boolean('all_varients');
+            $table->integer('pm_product_variant_group_id')->nullable();
+            $table->integer('pm_product_variant_id')->nullable();
+            $table->boolean('all_variants');
 
             $table->primary(['id','promotion_id']);
             $table->foreign('promotion_id')->references('id')->on('promo_promotions');
             $table->foreign('pm_product_id')->references('id')->on('pm_product');
-            $table->foreign('pm_product_varient_id')->references('id')->on('pm_product_varient');
+            $table->foreign('pm_product_variant_id')->references('id')->on('pm_product_variant');
+            $table->foreign('pm_product_variant_group_id')->references('id')->on('pm_product_variant_group');
 
         });
     }

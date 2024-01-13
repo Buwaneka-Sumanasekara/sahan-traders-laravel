@@ -5,7 +5,7 @@ import { GeneralServerError } from '../../types/Common';
 type AddToCartButtonProps={
     productId:string,
     stockId:string,
-    varientId:string,
+    variantId:string,
     disabled:boolean,
     isInqueryItem:boolean
     qty:number
@@ -13,12 +13,9 @@ type AddToCartButtonProps={
     unitId:string,
     additionalCostId?:string
 }
-const AddToCartButton = ({ productId,stockId,varientId,disabled,isInqueryItem,qty,additionalCostId,unitGroupId,unitId }:AddToCartButtonProps) => {
+const AddToCartButton = ({ productId,stockId,variantId,disabled,isInqueryItem,qty,additionalCostId,unitGroupId,unitId }:AddToCartButtonProps) => {
 
     const {mutate:onAddToCart}=useAddToCart(onSuccessAddToCart,onErrorAddToCart);
-
-
-
 
     function onSuccessAddToCart(data: any) {
        console.log("onSuccessAddToCart",data)
@@ -33,7 +30,7 @@ const AddToCartButton = ({ productId,stockId,varientId,disabled,isInqueryItem,qt
         onAddToCart({
             productId:productId,
             stockId:stockId,
-            varientId:varientId,
+            variantId:variantId,
             qty:qty,
             additionalCostId:additionalCostId,
             unitGroupId:unitGroupId,
@@ -50,7 +47,7 @@ const AddToCartButton = ({ productId,stockId,varientId,disabled,isInqueryItem,qt
             <button className="btn btn-danger" disabled={disabled} onClick={() =>onPressInquiry({
                 productId:productId,
                 stockId:stockId,
-                varientId:varientId
+                variantId:variantId
             })}>Send Inquiry</button>
         ) 
     }

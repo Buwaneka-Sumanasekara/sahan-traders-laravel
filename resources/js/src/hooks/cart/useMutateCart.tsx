@@ -14,7 +14,7 @@ const api=getAxios();
 
 type addToCartProps={
   productId:string,
-  varientId:string,
+  variantId:string,
   stockId:string,
   qty:number,
   unitGroupId:string,

@@ -16,21 +16,49 @@ class ProductResource extends JsonResource
     {
        // dd($this);
        
-        $varientId=isset($this->varientId)?$this->varientId:$this->getDefaultProductVarient()->id;
+       $variantId="";
+       $stock=null;
+
+       $stockId="";
+       if(isset($this->variantId)){
+        $variantId=$this->variantId;
+        $stock=$this->getFIFOStockByVarientId($variantId);
+       
+       }else{
+        $stock=$this->getFIFOStockWithVariant();
+        $variantId=$stock->pm_product_variant_id;
+       }
+
+       $stockId=$stock->batch;
+       $sellPrice=$this->getSellPrice($stockId,$variantId);
+
+       $arVariants=[];
+
+         foreach($this->stocks as $stock){
+            $variant=$stock->variant;
+            $variant->stockId=$stock->batch;
+            $variant->sellPrice=$stock->sell_price;
+            $variant->displaySellPrice=$this->getDisplayPrice($stock->sell_price);
+            $variant->costPrice=$stock->cost_price;
+
+            $arVariants[]=$variant;
+         }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
             'isInquiryItem' => $this->is_inquiry_item,
-            'isQtyAvailableInStock'=>$this->isQtyAvailableInStock(1,$varientId),//default varient id is 1
+            'isQtyAvailableInStock'=>!$this->isQtyOutOfStock($stockId,$variantId),
             'mainThumbnailImageUrl' => $this->mainThumbnailImageUrl(),
-            'displayPrice'=>$this->getDisplayPrice($varientId),
-            'price'=>$this->getFIFOStockPrice($varientId),
-            'varientId'=>$varientId,
-            'stockId'=>$this->getFIFOStockId($varientId),
+            'displayPrice'=>$this->getDisplayPrice($sellPrice),
+            'price'=>$sellPrice,
+            'variantId'=>$variantId,
+            'stockId'=>$stockId,
             'unitId'=>$this->getDefaultSalesUnitId(),
             'unitGroupId'=>$this->pm_unit_group_id,
-            'avilableStockQty'=>$this->getAvailableStockQty($varientId),
+            'avilableStockQty'=>$stock->qty,
+            'variants'=>$arVariants,
         ];
     }
 }

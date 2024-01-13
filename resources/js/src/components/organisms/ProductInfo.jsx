@@ -9,8 +9,8 @@ export default function ProductInfo(props){
 
     const {id}=props;
 
-    const [prodVarients, setProdVarients] = useState(JSON.parse(props.prodVarients))
-    const [varientId, setVarientId] = useState(prodVarients[0].id);
+    const [prodVarients, setProdVarients] = useState([])
+    const [variantId, setVarientId] = useState(0);
     const [stockId, setStockId] = useState("");
     const [price, setPrice] = useState(0);
     const [isInqueryItem, setIsInqueryItem] = useState(false);
@@ -20,10 +20,10 @@ export default function ProductInfo(props){
     const [unitId,setUnitId]=useState("");
 
 
-    const {data:productPriceInfo, isLoading, error} = useFetchSpecificProduct(id,varientId)
+    const {data:productPriceInfo, isLoading, error} = useFetchSpecificProduct(id)
 
  
-    console.log("productPriceInfo",productPriceInfo)
+  
 
     useEffect(() => {
         if(productPriceInfo){
@@ -32,6 +32,10 @@ export default function ProductInfo(props){
             setStockId(productPriceInfo.stockId)
             setUnitGroupId(productPriceInfo.unitGroupId)
             setUnitId(productPriceInfo.unitId)
+
+            const variants=productPriceInfo.variants;
+            setProdVarients(variants)
+            setVarientId(variants[0].id)
         }
     }
     ,[productPriceInfo])
@@ -48,7 +52,7 @@ export default function ProductInfo(props){
             disabled={false} 
             productId={id} 
             stockId={stockId} 
-            varientId={varientId} 
+            variantId={variantId} 
             isInqueryItem={isInqueryItem} 
             qty={qty}
             additionalCostId={additionalCostId}

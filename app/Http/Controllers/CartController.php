@@ -21,7 +21,7 @@ class CartController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             $productId = $request->string('productId')->trim();
             $stockId = $request->string('stockId')->trim();
-            $varientId = $request->string('varientId')->trim();
+            $variantId = $request->string('variantId')->trim();
             $qty = $request->float('qty');
             $unitGroupId=$request->string('unitGroupId')->trim();
             $unitId=$request->string('unitId')->trim();
@@ -33,7 +33,7 @@ class CartController extends Controller
                 'unitGroupId'=>$unitGroupId,
                 'unitId'=>$unitId,
                 'stockId'=>$stockId,
-                'varientId'=>$varientId,
+                'variantId'=>$variantId,
                 'additionalCostId'=>$additionalCostId]);
         } else {
             $errorResponse = new ErrorResource(new EmailNotVerifiedException());

@@ -14,7 +14,13 @@ class PmProductStock extends Model
     protected $fillable = [
         'pm_product_id',
         'batch',
-        'pm_product_varient_id'
+        'qty',
+        'sell_price',
+        'cost_price',
+        'pm_product_variant_id',
+        'pm_product_variant_group_id',
+        'pm_unit_group_id',
+        'pm_unit_id'
     ];
 
     public function product()
@@ -30,5 +36,20 @@ class PmProductStock extends Model
     public function displayPrice()
     {
         return money($this->sell_price, config('setup.base_country_id'));
+    }
+
+    public function displayCostPrice()
+    {
+        return money($this->cost_price, config('setup.base_country_id'));
+    }
+
+    public function variant()
+    {
+        return $this->belongsTo(PmProductVariant::class, 'pm_product_variant_id', 'id');
+    }
+
+    public function variantGroup()
+    {
+        return $this->belongsTo(PmProductVariantGroup::class, 'pm_product_variant_group_id', 'id');
     }
 }
