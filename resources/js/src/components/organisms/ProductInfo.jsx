@@ -6,18 +6,23 @@ import AddToCartButton from '../atoms/AddToCartButton';
 import PriceTag from '../atoms/PriceDisplay';
 import VariantsList from '../atoms/VarientsList';
 import { AddCartButtonType } from '../../types/Cart';
+import QtyInput from '../atoms/QtyInput';
+import AdditionalCost from '../atoms/AdditionalCost';
 
 export default function ProductInfo(props) {
 
     const { id } = props;
 
     const [prodVarients, setProdVarients] = useState([])
+    const [prodAdditionalCosts, setProdAdditionalCosts] = useState([])
+
+
     const [variantId, setVarientId] = useState(0);
     const [stockId, setStockId] = useState("");
     const [price, setPrice] = useState(0);
     const [isInqueryItem, setIsInqueryItem] = useState(false);
-    const [qty, setQty] = useState(2);
-    const [additionalCostId, setAdditionalCostId] = useState("")
+    const [qty, setQty] = useState(1);
+    const [additionalCostId, setAdditionalCostId] = useState(null)
     const [unitGroupId, setUnitGroupId] = useState("");
     const [unitId, setUnitId] = useState("");
 
@@ -38,6 +43,9 @@ export default function ProductInfo(props) {
             const variants = productPriceInfo.variants;
             setProdVarients(variants)
             setVarientId(variants[0].id)
+
+            const additionalCosts = productPriceInfo.additionalCosts;
+            setProdAdditionalCosts(additionalCosts)
         }
     }
         , [productPriceInfo])
@@ -66,6 +74,13 @@ export default function ProductInfo(props) {
                     selectedVariantId={variantId}
                 /> : null}
 
+
+            {prodAdditionalCosts.length > 0 ? <AdditionalCost
+                    values={prodAdditionalCosts}
+                    onChangeValue={(v) => setAdditionalCostId(v.id)}
+                    selectedValue={additionalCostId}
+            />:null}
+
                 {isInqueryItem ? <AddToCartButton
                     disabled={false}
                     productId={id}
@@ -77,7 +92,15 @@ export default function ProductInfo(props) {
                     unitGroupId={unitGroupId}
                     unitId={unitId}
                     buttonType={AddCartButtonType.AddToCart}
-                /> : <div className={"d-flex"}>
+                /> : <div className={"d-flex mt-4"}>
+
+                    <div className={"pe-1"}>
+                        <QtyInput
+                            qty={qty}
+                            onChange={(qty) => setQty(qty)}
+                        />
+                    </div>
+                    <div className={"d-flex flex-fill ms-2"}>
                     <div className={"me-2"}>
                         <AddToCartButton
                             disabled={false}
@@ -92,7 +115,7 @@ export default function ProductInfo(props) {
                             buttonType={AddCartButtonType.AddToCart}
                         />
                     </div>
-                    <div>
+                    <div className={"flex-fill"}>
                         <AddToCartButton
                             disabled={false}
                             productId={id}
@@ -105,6 +128,7 @@ export default function ProductInfo(props) {
                             unitId={unitId}
                             buttonType={AddCartButtonType.BuyNow}
                         />
+                    </div>
                     </div>
                 </div>}
             </div>

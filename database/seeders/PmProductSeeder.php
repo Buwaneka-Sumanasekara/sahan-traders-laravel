@@ -325,6 +325,10 @@ class PmProductSeeder extends Seeder
                     ["variant_id"=>1,"sell_price"=>16342,"cost_price"=>10000],
                     ["variant_id"=>2,"sell_price"=>16442,"cost_price"=>10000],
                     ["variant_id"=>3,"sell_price"=>16542,"cost_price"=>10000]
+                ],
+                'ar_additional_costs'=>[
+                    ["name"=>"One Bubble wrap","amount"=>0],
+                    ["name"=>"Additional Bubble wrap","amount"=>100],
                 ]
             ],
         ];

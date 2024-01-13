@@ -33,10 +33,12 @@ const addToCart = async (data:addToCartProps) => {
     const queryClient = useQueryClient()
     return useMutation(addToCart, {
       onError: (error, variables, context) => {
-        console.log("useAddToCart",error);
+       
         const errorObj=error?.response;
         if(errorObj.status===401){
           window.open(`/login?redirect-to-item=${variables.productId}`,'_self');
+        }else if(errorObj.status===403){
+          window.open(`#`,'_self');
         }else{
           onErrorCallback?.(
             error?.response?.data as GeneralServerError

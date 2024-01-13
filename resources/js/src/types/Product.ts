@@ -16,7 +16,20 @@ export interface ProductVarient {
     val:string,
   }
 
+  export interface ProductAdditionalCost {
+    id: number,
+    name: string,
+    amount:number,
+    displayAmount:string,
+  }
+
   export enum ProductVariantType {
     Text=0,
     Color=1,
+  }
+
+  export type Unit={
+    id:number,
+    name:string,
+    symbol:string,
   }

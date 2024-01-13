@@ -26,6 +26,7 @@ const AddToCartButton = ({ productId, stockId, variantId, disabled, isInqueryIte
 
     function onErrorAddToCart(er: GeneralServerError) {
         console.log(er);
+       
     }
 
 

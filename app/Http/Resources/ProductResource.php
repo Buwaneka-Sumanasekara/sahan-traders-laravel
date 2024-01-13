@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\PmProductAdditionalCost;
 
 class ProductResource extends JsonResource
 {
@@ -69,6 +70,7 @@ class ProductResource extends JsonResource
             'avilableStockQty'=>$stock->qty,
             'varientGroup'=>$stock->variantGroup,
             'variants'=>$arVariants,
+            'additionalCosts'=>$this->productAdditionalCosts()->get()->map(fn (PmProductAdditionalCost $item) => new AdditionalCostResource($item)),
         ];
     }
 }

@@ -10,7 +10,7 @@ const PriceTag = ({ price,size }:PriceTagProps) => {
 
   
     return (
-        <Element className="text-secondary-emphasis">{price}</Element>
+        <Element className="text-primary">{price}</Element>
     )
 }
 

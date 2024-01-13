@@ -32,7 +32,7 @@ const VariantsList = ({ variants, variantGroup, onSelectedVariant, selectedVaria
 
 
 
-  console.log("variants", variants)
+  
 
   return (
     <div className={"mt-4"}>
