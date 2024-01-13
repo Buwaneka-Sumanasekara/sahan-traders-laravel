@@ -55,6 +55,7 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'note'=>$this->note,
             'slug' => $this->slug,
             'isInquiryItem' => $this->is_inquiry_item,
             'isQtyAvailableInStock'=>!$this->isQtyOutOfStock($stockId,$variantId),
