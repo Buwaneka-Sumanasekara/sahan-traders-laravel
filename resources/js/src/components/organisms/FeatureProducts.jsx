@@ -10,16 +10,11 @@ export default function FeatureProducts(props){
     const {data:featureProducts, isLoading, error} = useFetchFeatureProducts(5)
 
 
-
-    
-
     const onPressProduct = (product)=>{
-        console.log("onPressProduct",product)
         window.open(`/product/${product.slug}`,'_self');
     }
 
     const products=featureProducts || [];
-   console.log("FeatureProducts",products)
     return (
        <React.Fragment>
         {products.map((product,index)=>(
@@ -33,6 +28,7 @@ export default function FeatureProducts(props){
                     <div className="card-body">
                         <h5 className="card-title">{product.name}</h5>
                         <p className="card-text">{product.displayPrice}</p>
+                        
                     </div>
                     <div className="card-footer d-grid">
                       <AddToCartButton 

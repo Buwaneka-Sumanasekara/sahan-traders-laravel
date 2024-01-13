@@ -6,7 +6,7 @@ type PriceTagProps={
 }
 const PriceTag = ({ price,size }:PriceTagProps) => {
 
-    const Element = size === 'sm' ? 'h6' : size === 'md' ? 'h5' : 'h4'
+    const Element = size === 'sm' ? 'h4' : size === 'md' ? 'h2' : 'h3'
 
   
     return (

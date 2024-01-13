@@ -35,11 +35,19 @@ class ProductResource extends JsonResource
        $arVariants=[];
 
          foreach($this->stocks as $stock){
-            $variant=$stock->variant;
-            $variant->stockId=$stock->batch;
+            $variantObj=$stock->variant;
+            $variantGroupObj=$stock->variantGroup;
+
+            $variant=new \stdClass();
+            $variant->stockId=$stockId;
+
             $variant->sellPrice=$stock->sell_price;
             $variant->displaySellPrice=$this->getDisplayPrice($stock->sell_price);
             $variant->costPrice=$stock->cost_price;
+            $variant->val=$variantObj->val;
+            $variant->id=$variantObj->id;
+            $variant->name=$variantObj->name;
+            $variant->typeId=$variantGroupObj->type_id;
 
             $arVariants[]=$variant;
          }
@@ -58,6 +66,7 @@ class ProductResource extends JsonResource
             'unitId'=>$this->getDefaultSalesUnitId(),
             'unitGroupId'=>$this->pm_unit_group_id,
             'avilableStockQty'=>$stock->qty,
+            'varientGroup'=>$stock->variantGroup,
             'variants'=>$arVariants,
         ];
     }

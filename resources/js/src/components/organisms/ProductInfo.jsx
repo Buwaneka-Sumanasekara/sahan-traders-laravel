@@ -4,6 +4,7 @@ import  CustomEvents from '../../common/CustomEvents';
 import {triggerCustomEvent} from '../../common/CommonUtil'
 import AddToCartButton from '../atoms/AddToCartButton';
 import PriceTag from '../atoms/PriceDisplay';
+import VariantsList from '../atoms/VarientsList';
 
 export default function ProductInfo(props){
 
@@ -41,13 +42,29 @@ export default function ProductInfo(props){
     ,[productPriceInfo])
 
    
+
+    const onSelectedVariant=(variant)=>{
+        console.log("onSelectedVariant",variant)
+        setVarientId(variant.id);
+        setPrice(variant.displaySellPrice);
+
+        setStockId(variant.stockId);
+
+    }
   
 
 
    if(!!productPriceInfo){
     return (
-        <div>
-            <PriceTag price={price} size={"md"} />
+        <div className={"mt-5"}>
+            <PriceTag price={price} size={"lg"} />
+            {prodVarients.length>1?<VariantsList 
+            variants={prodVarients} 
+            variantGroup={productPriceInfo.varientGroup}
+            onSelectedVariant={onSelectedVariant}
+            selectedVariantId={variantId}
+            />:null}
+
             <AddToCartButton 
             disabled={false} 
             productId={id} 
