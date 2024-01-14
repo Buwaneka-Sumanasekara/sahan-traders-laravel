@@ -20,6 +20,11 @@ class CmCartHed extends Model
     protected $keyType = 'string';
 
 
+    protected $fillable = [
+        "id",
+        'gross_amount'
+    ];
+
     public function cartDetItems(): HasMany
     {
         return $this->hasMany(CmCartDet::class);
@@ -32,9 +37,5 @@ class CmCartHed extends Model
 
     
 
-    public function getDisplayTotal()
-    {
-        $price = $this->net_amount;
-        return money($price, config('setup.base_country_id'));
-    }
+   
 }

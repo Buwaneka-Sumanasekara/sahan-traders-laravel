@@ -20,6 +20,6 @@ class CmCartDet extends Model
 
     public function cart()
     {
-        return $this->belongsTo(CmCart::class, 'cm_cart_id', 'id');
+        return $this->belongsTo(CmCartHed::class, 'cm_cart_id', 'id');
     }
 }

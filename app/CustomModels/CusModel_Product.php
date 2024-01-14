@@ -229,7 +229,7 @@ class CusModel_Product extends Model
         }
         return PmProduct::find($id);
     }
-    public static function getCartProduct($id): PmProduct
+    public static function getCartProductById($id): PmProduct
     {
         return PmProduct::where("id", $id)->where("active", true)->where("is_inquiry_item", false)->first();
     }

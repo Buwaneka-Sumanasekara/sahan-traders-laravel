@@ -14,7 +14,7 @@ class StkmTrnSetupSeeder extends Seeder
     {
         $ar_items = [
             [
-                "id" => congif("global.trn_setup_id.cart"),
+                "id" => config("global.trn_setup_id.cart"),
                 "type" => config('global.trn_setup_types.Cart'),
                 "name" => "Cart transaction",
                 "mode" => -1,

@@ -8,18 +8,10 @@ use Illuminate\Support\Str;
 use App\Models\CmCartHed;
 use App\Models\CmCartDet;
 use App\Models\BmBuyer;
-use App\Models\PmProduct;
-use App\Models\PmProductVariant;
-use App\Models\PmProductVariantGroup;
 use App\Models\PmProductAdditionalCost;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\File as FileFacade;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
-use Intervention\Image\Facades\Image;
+
 
 class CusModel_Cart extends Model
 {
@@ -33,7 +25,6 @@ class CusModel_Cart extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
         'bm_buyer_id',
         'ar_cart_items'//array
     ];
@@ -47,14 +38,14 @@ class CusModel_Cart extends Model
           $lastId = CmCartHed::max("id");
           if ($lastId) {
               $lastNo = preg_replace("/[^0-9\.]/", '', $lastId);
-              return $prefix."" . sprintf('%08d', $lastNo + 1);
+              return $prefix."". sprintf('%08d', $lastNo + 1);
           } else {
               return $prefix."00000001";
           }
       }
       private function generateNextCartItemId($cartId)
       {
-          $lastId = CmCartDet::max("id")->where('cm_cart_hed_id',$cartId);
+          $lastId = CmCartDet::where('cm_cart_hed_id',$cartId)->max("id");
           if ($lastId) {
               return $lastId + 1;
           } else {
@@ -77,7 +68,7 @@ class CusModel_Cart extends Model
       public function getActiveCartDetByProductIdAndHedId($cartHedId,$productId,$stockId,$variantId)
       {
           return CmCartDet::where('cm_cart_hed_id',$cartHedId)
-          ->where('pm_product_id',$productId)
+          ->where('product_id',$productId)
           ->where('pm_product_variant_id',$variantId)
           ->where('stk_batch_id',$stockId)
           ->first();
@@ -121,9 +112,12 @@ class CusModel_Cart extends Model
       {
         DB::beginTransaction();
         try {
-            $buyer=BmBuyer::find($this->bm_buyer_id);
+            $buyer=BmBuyer::find($this->user_id);
 
-            $cartHed=$this->getActiveCartHedByBuyerId($this->bm_buyer_id);
+            if($buyer===null){
+                throw new \Exception("You are not a buyer");
+            }
+            $cartHed=$this->getActiveCartHedByBuyerId($buyer->id);
 
             $cartHedId="";
             if($cartHed!==null){
@@ -135,24 +129,53 @@ class CusModel_Cart extends Model
                 $buyerShipAddress=$this->getAddressFromBuyer($buyer,"shipping");
 
 
-                $cartHed=CmCartHed::create([
-                    'id'=>$cartHedId,
-                    'bm_buyer_id'=>$this->bm_buyer_id,
-                    'cm_cart_status_id'=>config('global.cart_status.pending'),
-                    'cr_by_user_id'=>$buyer->user_id,
-                    'md_by_user_id'=>$buyer->user_id,
-                    'trn_date'=>now(),
-                    'stkm_trn_status_id'=>config('global.stk_trn_status.pending'),
-                    'stkm_trn_setup_id'=>config('global.trn_setup_id.cart'),
-                    'trn_ref_no'=>"",
-                    'gross_amount'=>0,
-                    'dis_per'=>0,
-                    'net_amount'=>0,
-                    'ship_address'=>(isset($buyerShipAddress)?$buyerShipAddress->toJSON():null),
-                    'ship_address_country_id'=>(isset($buyerShipAddress)?$buyerShipAddress->cdm_country_id:null),
-                    'bill_address'=>(isset($buyerBillAddress)?$buyerBillAddress->toJSON():null),
-                    'bill_address_country_id'=>(isset($buyerBillAddress->cdm_country_id)?$buyerBillAddress->cdm_country_id:null),
-                ]);
+                $cartHed=new CmCartHed;
+
+                $cartHed->id=$cartHedId;
+                $cartHed->bm_buyer_id=$buyer->id;
+                $cartHed->cm_cart_status_id=config('global.cart_status.pending');
+                $cartHed->cr_by_user_id=$buyer->user_id;
+                $cartHed->md_by_user_id=$buyer->user_id;
+                $cartHed->trn_date=now();
+                $cartHed->stkm_trn_status_id=config('global.stk_trn_status.pending');
+                $cartHed->stkm_trn_setup_id=config('global.trn_setup_id.cart');
+                $cartHed->trn_ref_no="";
+                $cartHed->gross_amount=0;
+                if(config("setup.en_tax")){
+                    $cartHed->tax_per=config("setup.tax_per");
+                }else{
+                    $cartHed->tax_per=0;
+                }
+                $cartHed->tracking_no="";
+                $cartHed->shipping_cost=0;
+                $cartHed->dis_per=0;
+                $cartHed->net_amount=0;
+                $cartHed->ship_address=(isset($buyerShipAddress)?$buyerShipAddress->toJSON():null);
+                $cartHed->ship_address_country_id=(isset($buyerShipAddress)?$buyerShipAddress->cdm_country_id:null);
+                $cartHed->bill_address=(isset($buyerBillAddress)?$buyerBillAddress->toJSON():null);
+                $cartHed->bill_address_country_id=(isset($buyerBillAddress->cdm_country_id)?$buyerBillAddress->cdm_country_id:null);
+                $cartHed->save();
+
+
+
+                // $cartHed=CmCartHed::create([
+                //     'id'=>$cartHedId,
+                //     'bm_buyer_id'=>$buyer->id,
+                //     'cm_cart_status_id'=>config('global.cart_status.pending'),
+                //     'cr_by_user_id'=>$buyer->user_id,
+                //     'md_by_user_id'=>$buyer->user_id,
+                //     'trn_date'=>now(),
+                //     'stkm_trn_status_id'=>config('global.stk_trn_status.pending'),
+                //     'stkm_trn_setup_id'=>config('global.trn_setup_id.cart'),
+                //     'trn_ref_no'=>"",
+                //     'gross_amount'=>0,
+                //     'dis_per'=>0,
+                //     'net_amount'=>0,
+                //     'ship_address'=>(isset($buyerShipAddress)?$buyerShipAddress->toJSON():null),
+                //     'ship_address_country_id'=>(isset($buyerShipAddress)?$buyerShipAddress->cdm_country_id:null),
+                //     'bill_address'=>(isset($buyerBillAddress)?$buyerBillAddress->toJSON():null),
+                //     'bill_address_country_id'=>(isset($buyerBillAddress->cdm_country_id)?$buyerBillAddress->cdm_country_id:null),
+                // ]);
             }
             
             $arCartItems=isset($this->ar_cart_items)? $this->ar_cart_items:[];
@@ -176,7 +199,7 @@ class CusModel_Cart extends Model
                     $qty=$cartDet->qty+$qty;
                 }
 
-                if($product->isQtyAvailableInStock($stockId,$variantId,$qty)){
+                if(!$product->isQtyAvailableInStock($stockId,$variantId,$qty)){
                     throw new \Exception("Product is out of stock");
                 }
 
@@ -212,7 +235,7 @@ class CusModel_Cart extends Model
                     $sellPrice=$product->getSellPrice($stockId,$variantId);
                     $costPrice=$product->getCostPrice($stockId,$variantId);
 
-                    
+                   
                     $cartItemId=$this->generateNextCartItemId($cartHedId);
 
                     $cartDet= new CmCartDet;
