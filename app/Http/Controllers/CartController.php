@@ -28,7 +28,8 @@ class CartController extends Controller
             $additionalCostId=$request->string('additionalCostId')->trim();
 
             return response()
-                ->json(['id' => $productId, 
+                ->json([
+                'id' => $productId, 
                 'qty' => $qty,
                 'unitGroupId'=>$unitGroupId,
                 'unitId'=>$unitId,

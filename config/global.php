@@ -94,4 +94,7 @@ return [
         "default" => 0,
         "color" => 1,
     ],
+    "trn_setup_id"=>[
+        "cart"=>"T00001",
+    ]
 ];

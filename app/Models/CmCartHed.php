@@ -30,6 +30,8 @@ class CmCartHed extends Model
         return $this->hasOne(BmBuyer::class);
     }
 
+    
+
     public function getDisplayTotal()
     {
         $price = $this->net_amount;

@@ -16,4 +16,16 @@ class BmBuyerAddress extends Model
      */
     protected $primaryKey = 'id';
     public $incrementing = false;
+
+    
+    /**
+     * Get the collection of items as JSON.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->jsonSerialize(), $options);
+    }
 }
