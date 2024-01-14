@@ -45,7 +45,7 @@ class ProductController extends Controller
         try {
             $product = CusModel_Product::getProductById($productId);
             if ($product == null) {
-                throw new ResourceNotFound("Product");
+                throw new ResourceNotFoundException("Product not found");
             } else {
                 //  $price = $product->getDisplayPrice($variantId);
                 //  $stockQty=$product->getAvailableStockQty($variantId);

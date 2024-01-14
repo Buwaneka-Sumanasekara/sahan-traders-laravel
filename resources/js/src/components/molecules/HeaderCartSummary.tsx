@@ -1,28 +1,41 @@
 import React, { useState,useEffect } from 'react';
 import CustomEvents from '../../common/CustomEvents';
+import { useFetchCurrentUserCart } from '../../hooks/cart/useFetchCart';
+import { useQueryClient } from 'react-query';
+import QueryKeys from '../../common/QueryKeys';
 
 type HeaderCartSummaryProps={
 
 }
+
+
 const HeaderCartSummary  = (props:HeaderCartSummaryProps) => {
 
-    const [cartItemsCount,setCartItemsCount]=useState(2);
-    const [cartItemsAmount,setCartItemsAmount]=useState(0);
+    const queryClient=useQueryClient();
 
+
+    const {data:currentCart}=useFetchCurrentUserCart();
+
+    console.log("currentCart",currentCart)
+
+    const cartHed=currentCart?.hed || {}
+    const cartItemsAmount=cartHed?.displayNetAmount || "0";
+    const cartItemsCount=cartHed?.itemsCount || 0
 
     useEffect(() => {
         const handleCustomEvent = (event) => {
           // Handle the custom event here
           console.log('Custom event received:', event.detail);
          // setCount(event.detail.id)
+         queryClient.invalidateQueries([QueryKeys.CART_CURRENT])
         };
     
         // Add event listener when the component mounts
-        window.addEventListener(CustomEvents.EVENT_TEST, handleCustomEvent);
+        window.addEventListener(CustomEvents.EVENT_CART_UPDATED, handleCustomEvent);
     
         // Remove event listener when the component unmounts
         return () => {
-          window.removeEventListener(CustomEvents.EVENT_TEST, handleCustomEvent);
+          window.removeEventListener(CustomEvents.EVENT_CART_UPDATED, handleCustomEvent);
         };
     }, []); // Empty dependency array ensures that the effect runs once on mount
     

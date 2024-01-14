@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomModels\CusModel_Cart;
+use App\Exceptions\AuthenticationException;
 use App\Exceptions\EmailNotVerifiedException;
+use App\Exceptions\ResourceNotFoundException;
+use App\Http\Resources\CartItemCollectionResource;
+use App\Http\Resources\CartResource;
 use App\Http\Resources\CommonResponseResource;
 use App\Http\Resources\ErrorResource;
+use App\Models\CmCartHed;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -14,10 +20,39 @@ class CartController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        
+        $this->middleware('auth')->except([
+            'api_getCurrentCart'
+        ]);
     }
 
-    public function addToCart(Request $request)
+
+    public function api_getCurrentCart(Request $request)
+    {
+        try {
+            if (!!$request->user()) {
+                $user_id=$request->user()->id;
+
+                $cartHed=CusModel_Cart::getActiveCartHedByUserId($user_id);
+                if($cartHed!==null){
+                    return (new CommonResponseResource(new CartResource($cartHed)));
+                    
+                }else{
+                    $cartHed=new CmCartHed();
+                    return (new CommonResponseResource(new CartResource($cartHed)));
+                }
+               
+            }else {
+                throw new AuthenticationException();
+            }
+        } catch (\Exception $e) {
+            $cartHed=new CmCartHed();
+            return (new CommonResponseResource(new CartResource($cartHed)));
+        }
+       
+    }
+
+    public function api_addToCart(Request $request)
     {
         try {
             if ($request->user()->hasVerifiedEmail()) {

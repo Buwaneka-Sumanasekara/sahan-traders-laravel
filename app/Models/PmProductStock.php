@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 
 class PmProductStock extends Model
 {
@@ -35,12 +36,12 @@ class PmProductStock extends Model
 
     public function displayPrice()
     {
-        return money($this->sell_price, config('setup.base_country_id'));
+        return Number::currency($this->sell_price, config("setup.base_country_id"));
     }
 
     public function displayCostPrice()
     {
-        return money($this->cost_price, config('setup.base_country_id'));
+        return Number::currency($this->cost_price, config("setup.base_country_id"));
     }
 
     public function variant()

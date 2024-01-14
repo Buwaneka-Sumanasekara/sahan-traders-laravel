@@ -43,7 +43,7 @@ class CusModel_Cart extends Model
               return $prefix."00000001";
           }
       }
-      private function generateNextCartItemId($cartId)
+      private function generateNextCartItemId(string $cartId)
       {
           $lastId = CmCartDet::where('cm_cart_hed_id',$cartId)->max("id");
           if ($lastId) {
@@ -55,17 +55,22 @@ class CusModel_Cart extends Model
 
 
       // ======================== Getters ====================================
-      private function getCartItemById($cartHedId,$id)
+      private function getCartItemById(string $cartHedId,string $id)
       {
           return CmCartDet::where('cm_cart_hed_id',$cartHedId)->where('id',$id)->first();
       }
 
-      public function getActiveCartHedByBuyerId($buyerId)
+      private function getActiveCartHedByBuyerId(string $buyerId)
       {
           return CmCartHed::where('bm_buyer_id',$buyerId)->where('cm_cart_status_id',config('global.cart_status.pending'))->first();
       }
 
-      public function getActiveCartDetByProductIdAndHedId($cartHedId,$productId,$stockId,$variantId)
+      private function getActiveCartDetByProductIdAndHedId(
+        string $cartHedId,
+        string $productId,
+        string $stockId,
+        string $variantId
+        )
       {
           return CmCartDet::where('cm_cart_hed_id',$cartHedId)
           ->where('product_id',$productId)
@@ -74,11 +79,7 @@ class CusModel_Cart extends Model
           ->first();
       }
      
-
-
-
-
-      public function getAddressFromBuyer(BmBuyer $buyer,$addressType)
+      private function getAddressFromBuyer(BmBuyer $buyer,string $addressType)
       {
           if($addressType=="shipping"){
               return $buyer->shippingAddress;
@@ -89,10 +90,20 @@ class CusModel_Cart extends Model
           }    
       }
 
+
+    //===========================GET functions : all items ===========================================
+
+      public static  function getActiveCartHedByUserId(string $userId)
+      {
+        $buyer=BmBuyer::find($userId);
+        $cartHed=CmCartHed::where('bm_buyer_id',$buyer->id)->where('cm_cart_status_id',config('global.cart_status.pending'))->first();
+        return $cartHed;
+      }
+
       //===========================CRUD functions : one item ===========================================
 
 
-      private function calculateTotalAmount($cartHedId)
+      private function calculateTotalAmount(string $cartHedId)
       {
           $cartHed=CmCartHed::find($cartHedId);
           $cartDets=CmCartDet::where('cm_cart_hed_id',$cartHedId)->get();

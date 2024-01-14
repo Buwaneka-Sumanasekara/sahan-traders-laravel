@@ -49,10 +49,17 @@ Route::prefix('web-api')->group(function () {
         Route::get('/product/{productId}', 'api_getProductInfoForVarient')->name('api.product.get-info-for-variant');
         Route::get('/feature-products', 'api_getFeatureProducts')->name('api.product.get-feature-products');
     });
+
+    Route::controller(CartController::class)->group(function () {
+        Route::prefix('cart')->group(function () {
+            Route::get('/current', 'api_getCurrentCart')->name('api.cart.get-current-cart');
+        });
+    });
+
     Route::prefix('action')->group(function () {
         Route::prefix('cart')->group(function () {
             Route::controller(CartController::class)->group(function () {
-                Route::post('/add', 'addToCart')->name('cart.action.add');
+                Route::post('/add', 'api_addToCart')->name('action.cart.add');
             });
         });
     });

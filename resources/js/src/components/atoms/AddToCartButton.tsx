@@ -2,6 +2,8 @@ import React from 'react';
 import { useAddToCart } from '../../hooks/cart/useMutateCart';
 import { GeneralServerError } from '../../types/Common';
 import { AddCartButtonType } from '../../types/Cart';
+import * as CommonUtil from '../../common/CommonUtil';
+import CustomEvents from '../../common/CustomEvents';
 
 type AddToCartButtonProps = {
     productId: string,
@@ -21,7 +23,7 @@ const AddToCartButton = ({ productId, stockId, variantId, disabled, isInqueryIte
 
     function onSuccessAddToCart(data: any) {
         console.log("onSuccessAddToCart", data)
-
+        CommonUtil.triggerCustomEvent(CustomEvents.EVENT_CART_UPDATED,{})
     }
 
     function onErrorAddToCart(er: GeneralServerError) {

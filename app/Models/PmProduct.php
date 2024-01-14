@@ -125,7 +125,7 @@ class PmProduct extends Model
         return $this->stocks()->where("qty", ">", 0)->where("pm_product_variant_id",$variantId)->orderBy('batch', 'asc')->first();
     }
 
-    public function getStockByIdAndVariantId($stockId,$variantId):PmProductStock
+    public function getStockByIdAndVariantId($stockId,$variantId)
     {
         return $this->stocks()->where("batch", $stockId)->where("pm_product_variant_id",$variantId)->first();
     }

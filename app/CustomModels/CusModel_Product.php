@@ -9,14 +9,9 @@ use App\Models\PmProduct;
 use App\Models\PmProductStock;
 use App\Models\PmUnitHasPmUnitGroup;
 use App\Models\PmProductImages;
-use App\Models\PmProductVarient;
 use App\Models\PmProductAdditionalCost;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
 use Intervention\Image\Facades\Image;
 
 class CusModel_Product extends Model
@@ -235,18 +230,7 @@ class CusModel_Product extends Model
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
     /*============================Save /Update product==============================================*/

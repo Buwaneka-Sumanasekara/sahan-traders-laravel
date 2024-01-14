@@ -15,11 +15,11 @@ class CmCartDet extends Model
 
     public function product()
     {
-        return $this->belongsTo(PmProduct::class, 'pm_product_id', 'id');
+        return $this->belongsTo(PmProduct::class, 'product_id', 'id');
     }
 
     public function cart()
     {
-        return $this->belongsTo(CmCartHed::class, 'cm_cart_id', 'id');
+        return $this->belongsTo(CmCartHed::class, 'cm_cart_hed_id', 'id');
     }
 }
