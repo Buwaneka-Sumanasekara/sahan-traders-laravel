@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Number;
+
+
+use function App\Helpers\convertToDisplayPrice;
 
 class PmProduct extends Model
 {
@@ -154,7 +156,7 @@ class PmProduct extends Model
         return $stock->cost_price;
     }
 
-     public function getDefaultSalesUnitId()
+    public function getDefaultSalesUnitId()
     {
         return PmUnitHasPmUnitGroup::where("pm_unit_group_id", $this->pm_unit_group_id)
             ->where("active", true)->where("is_sales_unit", true)->first()->pm_unit_id;
@@ -163,9 +165,9 @@ class PmProduct extends Model
 
 
     //helpers
-    public function getDisplayPrice($price)
+    public function getDisplaySellingPrice($stockId,$variantId)
     { 
-        return  Number::currency($price, config("setup.base_country_id"));
+        return  convertToDisplayPrice($this->getSellPrice($stockId,$variantId));
     }
 
  

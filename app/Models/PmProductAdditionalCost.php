@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Number;
+use function App\Helpers\convertToDisplayPrice;
 
 class PmProductAdditionalCost extends Model
 {
@@ -15,6 +15,6 @@ class PmProductAdditionalCost extends Model
 
     public function getDisplayPrice()
     { 
-        return  Number::currency($this->amount, config("setup.base_country_id"));
+        return  convertToDisplayPrice($this->amount);
     }
 }

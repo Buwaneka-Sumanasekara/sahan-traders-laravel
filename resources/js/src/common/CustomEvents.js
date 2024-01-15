@@ -1,4 +1,0 @@
-export default{
-    EVENT_TEST:'EVENT_TEST',
-    EVENT_CART_UPDATED:'EVENT_CART_UPDATED'
-}

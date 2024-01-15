@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useFetchSpecificProduct } from '../../hooks/products/useFetchProducts';
-import CustomEvents from '../../common/CustomEvents';
-import { triggerCustomEvent } from '../../common/CommonUtil'
 import AddToCartButton from '../atoms/AddToCartButton';
 import PriceTag from '../atoms/PriceDisplay';
 import VariantsList from '../atoms/VarientsList';

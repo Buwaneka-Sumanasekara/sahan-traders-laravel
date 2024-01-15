@@ -43,6 +43,11 @@
                 <x-organisms.footer />
             </div>
         </div>
+
+        <div className="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="jsx-toast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        </div>
+        </div>  
     </div>
 
 </body>

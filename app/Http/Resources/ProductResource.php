@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\PmProductAdditionalCost;
 
+use function App\Helpers\convertToDisplayPrice;
+
 class ProductResource extends JsonResource
 {
     /**
@@ -43,7 +45,7 @@ class ProductResource extends JsonResource
             $variant->stockId=$stockId;
 
             $variant->sellPrice=$stock->sell_price;
-            $variant->displaySellPrice=$this->getDisplayPrice($stock->sell_price);
+            $variant->displaySellPrice=convertToDisplayPrice($stock->sell_price);
             $variant->costPrice=$stock->cost_price;
             $variant->val=$variantObj->val;
             $variant->id=$variantObj->id;
@@ -61,7 +63,7 @@ class ProductResource extends JsonResource
             'isInquiryItem' => $this->is_inquiry_item,
             'isQtyAvailableInStock'=>!$this->isQtyOutOfStock($stockId,$variantId),
             'mainThumbnailImageUrl' => $this->mainThumbnailImageUrl(),
-            'displayPrice'=>$this->getDisplayPrice($sellPrice),
+            'displayPrice'=>convertToDisplayPrice($sellPrice),
             'price'=>$sellPrice,
             'variantId'=>$variantId,
             'stockId'=>$stockId,

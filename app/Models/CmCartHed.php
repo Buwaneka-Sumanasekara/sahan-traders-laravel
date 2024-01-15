@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Number;
+
+use function App\Helpers\convertToDisplayPrice;
 
 class CmCartHed extends Model
 {
@@ -37,15 +38,10 @@ class CmCartHed extends Model
     }
 
     public function totalNetAmountDisplay(){
-        if($this->net_amount){
-            return  Number::currency($this->net_amount, config("setup.base_country_id"));
-        }else{
-            return Number::currency(0, config("setup.base_country_id"));
-        }
-        
+        return convertToDisplayPrice($this->net_amount);
     }
     public function totalGrossAmountDisplay(){
-        return  Number::currency($this->gross_amount, config("setup.base_country_id"));
+        return  convertToDisplayPrice($this->gross_amount);
     }
     
 

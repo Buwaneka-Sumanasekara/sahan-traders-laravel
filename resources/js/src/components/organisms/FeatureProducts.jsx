@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { useFetchFeatureProducts, useFetchSpecificProduct } from '../../hooks/products/useFetchProducts';
-import CustomEvents from '../../common/CustomEvents';
-import { triggerCustomEvent } from '../../common/CommonUtil'
+import React from 'react'
+import { useFetchFeatureProducts } from '../../hooks/products/useFetchProducts';
 import AddToCartButton from '../atoms/AddToCartButton';
-import PriceTag from '../atoms/PriceDisplay';
 import { AddCartButtonType } from '../../types/Cart';
+import Constants from '../../common/Constants';
 
 export default function FeatureProducts(props) {
 
-    const { data: featureProducts, isLoading, error } = useFetchFeatureProducts(5)
+    const { data: featureProducts, isLoading, error } = useFetchFeatureProducts(Constants.PAGE_SIZES.FEATURE_PRODUCT_LIST)
 
 
     const onPressProduct = (product) => {
         window.open(`/product/${product.slug}`, '_self');
     }
 
+    console.log("featureProducts", featureProducts)
     const products = featureProducts || [];
     return (
         <React.Fragment>

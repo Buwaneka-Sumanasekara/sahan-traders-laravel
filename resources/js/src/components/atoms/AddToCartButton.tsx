@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAddToCart } from '../../hooks/cart/useMutateCart';
-import { GeneralServerError } from '../../types/Common';
+import { EventType, GeneralServerError } from '../../types/Common';
 import { AddCartButtonType } from '../../types/Cart';
 import * as CommonUtil from '../../common/CommonUtil';
-import CustomEvents from '../../common/CustomEvents';
+import { useMutateEventListener, useMutateToastEventListner } from '../../hooks/common/useEventsListner';
 
 type AddToCartButtonProps = {
     productId: string,
@@ -21,13 +21,26 @@ const AddToCartButton = ({ productId, stockId, variantId, disabled, isInqueryIte
 
     const { mutate: onAddToCart } = useAddToCart(onSuccessAddToCart, onErrorAddToCart);
 
-    function onSuccessAddToCart(data: any) {
+    const {onExecuteEvent:onExecuteEvent}=useMutateEventListener();
+    const {onShowWarningMessage:onShowWarningMessage,onShowSuccessMessage:onShowSuccessMessage}=useMutateToastEventListner();
+
+    function onSuccessAddToCart(data: object) {
         console.log("onSuccessAddToCart", data)
-        CommonUtil.triggerCustomEvent(CustomEvents.EVENT_CART_UPDATED,{})
+        onExecuteEvent(EventType.EVENT_CART_UPDATED,{
+            productId: productId,
+        })
+
+        onShowSuccessMessage({
+            message: "Item added to cart",
+        })
+
     }
 
     function onErrorAddToCart(er: GeneralServerError) {
         console.log(er);
+        onShowWarningMessage({
+            message: er.message,
+        })
        
     }
 

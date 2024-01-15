@@ -40,7 +40,7 @@ export const useFetchFeatureProducts = (
   enabled = true,
 ) => {
   return useQuery(
-      [QueryKeys.FEATURE_PRODUCTS,pageSize], 
+      [QueryKeys.FEATURE_PRODUCTS], 
       ()=>fetchFeatureProducts(pageSize), {
     enabled:enabled,
     select: (data) => {

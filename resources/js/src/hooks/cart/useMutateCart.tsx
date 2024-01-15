@@ -41,7 +41,7 @@ const addToCart = async (data:addToCartProps) => {
           window.open(`#`,'_self');
         }else{
           onErrorCallback?.(
-            errorObj.data as GeneralServerError
+            errorObj.data?.error as GeneralServerError
           )
         }
        
