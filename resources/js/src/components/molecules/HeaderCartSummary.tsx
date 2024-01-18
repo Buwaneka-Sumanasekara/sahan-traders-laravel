@@ -23,29 +23,16 @@ const HeaderCartSummary  = (props:HeaderCartSummaryProps) => {
     const cartItemsAmount=cartHed?.displayNetAmount || "0";
     const cartItemsCount=cartHed?.itemsCount || 0
 
-    // useEffect(() => {
-    //     const handleCustomEvent = (event) => {
-    //       // Handle the custom event here
-    //       console.log('Custom event received:', event.detail);
-    //      // setCount(event.detail.id)
-    //      queryClient.invalidateQueries([QueryKeys.CART_CURRENT])
-    //     };
-    
-    //     // Add event listener when the component mounts
-    //     window.addEventListener(CustomEvents.EVENT_CART_UPDATED, handleCustomEvent);
-    
-    //     // Remove event listener when the component unmounts
-    //     return () => {
-    //       window.removeEventListener(CustomEvents.EVENT_CART_UPDATED, handleCustomEvent);
-    //     };
-    // }, []); // Empty dependency array ensures that the effect runs once on mount
-    
+
+    const onClickCart=()=>{
+        window.open(`/cart`, '_self');
+    }
 
 
     return (
         <>
              <div className="d-flex align-self-center me-4">
-                <button type="button" className="btn btn-outline-secondary position-relative rounded">
+                <button type="button" className="btn btn-outline-secondary position-relative rounded" onClick={onClickCart}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-bag"
                         viewBox="0 0 16 16">
                         <path
@@ -56,7 +43,7 @@ const HeaderCartSummary  = (props:HeaderCartSummaryProps) => {
                     </span>
                 </button>
             </div>
-            <div className="d-flex flex-column justify-content-center">
+            <div className="d-flex flex-column justify-content-center" onClick={onClickCart}>
                 <div className="text-body-tertiary">
                     Shopping Cart
                 </div>

@@ -4,7 +4,7 @@ import AddToCartButton from '../atoms/AddToCartButton';
 import { AddCartButtonType } from '../../types/Cart';
 import Constants from '../../common/Constants';
 
-export default function FeatureProducts(props) {
+export default function FeatureProducts() {
 
     const { data: featureProducts, isLoading, error } = useFetchFeatureProducts(Constants.PAGE_SIZES.FEATURE_PRODUCT_LIST)
 
@@ -13,7 +13,7 @@ export default function FeatureProducts(props) {
         window.open(`/product/${product.slug}`, '_self');
     }
 
-    console.log("featureProducts", featureProducts)
+
     const products = featureProducts || [];
     return (
         <React.Fragment>

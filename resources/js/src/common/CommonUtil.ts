@@ -1,3 +1,4 @@
+import { LottieAnimationName } from "../types/Common";
 
 
 export function triggerCustomEvent(eventName, data) {
@@ -8,4 +9,5 @@ export function triggerCustomEvent(eventName, data) {
   const state=window.dispatchEvent(event);
   console.log("triggerCustomEvent call", event,"state:",state)
 }
+
 

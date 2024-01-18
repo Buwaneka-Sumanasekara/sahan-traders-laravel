@@ -30,14 +30,16 @@ class CartItemResource extends JsonResource
                 'unitId'=>$this->unit_id,
                 'productName'=>$product->name,
                 'productSlug'=>$product->slug,
-                'productThumbnailImage_url'=>$product->mainThumbnailImageUrl(),
-                'displaySellPrice'=>$stock->displayPrice(),
-                'displayCostPrice'=>$stock->displayCostPrice(),
+                'productThumbnailImageUrl'=>$product->mainThumbnailImageUrl(),
+                'displaySellPrice'=>$this->displaySellPrice(),
+                'displayCostPrice'=>$this->displayCostPrice(),
                 'additionalCostId'=>$this->additional_product_cost_id,
                 'additionalCostDes'=> $additionalCost ? $additionalCost->name : "",
                 'additionalCostAmount'=> $additionalCost ? $additionalCost->amount : 0,
                 'lineDisPer'=> $this->line_dis_per,
-                'lineDisAmt'=> $this->line_dis_amt,   
+                'lineDisAmt'=> $this->line_dis_amt,
+                'displayAmount'=> $this->displayAmountPrice(),
+                'hasPriceUpdate'=>($this->sprice !== $stock->sprice)   
         ];
     }
 }

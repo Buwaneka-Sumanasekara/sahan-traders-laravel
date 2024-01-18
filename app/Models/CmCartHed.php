@@ -43,7 +43,26 @@ class CmCartHed extends Model
     public function totalGrossAmountDisplay(){
         return  convertToDisplayPrice($this->gross_amount);
     }
-    
 
+    public function taxAmount(){
+        $taxAmount=($this->gross_amount*$this->tax_per)/100;
+        return  $taxAmount;
+    }
+
+   
+
+    public function taxAmountDisplay(){
+        return  convertToDisplayPrice($this->taxAmount());
+    }
+
+
+    public function discountPerAmount(){
+        $disCountAmount=($this->gross_amount*$this->dis_per)/100;
+        return  $disCountAmount;
+    }
+
+    public function discountPerAmountDisplay(){
+        return  "-".convertToDisplayPrice($this->discountPerAmount());
+    }
    
 }

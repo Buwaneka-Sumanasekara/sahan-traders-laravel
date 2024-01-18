@@ -15,3 +15,14 @@ export type ToastProps={
     message:string,
     type?:'error'|'success'|'info'|'warning'
 }
+
+
+export enum LottieAnimationName{
+    EMPTY_CART="empty-cart",
+}
+
+export type IconProps={
+    name:string,
+    color?:string,
+    size?:number,
+}

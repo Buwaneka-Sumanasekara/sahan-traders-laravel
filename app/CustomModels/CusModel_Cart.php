@@ -113,8 +113,24 @@ class CusModel_Cart extends Model
               $totalAmount+=$cartDet->amount;
           }
 
+          $taxPer=0;
+          $isEnableTax=config("setup.en_tax");
+          if($isEnableTax){
+            $taxPer=config("setup.tax_per");
+          }
+
+          $cartHed->tax_per=$taxPer;
+
+
+          $disPer=isset($cartHed->dis_per)?$cartHed->dis_per:0;          
+          
+
           $cartHed->gross_amount=$totalAmount;
-          $cartHed->net_amount=$totalAmount - ($totalAmount*$cartHed->dis_per/100);
+
+          //Tax will be calculate to gross amount
+          $netAmount=$totalAmount - ($totalAmount*$disPer/100) + ($totalAmount*$taxPer/100);
+
+          $cartHed->net_amount=$netAmount;
           $cartHed->update();
       }
      
@@ -252,8 +268,8 @@ class CusModel_Cart extends Model
                     $cartDet= new CmCartDet;
 
                     $cartDet->id=$cartItemId;
-                    $cartDet->cprice=$sellPrice;
-                    $cartDet->sprice=$costPrice;
+                    $cartDet->cprice=$costPrice;
+                    $cartDet->sprice=$sellPrice;
                     $cartDet->qty=$qty;
                     $cartDet->free_qty=0;
                     $cartDet->line_dis_per=0;

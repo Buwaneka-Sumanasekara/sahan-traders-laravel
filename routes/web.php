@@ -40,6 +40,9 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product/{slug}', 'specificProductBySlugPage')->name('product.public.display');
 });
 
+Route::controller(CartController::class)->group(function () {
+    Route::get('/cart', 'cartStep1')->name('cart.step1');
+});
 
 
 

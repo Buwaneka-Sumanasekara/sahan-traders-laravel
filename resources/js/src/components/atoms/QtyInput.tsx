@@ -6,8 +6,8 @@ type QtyInputProps={
     disableIncrement:boolean,
     disableDecrement:boolean,
     onChange:(qty:number,unitId?:string)=>void,
-    units:Unit[],
-    enableUnitSelection:boolean,
+    units?:Unit[],
+    enableUnitSelection?:boolean,
 }
 const QtyInput = (props:QtyInputProps) => {
 
@@ -24,7 +24,7 @@ const QtyInput = (props:QtyInputProps) => {
 
     return (
         
-        <div className="input-group input-group-md mb-3">
+        <div className="input-group input-group-md">
             <button className="btn btn-outline-secondary" 
             type="button" id="button-addon1" 
             onClick={() => onChangeValue(qty - 1)}

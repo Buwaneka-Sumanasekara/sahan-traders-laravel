@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\CustomModels\CusModel_Cart;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\EmailNotVerifiedException;
-use App\Exceptions\ResourceNotFoundException;
-use App\Http\Resources\CartItemCollectionResource;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CommonResponseResource;
 use App\Http\Resources\ErrorResource;
@@ -20,12 +18,20 @@ class CartController extends Controller
      */
     public function __construct()
     {
-        
         $this->middleware('auth')->except([
             'api_getCurrentCart'
         ]);
     }
 
+
+    public function cartStep1()
+    {
+        return view('pages.general.cart-step1');
+    }
+
+
+
+    /* ============================ API ============================================ */
 
     public function api_getCurrentCart(Request $request)
     {

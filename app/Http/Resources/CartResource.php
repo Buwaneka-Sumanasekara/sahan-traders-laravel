@@ -42,6 +42,11 @@ class CartResource extends JsonResource
                     'createdAt'=>$this->created_at,
                     'updatedAt'=>$this->updated_at,
                     'itemsCount'=>$this->cartDetItems()->count(),
+                    'displayGrossAmount'=>$this->totalGrossAmountDisplay(),
+                    'displayDisPer'=>$this->dis_per.'%',
+                    'displayDisPerAmount'=>$this->discountPerAmountDisplay(),
+                    'displayTaxPer'=>$this->tax_per.'%',
+                    'displayTaxAmount'=>$this->taxAmountDisplay(),
                     'displayNetAmount'=>$this->totalNetAmountDisplay()
                 ],
                 'det'=>$this->cartDetItems()->get()->map(fn (CmCartDet $item) => new CartItemResource($item)),
