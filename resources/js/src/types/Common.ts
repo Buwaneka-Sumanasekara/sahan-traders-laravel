@@ -37,5 +37,6 @@ export type RedirectProps={
 
 export type Country={
     name:string,
-    code:string,
+    courierCode:string,
+    
 }
