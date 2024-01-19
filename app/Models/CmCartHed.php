@@ -45,7 +45,7 @@ class CmCartHed extends Model
     }
 
     public function taxAmount(){
-        $taxAmount=($this->gross_amount*$this->tax_per)/100;
+        $taxAmount=$this->tax_amount;
         return  $taxAmount;
     }
 

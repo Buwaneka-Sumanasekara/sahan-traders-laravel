@@ -60,9 +60,13 @@ Route::prefix('web-api')->group(function () {
     });
 
     Route::prefix('action')->group(function () {
-        Route::prefix('cart')->group(function () {
-            Route::controller(CartController::class)->group(function () {
-                Route::post('/add', 'api_addToCart')->name('action.cart.add');
+        Route::controller(CartController::class)->group(function () {
+            Route::prefix('cart')->group(function () {
+                Route::prefix('item')->group(function () {
+                    Route::post('/add', 'api_addToCart')->name('action.cart.item.add');
+                    Route::put('/update', 'api_updateCartItem')->name('action.cart.item.update');
+                    Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');    
+                });
             });
         });
     });

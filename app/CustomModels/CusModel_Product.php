@@ -265,6 +265,7 @@ class CusModel_Product extends Model
                 'prop_depth' => $this->prop_depth,
                 'prop_weight' => isset($this->prop_weight)?$this->prop_weight:0,
                 'pm_product_variant_group_id' => $variantGroupId,
+                'is_taxable_item'=>true,//default for japan
             ];
 
             $product = PmProduct::create($prod);

@@ -111,6 +111,7 @@ export default function ProductInfo(props) {
                             unitGroupId={unitGroupId}
                             unitId={unitId}
                             buttonType={AddCartButtonType.AddToCart}
+                          
                         />
                     </div>
                     <div className={"flex-fill"}>

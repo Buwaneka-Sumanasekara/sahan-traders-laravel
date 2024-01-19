@@ -2,7 +2,6 @@ import React from 'react';
 import { useAddToCart } from '../../hooks/cart/useMutateCart';
 import { EventType, GeneralServerError } from '../../types/Common';
 import { AddCartButtonType } from '../../types/Cart';
-import * as CommonUtil from '../../common/CommonUtil';
 import { useMutateEventListener, useMutateToastEventListner } from '../../hooks/common/useEventsListner';
 
 type AddToCartButtonProps = {
@@ -16,8 +15,11 @@ type AddToCartButtonProps = {
     unitId: string,
     additionalCostId?: string,
     buttonType: AddCartButtonType
+    isIncrementingQty?: boolean
 }
-const AddToCartButton = ({ productId, stockId, variantId, disabled, isInqueryItem, qty, additionalCostId, unitGroupId, unitId, buttonType }: AddToCartButtonProps) => {
+const AddToCartButton = ({ productId, stockId, variantId, disabled, 
+    isInqueryItem, qty, additionalCostId, unitGroupId, unitId, 
+    buttonType,isIncrementingQty }: AddToCartButtonProps) => {
 
     const { mutate: onAddToCart } = useAddToCart(onSuccessAddToCart, onErrorAddToCart);
 
@@ -25,7 +27,6 @@ const AddToCartButton = ({ productId, stockId, variantId, disabled, isInqueryIte
     const {onShowWarningMessage:onShowWarningMessage,onShowSuccessMessage:onShowSuccessMessage}=useMutateToastEventListner();
 
     function onSuccessAddToCart(data: object) {
-        console.log("onSuccessAddToCart", data)
         onExecuteEvent(EventType.EVENT_CART_UPDATED,{
             productId: productId,
         })
@@ -53,7 +54,8 @@ const AddToCartButton = ({ productId, stockId, variantId, disabled, isInqueryIte
             qty: qty,
             additionalCostId: additionalCostId,
             unitGroupId: unitGroupId,
-            unitId: unitId
+            unitId: unitId,
+            isIncrementingQty:isIncrementingQty
         })
     }
 

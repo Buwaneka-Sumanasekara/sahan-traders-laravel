@@ -7,8 +7,8 @@ import { ToastProps } from '../../types/Common';
 
 const Toast = () => {
 
-    useToastEventListener(({type,message}:ToastProps)=>{toast(message,{
-        position: "top-right",
+    useToastEventListener(({type,message,position}:ToastProps)=>{toast(message,{
+        position: position?position:"top-right",
         autoClose: 5000,
         hideProgressBar: true,
         closeOnClick: true,

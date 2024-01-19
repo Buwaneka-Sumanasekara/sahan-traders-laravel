@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('stkm_trn_out_hed_id', 100);
             $table->string('product_id', 60);
             $table->string('stk_batch_id', 5);
+            $table->boolean('is_taxable_item')->default(true);
 
 
             $table->integer('pm_product_variant_id');

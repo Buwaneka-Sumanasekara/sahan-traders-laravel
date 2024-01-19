@@ -1,4 +1,4 @@
-import { LottieAnimationName } from "../types/Common";
+import { GeneralServerError, LottieAnimationName, RedirectProps } from "../types/Common";
 
 
 export function triggerCustomEvent(eventName, data) {
@@ -11,3 +11,15 @@ export function triggerCustomEvent(eventName, data) {
 }
 
 
+export function authenticationRedirectHandler(props:RedirectProps) {
+  const {onErrorCallBack,productId,errorObject}=props;
+  if(errorObject.status===401 && productId){
+    window.open(`/login?redirect-to-item=${productId}`,'_self');
+  }else if(errorObject.status===403){
+    window.open(`#`,'_self');
+  }else{
+    onErrorCallBack?.(
+      errorObject.data?.error as GeneralServerError
+    )
+  }
+}

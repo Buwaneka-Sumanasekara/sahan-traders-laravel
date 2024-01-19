@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('line_dis_per', 10, 2);
             $table->double('line_dis_amt', 10, 2);
             $table->double('amount', 20, 2);
+            $table->boolean('is_taxable_item')->default(true);
 
             $table->integer('pm_unit_group_id');
             $table->integer('pm_unit_id');

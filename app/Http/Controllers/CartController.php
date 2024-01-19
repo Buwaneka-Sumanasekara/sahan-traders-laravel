@@ -69,6 +69,8 @@ class CartController extends Controller
                 $unitGroupId=$request->string('unitGroupId')->trim();
                 $unitId=$request->string('unitId')->trim();
                 $additionalCostId=$request->string('additionalCostId')->trim();
+
+                $isIncrementingQty=$request->boolean('isIncrementingQty');
     
     
                 $cart=new \App\CustomModels\CusModel_Cart();
@@ -83,7 +85,68 @@ class CartController extends Controller
                     "unit_id"=>$unitId
                 ]);
     
-                $cart->addToCart();
+                $cart->addToCart($isIncrementingQty);
+    
+                return (new CommonResponseResource([
+                    "status"=>"success"
+                ]));
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+      
+    }
+
+    public function api_updateCartItem(Request $request)
+    {
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $cartDetId = $request->string('id')->trim();
+                $qty = $request->float('qty');
+                $unitGroupId=$request->string('unitGroupId')->trim();
+                $unitId=$request->string('unitId')->trim();
+    
+    
+                $cart=new \App\CustomModels\CusModel_Cart();
+                $cart->user_id=$request->user()->id;
+                $cart->ar_cart_items=array([
+                    "id"=>$cartDetId,
+                    "qty"=>$qty,
+                    "unit_group_id"=>$unitGroupId,
+                    "unit_id"=>$unitId
+                ]);
+    
+                $cart->updateCartLine();
+    
+                return (new CommonResponseResource([
+                    "status"=>"success"
+                ]));
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+      
+    }
+
+    public function api_deleteCartItem(Request $request)
+    {
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $cartDetId = $request->string('id')->trim();
+                    
+                $cart=new \App\CustomModels\CusModel_Cart();
+                $cart->user_id=$request->user()->id;
+                $cart->ar_cart_items=array([
+                    "id"=>$cartDetId
+                ]);
+    
+                $cart->deleteCartLine();
     
                 return (new CommonResponseResource([
                     "status"=>"success"

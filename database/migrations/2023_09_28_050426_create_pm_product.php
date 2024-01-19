@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 400);
             $table->string('slug', 500);
             $table->boolean('is_inquiry_item')->default(false);
+            $table->boolean('is_taxable_item')->default(true);
             $table->text('note')->nullable();
             $table->text('note_html')->nullable();
             $table->boolean('active')->default(true);

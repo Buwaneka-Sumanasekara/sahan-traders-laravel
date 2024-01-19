@@ -5,7 +5,7 @@ type QtyInputProps={
     qty:number,
     disableIncrement:boolean,
     disableDecrement:boolean,
-    onChange:(qty:number,unitId?:string)=>void,
+    onChange:(qty:number,unitGroupId?:string,unitId?:string)=>void,
     units?:Unit[],
     enableUnitSelection?:boolean,
 }

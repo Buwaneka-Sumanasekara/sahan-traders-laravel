@@ -72,10 +72,11 @@ export const useToastEventListener = (onShowToast:(props:ToastProps)=>void) => {
     
 
     function handleCustomEvent(event) {
-        const {type,message}=event.detail; 
+        const {type,message,...otherProps}=event.detail; 
         onShowToast({
             message:message,
-            type:type || 'error'
+            type:type || 'error',
+            ...otherProps
         });
     }
 }

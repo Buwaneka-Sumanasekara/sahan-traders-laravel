@@ -41,6 +41,7 @@ export default function FeatureProducts() {
                                 unitGroupId={product.unitGroupId}
                                 unitId={product.unitId}
                                 buttonType={AddCartButtonType.AddToCart}
+                                isIncrementingQty={true}
                             />
                         </div>
                     </div>
