@@ -34,3 +34,8 @@ export type RedirectProps={
     productId?:string,
     errorObject:any,
 }
+
+export type Country={
+    name:string,
+    code:string,
+}

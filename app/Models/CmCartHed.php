@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -34,7 +35,18 @@ class CmCartHed extends Model
 
     public function buyer(): HasOne
     {
-        return $this->hasOne(BmBuyer::class);
+        return $this->hasOne(BmBuyer::class, 'id', 'bm_buyer_id');
+    }
+
+
+    public function shippingAddressCountry(): BelongsTo
+    {
+        return $this->belongsTo(CdmCountry::class,"ship_address_country_id","id");
+    }
+
+    public function billingAddressCountry(): BelongsTo
+    {
+        return $this->belongsTo(CdmCountry::class,"bill_address_country_id","id");
     }
 
     public function totalNetAmountDisplay(){
@@ -63,6 +75,27 @@ class CmCartHed extends Model
 
     public function discountPerAmountDisplay(){
         return  "-".convertToDisplayPrice($this->discountPerAmount());
+    }
+   
+    public function shippingCostDisplay(){
+        return  convertToDisplayPrice($this->shipping_cost);
+    }
+
+    public function hasShippingAddress(){
+        return  $this->ship_address!=null;
+    }
+
+    public function getShippingAddress(){
+        if($this->ship_address!==null){
+            return  json_decode($this->ship_address, true);;
+        }
+        return  null;
+    }
+    public function getBillingAddress(){
+        if($this->bill_address!==null){
+            return  json_decode($this->bill_address, true);;
+        }
+        return  null;
     }
    
 }

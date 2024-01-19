@@ -12,6 +12,7 @@ import Container from 'react-bootstrap/esm/Container';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Overlay from 'react-bootstrap/Overlay';
 import Icon from '../atoms/Icon';
+import CartSummaryRowShipping from '../atoms/CartSummaryShipping';
 
 const CartSummaryHeader = () => {
     return (
@@ -28,27 +29,27 @@ const CartSummaryHeader = () => {
 
 
 const CartSummaryRow = (props: { displayAmount: string, label: string, toolTip?: string }) => {
-    const { displayAmount, label,toolTip } = props;
+    const { displayAmount, label, toolTip } = props;
     const target = useRef(null);
 
     const [show, setShow] = useState(false);
     return (
         <Row className='justify-content-end pt-3' >
-            <Col md={7} sm={12} ref={target} onMouseEnter={()=>{
-                if(!!toolTip){
+            <Col md={7} sm={12} ref={target} onMouseEnter={() => {
+                if (!!toolTip) {
                     setShow(true);
                 }
-            }} onMouseLeave={()=>setShow(false)}>
+            }} onMouseLeave={() => setShow(false)}>
                 <span className="fw-bold text-primary-emphasis ">{label}  {!!toolTip && <Icon name={"Info"} size={15} />}</span>
-               
+
             </Col>
-            <Overlay target={target.current} show={toolTip!=="" && show} placement="top">
-                        {(props) => (
-                            <Tooltip id="overlay-example" {...props}>
-                                {toolTip}
-                            </Tooltip>
-                        )}
-                    </Overlay>
+            <Overlay target={target.current} show={toolTip !== "" && show} placement="top">
+                {(props) => (
+                    <Tooltip id="overlay-example" {...props}>
+                        {toolTip}
+                    </Tooltip>
+                )}
+            </Overlay>
             <Col md={5} sm={12} className='text-end'>
                 <span className="fw-bold text-primary-emphasis ">{displayAmount}</span>
             </Col>
@@ -59,22 +60,24 @@ const CartSummaryRow = (props: { displayAmount: string, label: string, toolTip?:
 const CartSummaryButton = (props: { lable: string, varient: string, onPress: () => void }) => {
 
     const { lable, onPress, varient } = props;
-   
+
 
     return (
         <Row className='justify-content-end pt-3'>
             <Col md={12} sm={12} >
                 <div className="d-grid gap-2">
-                    <Button  variant={varient} onClick={onPress}>
+                    <Button variant={varient} onClick={onPress}>
                         {lable}
                     </Button>
-                   
+
                 </div>
 
             </Col>
         </Row>
     )
 }
+
+
 
 type CartStep1SummaryProps = {
     cart: any,
@@ -96,8 +99,14 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
             <CartSummaryRow label="Subtotal" displayAmount={cart.displayGrossAmount} />
             <CartSummaryRow label={`Discount (${cart.displayDisPer})`} displayAmount={cart.displayDisPerAmount} />
             <CartSummaryRow toolTip={"Tax will be calculated using the Subtotal amount"} label={`Tax (+ ${cart.displayTaxPer})`} displayAmount={cart.displayTaxAmount} />
+
+            <CartSummaryRowShipping amount={cart.displayShippingCost} shippingCountry={cart.shippingAddressCountry} />
+            <hr />
             <CartSummaryRow label="Total" displayAmount={cart.displayNetAmount} />
+          
             <CartSummaryButton lable="Continue Shopping" varient="outline-primary" onPress={onClickRedirectToHome} />
+
+
             <CartSummaryButton lable="Proceed to Checkout" varient="primary" onPress={() => { }} />
         </Container>
     )
