@@ -59,6 +59,14 @@ Route::prefix('web-api')->group(function () {
         });
     });
 
+    Route::controller(CartController::class)->group(function () {
+        Route::prefix('shipping')->group(function () {
+            Route::get('/carriers', 'api_getShippingCarriers')->name('api.shipping.carriers');
+            Route::get('/rates', 'api_getShippingRatesForCurrentCart')->name('api.shipping.carrier.costs');
+            
+        });
+    });
+
     Route::prefix('action')->group(function () {
         Route::controller(CartController::class)->group(function () {
             Route::prefix('cart')->group(function () {

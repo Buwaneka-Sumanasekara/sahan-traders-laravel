@@ -55,6 +55,7 @@ class CartResource extends JsonResource
                     'shippingAddressCountry'=>new CountryResource($this->shippingAddressCountry),
                     'billAddress'=>$this->getBillingAddress(),
                     'billAddressCountry'=>new CountryResource($this->billingAddressCountry),
+                    'carrierInfo'=>$this->getCarrierInfo(),
                 ],
                 'det'=>$this->cartDetItems()->get()->map(fn (CmCartDet $item) => new CartItemResource($item)),
             ];

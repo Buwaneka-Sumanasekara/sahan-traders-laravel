@@ -66,6 +66,16 @@ class UmUserSeeder extends Seeder
                 "um_user_role_id" => config("global.user_role_buyer"),
                 "password" => Hash::make('123'),
                 "email_verified" => false,
+            ],
+            [
+                "id" => 5,
+                "first_name" => "Buyer",
+                "last_name" => "(Ship & co test)",
+                "email" => "sahan.traders.tester+3@gmail.com",
+                "um_user_status_id" => config("global.user_status_active"),
+                "um_user_role_id" => config("global.user_role_buyer"),
+                "password" => Hash::make('123'),
+                "email_verified" => false,
             ]
         ];
 
@@ -91,6 +101,26 @@ class UmUserSeeder extends Seeder
         $buyerAddress_2->province_name = "Chiba";
         $buyerAddress_2->save();
 
+        $buyerAddress_3 = new \App\Models\BmBuyerAddress();
+        $buyerAddress_3->id = 3;
+        $buyerAddress_3->address_1 = "Rua Maria Matos, 32";
+        $buyerAddress_3->address_2 = "";
+        $buyerAddress_3->city = "CHARNECA DA CAPARICA";
+        $buyerAddress_3->zip_code = "2820-344";
+        $buyerAddress_3->cdm_country_id = 4; //Portugal
+        $buyerAddress_3->province_name = "SETUBAL";
+        $buyerAddress_3->save();
+
+        $buyerAddress_4 = new \App\Models\BmBuyerAddress();
+        $buyerAddress_4->id = 4;
+        $buyerAddress_4->address_1 = "OSAKAFU";
+        $buyerAddress_4->address_2 = "OTECHO";
+        $buyerAddress_4->city = "IBARAKI SHI";
+        $buyerAddress_4->zip_code = "5670883";
+        $buyerAddress_4->cdm_country_id = 1; //Japan
+        $buyerAddress_4->province_name = "OSAKA";
+        $buyerAddress_4->save();
+
 
 
 
@@ -111,6 +141,9 @@ class UmUserSeeder extends Seeder
                 } else  if ($ar_user["id"] === 3) {
                     $buyer->address_bill_id = $buyerAddress_1->id;
                     $buyer->address_ship_id = $buyerAddress_2->id;
+                }else  if ($ar_user["id"] === 5) {
+                    $buyer->address_bill_id = $buyerAddress_3->id;
+                    $buyer->address_ship_id = $buyerAddress_3->id;
                 }
 
 

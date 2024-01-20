@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\EmailNotVerifiedException;
+use App\Exceptions\ShipAndCoException;
 use App\Exceptions\UserNotFoundException;
 use Illuminate\Validation\ValidationException;
 
@@ -26,9 +27,15 @@ class ErrorResource extends JsonResource
                 'code' => 'error-001',
                 'message' => $this->getMessage(),
             ];
-        } else {
+        }else if ($this->resource instanceof ShipAndCoException) {
             return [
                 'code' => $this->getCode(),
+                'message' => $this->getMessage(),
+                'data' => ($this->resource->getData()!==null) ? $this->resource->getData() : $this->resource,
+            ];
+        }else {
+            return [
+                'code' => 'error-001',
                 'message' => $this->getMessage(),
             ];
         }
@@ -49,6 +56,8 @@ class ErrorResource extends JsonResource
         } else if ($this->resource instanceof UserNotFoundException) {
             $response->setStatusCode(401);
         } else if ($this->resource instanceof ValidationException) {
+            $response->setStatusCode(502);
+        }  else if ($this->resource instanceof ShipAndCoException) {
             $response->setStatusCode(502);
         } else if ($this->resource instanceof EmailNotVerifiedException) {
             $response->setStatusCode(403);

@@ -1,13 +1,8 @@
 import React, { useRef, useState } from 'react'
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { useFetchCurrentUserCart } from '../../hooks/cart/useFetchCart'
-import { useEventListener } from '../../hooks/common/useEventsListner';
-import { EventType, LottieAnimationName } from '../../types/Common';
-import { CartItem } from '../../types/Cart';
-import LottieAnimation from '../atoms/LottieAnimation';
+import { Cart, CartItem } from '../../types/Cart';
 import Container from 'react-bootstrap/esm/Container';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Overlay from 'react-bootstrap/Overlay';
@@ -80,7 +75,7 @@ const CartSummaryButton = (props: { lable: string, varient: string, onPress: () 
 
 
 type CartStep1SummaryProps = {
-    cart: any,
+    cart: Cart,
     carItems: CartItem[]
 }
 const CartStep1Summary = (props: CartStep1SummaryProps) => {
@@ -100,7 +95,7 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
             <CartSummaryRow label={`Discount (${cart.displayDisPer})`} displayAmount={cart.displayDisPerAmount} />
             <CartSummaryRow toolTip={"Tax will be calculated using the Subtotal amount"} label={`Tax (+ ${cart.displayTaxPer})`} displayAmount={cart.displayTaxAmount} />
 
-            <CartSummaryRowShipping amount={cart.displayShippingCost} shippingCountry={cart.shippingAddressCountry} />
+            <CartSummaryRowShipping carrierInfo={cart.carrierInfo} amount={cart.displayShippingCost} shippingCountry={cart.shippingAddressCountry} />
             <hr />
             <CartSummaryRow label="Total" displayAmount={cart.displayNetAmount} />
           

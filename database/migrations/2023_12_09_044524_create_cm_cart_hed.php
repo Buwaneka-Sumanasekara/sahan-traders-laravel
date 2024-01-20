@@ -32,7 +32,7 @@ return new class extends Migration
 
             $table->integer('cm_cart_status_id');
             $table->string('tracking_no', 200);
-
+            $table->json('carrier_info')->nullable();
            
             $table->bigInteger('cr_by_user_id');
             $table->bigInteger('md_by_user_id');

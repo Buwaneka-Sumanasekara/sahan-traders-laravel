@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BmBuyerAddress extends Model
 {
@@ -18,6 +19,16 @@ class BmBuyerAddress extends Model
     public $incrementing = false;
 
     
+
+
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(CdmCountry::class,"cdm_country_id","id");
+    }
+
+  
+
     /**
      * Get the collection of items as JSON.
      *

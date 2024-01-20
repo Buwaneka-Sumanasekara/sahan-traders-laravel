@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomModels\CusModel_Cart;
+use App\CustomModels\CusModel_ShipAndCoRates;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\EmailNotVerifiedException;
 use App\Http\Resources\CartResource;
@@ -37,25 +38,22 @@ class CartController extends Controller
     {
         try {
             if (!!$request->user()) {
-                $user_id=$request->user()->id;
+                $user_id = $request->user()->id;
 
-                $cartHed=CusModel_Cart::getActiveCartHedByUserId($user_id);
-                if($cartHed!==null){
+                $cartHed = CusModel_Cart::getActiveCartHedByUserId($user_id);
+                if ($cartHed !== null) {
                     return (new CommonResponseResource(new CartResource($cartHed)));
-                    
-                }else{
-                    $cartHed=new CmCartHed();
+                } else {
+                    $cartHed = new CmCartHed();
                     return (new CommonResponseResource(new CartResource($cartHed)));
                 }
-               
-            }else {
+            } else {
                 throw new AuthenticationException();
             }
         } catch (\Exception $e) {
-            $cartHed=new CmCartHed();
+            $cartHed = new CmCartHed();
             return (new CommonResponseResource(new CartResource($cartHed)));
         }
-       
     }
 
     public function api_addToCart(Request $request)
@@ -66,29 +64,29 @@ class CartController extends Controller
                 $stockId = $request->string('stockId')->trim();
                 $variantId = $request->string('variantId')->trim();
                 $qty = $request->float('qty');
-                $unitGroupId=$request->string('unitGroupId')->trim();
-                $unitId=$request->string('unitId')->trim();
-                $additionalCostId=$request->string('additionalCostId')->trim();
+                $unitGroupId = $request->string('unitGroupId')->trim();
+                $unitId = $request->string('unitId')->trim();
+                $additionalCostId = $request->string('additionalCostId')->trim();
 
-                $isIncrementingQty=$request->boolean('isIncrementingQty');
-    
-    
-                $cart=new \App\CustomModels\CusModel_Cart();
-                $cart->user_id=$request->user()->id;
-                $cart->ar_cart_items=array([
-                    "product_id"=>$productId,
-                    "stock_id"=>$stockId,
-                    "variant_id"=>$variantId,
-                    "qty"=>$qty,
-                    "additional_cost_id"=>$additionalCostId,
-                    "unit_group_id"=>$unitGroupId,
-                    "unit_id"=>$unitId
+                $isIncrementingQty = $request->boolean('isIncrementingQty');
+
+
+                $cart = new \App\CustomModels\CusModel_Cart();
+                $cart->user_id = $request->user()->id;
+                $cart->ar_cart_items = array([
+                    "product_id" => $productId,
+                    "stock_id" => $stockId,
+                    "variant_id" => $variantId,
+                    "qty" => $qty,
+                    "additional_cost_id" => $additionalCostId,
+                    "unit_group_id" => $unitGroupId,
+                    "unit_id" => $unitId
                 ]);
-    
+
                 $cart->addToCart($isIncrementingQty);
-    
+
                 return (new CommonResponseResource([
-                    "status"=>"success"
+                    "status" => "success"
                 ]));
             } else {
                 throw new EmailNotVerifiedException();
@@ -97,7 +95,6 @@ class CartController extends Controller
             $errorResponse = new ErrorResource($e);
             return $errorResponse;
         }
-      
     }
 
     public function api_updateCartItem(Request $request)
@@ -106,23 +103,23 @@ class CartController extends Controller
             if ($request->user()->hasVerifiedEmail()) {
                 $cartDetId = $request->string('id')->trim();
                 $qty = $request->float('qty');
-                $unitGroupId=$request->string('unitGroupId')->trim();
-                $unitId=$request->string('unitId')->trim();
-    
-    
-                $cart=new \App\CustomModels\CusModel_Cart();
-                $cart->user_id=$request->user()->id;
-                $cart->ar_cart_items=array([
-                    "id"=>$cartDetId,
-                    "qty"=>$qty,
-                    "unit_group_id"=>$unitGroupId,
-                    "unit_id"=>$unitId
+                $unitGroupId = $request->string('unitGroupId')->trim();
+                $unitId = $request->string('unitId')->trim();
+
+
+                $cart = new \App\CustomModels\CusModel_Cart();
+                $cart->user_id = $request->user()->id;
+                $cart->ar_cart_items = array([
+                    "id" => $cartDetId,
+                    "qty" => $qty,
+                    "unit_group_id" => $unitGroupId,
+                    "unit_id" => $unitId
                 ]);
-    
+
                 $cart->updateCartLine();
-    
+
                 return (new CommonResponseResource([
-                    "status"=>"success"
+                    "status" => "success"
                 ]));
             } else {
                 throw new EmailNotVerifiedException();
@@ -131,7 +128,6 @@ class CartController extends Controller
             $errorResponse = new ErrorResource($e);
             return $errorResponse;
         }
-      
     }
 
     public function api_deleteCartItem(Request $request)
@@ -139,17 +135,17 @@ class CartController extends Controller
         try {
             if ($request->user()->hasVerifiedEmail()) {
                 $cartDetId = $request->string('id')->trim();
-                    
-                $cart=new \App\CustomModels\CusModel_Cart();
-                $cart->user_id=$request->user()->id;
-                $cart->ar_cart_items=array([
-                    "id"=>$cartDetId
+
+                $cart = new \App\CustomModels\CusModel_Cart();
+                $cart->user_id = $request->user()->id;
+                $cart->ar_cart_items = array([
+                    "id" => $cartDetId
                 ]);
-    
+
                 $cart->deleteCartLine();
-    
+
                 return (new CommonResponseResource([
-                    "status"=>"success"
+                    "status" => "success"
                 ]));
             } else {
                 throw new EmailNotVerifiedException();
@@ -158,6 +154,45 @@ class CartController extends Controller
             $errorResponse = new ErrorResource($e);
             return $errorResponse;
         }
-      
     }
+
+    public function api_getShippingRatesForCurrentCart(Request $request)
+    {
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $user_id = $request->user()->id;
+
+                $cartHed = CusModel_Cart::getActiveCartHedByUserId($user_id);
+                $shipAndCo=new CusModel_ShipAndCoRates();
+                return $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+    }
+
+    //======================= Ship and co ==================================
+
+    public function api_getShippingCarriers(Request $request)
+    {
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $shipAndCo=new CusModel_ShipAndCoRates();
+                return $shipAndCo->getShippingCarriersList();
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+    }
+
+   
+
+    
+
 }

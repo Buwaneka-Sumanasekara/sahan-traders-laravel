@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CustomModels\CusModel_ShipAndCoRates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -94,6 +95,15 @@ class CmCartHed extends Model
     public function getBillingAddress(){
         if($this->bill_address!==null){
             return  json_decode($this->bill_address, true);;
+        }
+        return  null;
+    }
+
+    public function getCarrierInfo(){
+        if($this->carrier_info!==null){
+            $carrierInfo=json_decode($this->carrier_info, true);
+            $shipAndCoRates=new CusModel_ShipAndCoRates();
+            return  $shipAndCoRates->getCarrierInfo($carrierInfo);
         }
         return  null;
     }

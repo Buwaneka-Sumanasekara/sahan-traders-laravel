@@ -4,14 +4,13 @@ namespace App\CustomModels;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use App\Models\CmCartHed;
 use App\Models\CmCartDet;
 use App\Models\BmBuyer;
 use App\Models\PmProductAdditionalCost;
 
 use Illuminate\Support\Facades\DB;
-
+use stdClass;
 
 class CusModel_Cart extends Model
 {
@@ -80,10 +79,21 @@ class CusModel_Cart extends Model
 
     private function getAddressFromBuyer(BmBuyer $buyer, string $addressType)
     {
+        $buyerName = $buyer->user->first_name . " " . $buyer->user->last_name;
+        
+          
+
         if ($addressType == "shipping") {
-            return $buyer->shippingAddress;
+            $address= $buyer->shippingAddress;
+            $address->name = $buyerName;
+            $address->courier_country_code = $buyer->shippingAddress->country->courier_code;
+
+            return $address;
         } else if ($addressType == "billing") {
-            return $buyer->billingAddress;
+            $address= $buyer->billingAddress;
+            $address->name = $buyerName;
+            $address->courier_country_code = $buyer->billingAddress->country->courier_code;
+            return $address;
         } else {
             throw new \Exception("Invalid address type");
         }
@@ -106,10 +116,10 @@ class CusModel_Cart extends Model
         return CmCartDet::where('cm_cart_hed_id', $cartHedId)->where('id', $id)->delete();
     }
 
-    private function calculateTotalAmount(string $cartHedId)
+    private function calculateTotalAmount(CmCartHed $cartHed)
     {
-        $cartHed = CmCartHed::find($cartHedId);
-        $cartDets = CmCartDet::where('cm_cart_hed_id', $cartHedId)->get();
+      
+        $cartDets = $cartHed->cartDetItems;
 
 
         $taxPer = 0;
@@ -122,7 +132,7 @@ class CusModel_Cart extends Model
         $taxAmount = 0;
         foreach ($cartDets as $cartDet) {
             $totalAmount += $cartDet->amount;
-            if($cartDet->is_taxable_item){
+            if ($cartDet->is_taxable_item) {
                 $taxAmount += ($cartDet->amount * $taxPer / 100);
             }
         }
@@ -139,8 +149,37 @@ class CusModel_Cart extends Model
         //Tax will be calculate to gross amount
         $netAmount = $totalAmount - ($totalAmount * $disPer / 100) + $taxAmount;
 
+        $shippingCost=0;
+
+        if($cartHed->carrier_info!==null){
+            $shipAndCo = new CusModel_ShipAndCoRates();
+            $shippingCost=$shipAndCo->calculateAndGetShippingCost($cartHed);
+            $cartHed->shipping_cost = $shippingCost;
+        }
+
+        $netAmount=$netAmount+$shippingCost;
+
         $cartHed->net_amount = $netAmount;
         $cartHed->update();
+    }
+
+
+
+    private function addCarrierOfCartHeader(CmCartHed $cartHed)
+    { 
+      
+        if ($cartHed->carrier_info === null) {
+            $this->updateCartHedAddress($cartHed->buyer);
+            $shipAndCo = new CusModel_ShipAndCoRates();
+            $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
+           // dd($carriers);
+            if(count($carriers)>0){
+                $carrierInfo = $carriers[0];
+                $cartHed->carrier_info = json_encode($carrierInfo);
+                $cartHed->update();
+            }
+            $this->calculateTotalAmount($cartHed);
+        }
     }
 
 
@@ -155,6 +194,8 @@ class CusModel_Cart extends Model
 
 
         $cartHed = new CmCartHed;
+
+
 
         $cartHed->id = $cartHedId;
         $cartHed->bm_buyer_id = $buyer->id;
@@ -181,6 +222,8 @@ class CusModel_Cart extends Model
         $cartHed->ship_address_country_id = (isset($buyerShipAddress) ? $buyerShipAddress->cdm_country_id : null);
         $cartHed->bill_address = (isset($buyerBillAddress) ? $buyerBillAddress->toJSON() : null);
         $cartHed->bill_address_country_id = (isset($buyerBillAddress->cdm_country_id) ? $buyerBillAddress->cdm_country_id : null);
+
+
         $cartHed->save();
 
         return $cartHedId;
@@ -204,7 +247,8 @@ class CusModel_Cart extends Model
         $cartHed->update();
     }
 
-    public function deleteCartLine(){
+    public function deleteCartLine()
+    {
         DB::beginTransaction();
         try {
             $buyer = BmBuyer::find($this->user_id);
@@ -221,20 +265,22 @@ class CusModel_Cart extends Model
             foreach ($arCartItems as $cartItem) {
                 $cartItemId = $cartItem['id'];
                 $isDeleted = $this->deleteCartItem($cartHedId, $cartItemId);
-               
-                if(!$isDeleted){
+
+                if (!$isDeleted) {
                     throw new \Exception("Cart item not deleted");
                 }
             }
             DB::commit();
-            $this->calculateTotalAmount($cartHedId);
+            $cartHed = CmCartHed::find($cartHedId);
+            $this->calculateTotalAmount($cartHed);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
         }
     }
 
-    public function updateCartLine(){
+    public function updateCartLine()
+    {
         DB::beginTransaction();
         try {
             $buyer = BmBuyer::find($this->user_id);
@@ -267,7 +313,7 @@ class CusModel_Cart extends Model
                 $lineDisAmt = isset($cartDet->line_dis_amt) ? $cartDet->line_dis_amt : 0;
 
                 //check stock qty
-                $productId=$cartDet->product_id;
+                $productId = $cartDet->product_id;
                 $product = CusModel_Product::getCartProductById($productId);
                 $stockId = $cartDet->stk_batch_id;
                 $variantId = $cartDet->pm_product_variant_id;
@@ -287,8 +333,8 @@ class CusModel_Cart extends Model
             }
 
             DB::commit();
-
-            $this->calculateTotalAmount($cartHedId);
+            $cartHed = CmCartHed::find($cartHedId);
+            $this->calculateTotalAmount($cartHed);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -297,6 +343,7 @@ class CusModel_Cart extends Model
 
     public function addToCart(bool $isIncrementingQty)
     {
+        $isNew=false;
         DB::beginTransaction();
         try {
             $buyer = BmBuyer::find($this->user_id);
@@ -310,7 +357,8 @@ class CusModel_Cart extends Model
             if ($cartHed !== null) {
                 $cartHedId = $cartHed->id;
             } else {
-                $cartHedId=$this->createCartHed($buyer);
+                $cartHedId = $this->createCartHed($buyer);
+                $isNew=true;
             }
 
             $arCartItems = isset($this->ar_cart_items) ? $this->ar_cart_items : [];
@@ -404,7 +452,17 @@ class CusModel_Cart extends Model
 
             DB::commit();
 
-            $this->calculateTotalAmount($cartHedId);
+            
+            $cartHed = CmCartHed::find($cartHedId);
+            // if($isNew){
+            //     $this->addCarrierOfCartHeader($cartHed);
+            // }else{
+            //     $this->calculateTotalAmount($cartHed);
+            // }
+
+            $this->addCarrierOfCartHeader($cartHed);
+
+            
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

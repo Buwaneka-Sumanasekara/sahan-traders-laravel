@@ -38,7 +38,6 @@ const CartStep1 = () => {
     }
 
     const onChangeQty = (cartItemId: number,productId:string, qty: number,unitGroupId?:string, unitId?: string) => {
-        console.log("onChangeQty", cartItemId, qty, unitId)
         onUpdateQty({
             productId:productId,
             id: cartItemId.toString(),
@@ -54,7 +53,7 @@ const CartStep1 = () => {
             id: cartItemId.toString(),
         })
     }
-
+console.log("data:cart",data)
 
     if (isLoading) {
         return <div>Loading...</div>
