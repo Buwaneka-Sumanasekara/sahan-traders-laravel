@@ -50,9 +50,6 @@ const CartCarrierChangeModal = (props: CartCarrierChangeModalProps) => {
                                     onChange={() => setSelectedCarrier(carrier)}
                                 />
                             </div> 
-                            <div className="ms-2 me-auto">
-                                <div className="fw-bold">{`${carrier.displayService}`}</div>
-                            </div>
                             <Badge bg="primary" pill>
                                 {`${carrier.displayShippingCost}`}
                             </Badge>
