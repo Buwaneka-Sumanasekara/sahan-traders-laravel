@@ -8,7 +8,9 @@ use App\Exceptions\AuthenticationException;
 use App\Exceptions\EmailNotVerifiedException;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\CommonResponseResource;
+use App\Http\Resources\CountryCollectionResource;
 use App\Http\Resources\ErrorResource;
+use App\Models\CdmCountry;
 use App\Models\CmCartHed;
 use Illuminate\Http\Request;
 
@@ -216,6 +218,23 @@ class CartController extends Controller
         }
     }
 
+    public function api_getAvilableCountries(Request $request)
+    {
+
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $countries= CdmCountry::where("active",1)->get();
+                return (new CountryCollectionResource($countries));
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+
+    }
     
+   
 
 }

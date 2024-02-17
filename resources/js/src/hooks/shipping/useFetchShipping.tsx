@@ -49,3 +49,24 @@ export const useFetchShippingRates = (
   })
 }
 
+export const fetchShippingCountries= async () => {
+  return await api.get(`/shipping/countries`)
+}
+
+export const useFetchShippingCountries = (
+  enabled = true
+) => {
+  return useQuery(
+      [QueryKeys.SHIPPING_COUNTRIES], 
+      ()=>fetchShippingCountries(), {
+    enabled:enabled,
+    select: (data) => {
+      return data?.data?.data || []
+    },
+    onError(err) {
+        console.error(err);
+    },
+  })
+}
+
+

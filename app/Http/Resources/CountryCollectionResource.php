@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\CdmCountry;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CountryResource extends JsonResource
+class CountryCollectionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +16,8 @@ class CountryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'courierCode'=>$this->courier_code,
-            'paymentCode'=>$this->payment_code,
+            'time'=>time(),
+            'data'=> $this->map(fn (CdmCountry $item) => new CountryResource($item))
         ];
     }
 }

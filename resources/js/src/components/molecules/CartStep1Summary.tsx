@@ -8,6 +8,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Overlay from 'react-bootstrap/Overlay';
 import Icon from '../atoms/Icon';
 import CartSummaryRowShipping from '../atoms/CartSummaryShipping';
+import BuyerAddressChangeModal from './BuyerAddressChangeModal';
 
 const CartSummaryHeader = () => {
     return (
@@ -24,14 +25,14 @@ const CartSummaryHeader = () => {
 
 
 const CartSummaryRow = (props: { displayAmount?: string, label: string, toolTip?: string,onPress?:()=>void }) => {
-    const { displayAmount, label, toolTip } = props;
+    const { displayAmount, label, toolTip,onPress } = props;
     const target = useRef(null);
 
     const [show, setShow] = useState(false);
     const firstColSize=(displayAmount?7:12)
     const isButton=!!props.onPress;
     return (
-        <Row className='justify-content-end pt-3' >
+        <Row className='justify-content-end pt-3' onClick={()=>onPress?.()}>
             <Col md={firstColSize} sm={12} ref={target} onMouseEnter={() => {
                 if (!!toolTip) {
                     setShow(true);
@@ -86,6 +87,8 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
 
     const { cart } = props;
 
+    const [isVisibleAddressModal, setVisibleAddressModal] = useState(false);
+
 
     const onClickRedirectToHome = () => {
         window.open(`/`, '_self');
@@ -101,7 +104,7 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
 
 
              {cart.shippingAddressCountry? <CartSummaryRowShipping carrierInfo={cart.carrierInfo} amount={cart.displayShippingCost} shippingCountry={cart.shippingAddressCountry} />
-             : <CartSummaryRow onPress={()=>{}} toolTip={"Shipping cost will be calculated using the billing address"} label={`Click here to add Shipping address`} displayAmount={""} />
+             : <CartSummaryRow onPress={()=>setVisibleAddressModal(true)} toolTip={"Shipping cost will be calculated using the billing address"} label={`Click here to add Shipping address`} displayAmount={""} />
             }
 
             <hr />
@@ -111,6 +114,9 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
 
 
             <CartSummaryButton lable="Proceed to Checkout" varient="primary" onPress={() => { }} />
+
+
+            <BuyerAddressChangeModal isVisible={isVisibleAddressModal} onHide={() => setVisibleAddressModal(false)} />
         </Container>
     )
 

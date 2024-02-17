@@ -179,15 +179,24 @@ class CusModel_Cart extends Model
     {
 
         if ($cartHed->carrier_info === null) {
-            $this->updateCartHedAddress($cartHed->buyer);
-            $shipAndCo = new CusModel_ShipAndCoRates();
-            $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
-            if (count($carriers) > 0) {
-                $carrierInfo = $carriers[0];
-                $cartHed->carrier_info = json_encode($carrierInfo);
-                $cartHed->update();
+            //check buyer has shipping address
+            if(isset($cartHed->buyer->address_ship_id)){
+                $this->updateCartHedAddress($cartHed->buyer);
+                $cartHedUpdated=CmCartHed::find($cartHed->id);
+                $shipAndCo = new CusModel_ShipAndCoRates();
+                $carriers = $shipAndCo->getShippingCarriersRateList($cartHedUpdated, $cartHedUpdated->cartDetItems);
+                //dd($carriers);
+                if (count($carriers) > 0) {
+                    $carrierInfo = $carriers[0];
+                    $cartHedUpdated->carrier_info = json_encode($carrierInfo);
+                    $cartHedUpdated->update();
+                }
+                $this->calculateTotalAmount($cartHedUpdated);
+            }else{
+                $this->calculateTotalAmount($cartHed);
             }
-            $this->calculateTotalAmount($cartHed);
+            
+           
         }
     }
 
@@ -203,8 +212,6 @@ class CusModel_Cart extends Model
 
 
         $cartHed = new CmCartHed;
-
-
 
         $cartHed->id = $cartHedId;
         $cartHed->bm_buyer_id = $buyer->id;
@@ -492,6 +499,24 @@ class CusModel_Cart extends Model
                     // dd($carierId);
                     $this->calculateTotalAmount($cartHed);
                 }
+            }
+        } catch (\Exception $e) {
+
+            throw $e;
+        }
+    }
+
+
+    public function updateCartAddressAndReCalculate(CmCartHed $cartHed)
+    {
+        try {
+          
+           
+            if($cartHed->carrier_info === null){
+                $this->addCarrierOfCartHeader($cartHed); 
+            }else{ 
+                $this->updateCartHedAddress($cartHed->buyer);  
+                $this->calculateTotalAmount($cartHed);
             }
         } catch (\Exception $e) {
 

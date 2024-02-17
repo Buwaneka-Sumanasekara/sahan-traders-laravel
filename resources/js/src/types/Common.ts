@@ -36,7 +36,16 @@ export type RedirectProps={
 }
 
 export type Country={
+    id:string,
     name:string,
     courierCode:string,
-    
+    paymentCode:string,
+}
+
+
+
+export enum AddressType{
+    BILLING='billing',
+    SHIPPING='shipping',
+    BOTH='both',
 }
