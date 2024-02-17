@@ -38,7 +38,6 @@ const AddToCartButton = ({ productId, stockId, variantId, disabled,
     }
 
     function onErrorAddToCart(er: GeneralServerError) {
-        console.log(er);
         onShowWarningMessage({
             message: er.message,
         })

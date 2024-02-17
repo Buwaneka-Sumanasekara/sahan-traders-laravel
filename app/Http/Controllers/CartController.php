@@ -191,7 +191,30 @@ class CartController extends Controller
         }
     }
 
-   
+    public function api_changeShippingCarrier(Request $request)
+    {
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $carrierId = $request->string('carrierId')->trim();
+
+                $user_id = $request->user()->id;
+
+                $cartHed = CusModel_Cart::getActiveCartHedByUserId($user_id);
+                $cartModel=new CusModel_Cart();
+                
+                $cartModel->updateShippingCarrier($carrierId,$cartHed);
+
+                return (new CommonResponseResource([
+                    "status" => "success"
+                ]));
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+    }
 
     
 

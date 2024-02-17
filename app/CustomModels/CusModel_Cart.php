@@ -12,6 +12,8 @@ use App\Models\PmProductAdditionalCost;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
+use function App\Helpers\getValueFromObjectArray;
+
 class CusModel_Cart extends Model
 {
     use HasFactory;
@@ -172,7 +174,6 @@ class CusModel_Cart extends Model
             $this->updateCartHedAddress($cartHed->buyer);
             $shipAndCo = new CusModel_ShipAndCoRates();
             $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
-           // dd($carriers);
             if(count($carriers)>0){
                 $carrierInfo = $carriers[0];
                 $cartHed->carrier_info = json_encode($carrierInfo);
@@ -454,13 +455,13 @@ class CusModel_Cart extends Model
 
             
             $cartHed = CmCartHed::find($cartHedId);
-            // if($isNew){
-            //     $this->addCarrierOfCartHeader($cartHed);
-            // }else{
-            //     $this->calculateTotalAmount($cartHed);
-            // }
+            if($isNew){
+                $this->addCarrierOfCartHeader($cartHed);
+            }else{
+                $this->calculateTotalAmount($cartHed);
+            }
 
-            $this->addCarrierOfCartHeader($cartHed);
+            //$this->addCarrierOfCartHeader($cartHed);
 
             
         } catch (\Exception $e) {
@@ -468,4 +469,26 @@ class CusModel_Cart extends Model
             throw $e;
         }
     }
+
+    public function updateShippingCarrier($carierId,$cartHed)
+    {
+        try {
+            $shipAndCo = new CusModel_ShipAndCoRates();
+            $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
+            if(count($carriers)>0){
+                $carrierInfo = getValueFromObjectArray($carriers, "uniqueId", $carierId);
+              
+                if($carrierInfo!==null){
+                    $cartHed->carrier_info = json_encode($carrierInfo);
+                    $cartHed->update();
+                   // dd($carierId);
+                    $this->calculateTotalAmount($cartHed);
+                }  
+            }           
+        } catch (\Exception $e) {
+
+            throw $e;
+        }
+    }
+
 }

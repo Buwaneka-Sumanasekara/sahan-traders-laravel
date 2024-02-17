@@ -30,7 +30,6 @@ const CartStep1 = () => {
     }
 
     function onErrorUpdateCart(er: GeneralServerError) {
-        console.log(er);
         onShowWarningMessage({
             message: er.message,
         })
@@ -47,13 +46,12 @@ const CartStep1 = () => {
         })
     }
     const onDeleteItem = (cartItemId: number,productId:string) => {
-        console.log("onDeleteItem", cartItemId)
         onRemoveCartItem({
             productId:productId,
             id: cartItemId.toString(),
         })
     }
-console.log("data:cart",data)
+
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -66,7 +64,7 @@ console.log("data:cart",data)
                     <CartStep1Table cartItems={data.det} isUpdating={isUpdating || isDeleting} onChangeQty={onChangeQty} onDeleteItem={onDeleteItem} />
                 </Col>
                 <Col md={{ span: 3, offset: 1 }} sm={12} >
-                    <CartStep1Summary cart={data.hed} carItems={data.det} />
+                    <CartStep1Summary cart={data.hed}  />
                 </Col>
             </Row>
         </Container>)

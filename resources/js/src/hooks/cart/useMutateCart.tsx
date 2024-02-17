@@ -115,3 +115,35 @@ export const useDeleteCartItem = (
     },
   })
 }
+
+
+
+
+type updateCartCarrierProps = {
+  carrierId: string,
+}
+const updateCartCarrier = async (data: updateCartCarrierProps) => {
+  return await api.put(`/action/cart/carrier/update`, data)
+}
+
+export const useUpdateCartCarrier = (
+  onSuccessCallback?: (data: any, variables: updateCartCarrierProps) => void,
+  onErrorCallback?: (x: GeneralServerError) => void
+) => {
+  return useMutation(updateCartCarrier, {
+    onError: (error, variables, context) => {
+
+      const errorObj = error?.response || {};
+      authenticationRedirectHandler({
+        errorObject: errorObj,
+        onErrorCallBack: onErrorCallback
+      });
+
+    },
+    onSuccess: (data, variables) => {
+      onSuccessCallback?.(data, variables)
+    },
+    onSettled: () => {
+    },
+  })
+}

@@ -21,7 +21,6 @@ export const useFetchShippingCarriers = (
           ()=>fetchShippingCarriers(), {
         enabled:enabled,
         select: (data) => {
-          console.log("data",data)
           return data
         },
         onError(err) {
@@ -42,7 +41,6 @@ export const useFetchShippingRates = (
       ()=>fetchShippingRates(), {
     enabled:enabled,
     select: (data) => {
-      console.log("data",data)
       return data?.data || []
     },
     onError(err) {

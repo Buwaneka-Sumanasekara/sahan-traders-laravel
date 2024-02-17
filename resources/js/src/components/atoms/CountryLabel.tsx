@@ -14,7 +14,6 @@ const CountryLabel = ({ name,countryCode }:CountryLabelProps) => {
         });
 
         if(country){
-            console.log("country",country)
             return country.emoji
         }
     }

@@ -57,4 +57,17 @@ if (!function_exists('convertToDisplayPrice')) {
             return "";
         }
     }
+
+    function getValueFromObjectArray($array = [], $key = "id", $keyVal = "")
+    {
+
+       // dd($array);
+        foreach ($array as $item) {
+          // dd($keyVal==$item[$key]);
+            if ($item[$key] == $keyVal) {
+                return $item;
+            }
+        }
+        return null; // If no matching object found
+    }
 }

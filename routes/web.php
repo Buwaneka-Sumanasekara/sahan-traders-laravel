@@ -64,6 +64,7 @@ Route::prefix('web-api')->group(function () {
             Route::get('/carriers', 'api_getShippingCarriers')->name('api.shipping.carriers');
             Route::get('/rates', 'api_getShippingRatesForCurrentCart')->name('api.shipping.carrier.costs');
             
+            
         });
     });
 
@@ -74,6 +75,9 @@ Route::prefix('web-api')->group(function () {
                     Route::post('/add', 'api_addToCart')->name('action.cart.item.add');
                     Route::put('/update', 'api_updateCartItem')->name('action.cart.item.update');
                     Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');    
+                });
+                Route::prefix('carrier')->group(function () {
+                  Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
                 });
             });
         });

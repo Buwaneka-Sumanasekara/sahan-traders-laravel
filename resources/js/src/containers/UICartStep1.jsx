@@ -5,7 +5,7 @@ import CartStep1 from '../components/organisms/CartStep1';
 
 
 
-const UICartStep1 = (props) =><App><CartStep1 {...props} /></App>
+const UICartStep1 = (props) =><App><CartStep1 /></App>
 
 //assign to a element
 

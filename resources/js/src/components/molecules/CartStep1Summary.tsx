@@ -76,11 +76,10 @@ const CartSummaryButton = (props: { lable: string, varient: string, onPress: () 
 
 type CartStep1SummaryProps = {
     cart: Cart,
-    carItems: CartItem[]
 }
 const CartStep1Summary = (props: CartStep1SummaryProps) => {
 
-    const { cart, carItems } = props;
+    const { cart } = props;
 
 
     const onClickRedirectToHome = () => {

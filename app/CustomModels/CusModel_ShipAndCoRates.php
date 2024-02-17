@@ -151,7 +151,6 @@ class CusModel_ShipAndCoRates extends Model
             })->toArray(),
             "parcels" =>  $this->convertToParsals($cartItems)
         ];
-        //dd($data);
         $response = getShipAndCoApiHttp()->post("/rates",$data);
 
         $body = $response->json();
@@ -175,11 +174,14 @@ class CusModel_ShipAndCoRates extends Model
 
        $shippingCost=isset($courierRates->price) ? $courierRates->price : 0;
 
-       foreach($courierRates->surcharges as $surcharge){
-           if(isset($surcharge->price)){
-               $shippingCost+=$surcharge->price;
-           }
+       if(isset($courierRates->surcharges)){
+        foreach($courierRates->surcharges as $surcharge){
+            if(isset($surcharge->price)){
+                $shippingCost+=$surcharge->price;
+            }
+        }
        }
+       
 
          return $shippingCost;  
     }
@@ -189,11 +191,14 @@ class CusModel_ShipAndCoRates extends Model
 
         $totalCost=$carrierInfo['price'];
 
-        foreach($carrierInfo['surcharges'] as $surcharge){
-            if(isset($surcharge['price'])){
-                $totalCost+=$surcharge['price'];
+        if(isset($carrierInfo['surcharges'])){
+            foreach($carrierInfo['surcharges'] as $surcharge){
+                if(isset($surcharge['price'])){
+                    $totalCost+=$surcharge['price'];
+                }
             }
         }
+      
 
         $carrierInfo['uniqueId']=$carrierInfo['carrier_id'].'_'.$carrierInfo['service'];
         $carrierInfo['displayShippingCost']=convertToDisplayPrice($totalCost);
