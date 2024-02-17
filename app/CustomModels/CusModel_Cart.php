@@ -82,20 +82,28 @@ class CusModel_Cart extends Model
     private function getAddressFromBuyer(BmBuyer $buyer, string $addressType)
     {
         $buyerName = $buyer->user->first_name . " " . $buyer->user->last_name;
-        
-          
+
+
 
         if ($addressType == "shipping") {
-            $address= $buyer->shippingAddress;
-            $address->name = $buyerName;
-            $address->courier_country_code = $buyer->shippingAddress->country->courier_code;
+            if ($buyer->shippingAddress !== null) {
+                $address = $buyer->shippingAddress;
+                $address->name = $buyerName;
+                $address->courier_country_code = $buyer->shippingAddress->country->courier_code;
 
-            return $address;
+                return $address;
+            } else {
+                return null;
+            }
         } else if ($addressType == "billing") {
-            $address= $buyer->billingAddress;
-            $address->name = $buyerName;
-            $address->courier_country_code = $buyer->billingAddress->country->courier_code;
-            return $address;
+            if ($buyer->billingAddress !== null) {
+                $address = $buyer->billingAddress;
+                $address->name = $buyerName;
+                $address->courier_country_code = $buyer->billingAddress->country->courier_code;
+                return $address;
+            } else {
+                return null;
+            }
         } else {
             throw new \Exception("Invalid address type");
         }
@@ -120,7 +128,7 @@ class CusModel_Cart extends Model
 
     private function calculateTotalAmount(CmCartHed $cartHed)
     {
-      
+
         $cartDets = $cartHed->cartDetItems;
 
 
@@ -151,15 +159,15 @@ class CusModel_Cart extends Model
         //Tax will be calculate to gross amount
         $netAmount = $totalAmount - ($totalAmount * $disPer / 100) + $taxAmount;
 
-        $shippingCost=0;
+        $shippingCost = 0;
 
-        if($cartHed->carrier_info!==null){
+        if ($cartHed->carrier_info !== null) {
             $shipAndCo = new CusModel_ShipAndCoRates();
-            $shippingCost=$shipAndCo->calculateAndGetShippingCost($cartHed);
+            $shippingCost = $shipAndCo->calculateAndGetShippingCost($cartHed);
             $cartHed->shipping_cost = $shippingCost;
         }
 
-        $netAmount=$netAmount+$shippingCost;
+        $netAmount = $netAmount + $shippingCost;
 
         $cartHed->net_amount = $netAmount;
         $cartHed->update();
@@ -168,13 +176,13 @@ class CusModel_Cart extends Model
 
 
     private function addCarrierOfCartHeader(CmCartHed $cartHed)
-    { 
-      
+    {
+
         if ($cartHed->carrier_info === null) {
             $this->updateCartHedAddress($cartHed->buyer);
             $shipAndCo = new CusModel_ShipAndCoRates();
             $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
-            if(count($carriers)>0){
+            if (count($carriers) > 0) {
                 $carrierInfo = $carriers[0];
                 $cartHed->carrier_info = json_encode($carrierInfo);
                 $cartHed->update();
@@ -344,7 +352,7 @@ class CusModel_Cart extends Model
 
     public function addToCart(bool $isIncrementingQty)
     {
-        $isNew=false;
+        $isNew = false;
         DB::beginTransaction();
         try {
             $buyer = BmBuyer::find($this->user_id);
@@ -359,7 +367,7 @@ class CusModel_Cart extends Model
                 $cartHedId = $cartHed->id;
             } else {
                 $cartHedId = $this->createCartHed($buyer);
-                $isNew=true;
+                $isNew = true;
             }
 
             $arCartItems = isset($this->ar_cart_items) ? $this->ar_cart_items : [];
@@ -453,42 +461,41 @@ class CusModel_Cart extends Model
 
             DB::commit();
 
-            
+
             $cartHed = CmCartHed::find($cartHedId);
-            if($isNew){
+            if ($isNew) {
                 $this->addCarrierOfCartHeader($cartHed);
-            }else{
+            } else {
                 $this->calculateTotalAmount($cartHed);
             }
 
             //$this->addCarrierOfCartHeader($cartHed);
 
-            
+
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
         }
     }
 
-    public function updateShippingCarrier($carierId,$cartHed)
+    public function updateShippingCarrier($carierId, $cartHed)
     {
         try {
             $shipAndCo = new CusModel_ShipAndCoRates();
             $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
-            if(count($carriers)>0){
+            if (count($carriers) > 0) {
                 $carrierInfo = getValueFromObjectArray($carriers, "uniqueId", $carierId);
-              
-                if($carrierInfo!==null){
+
+                if ($carrierInfo !== null) {
                     $cartHed->carrier_info = json_encode($carrierInfo);
                     $cartHed->update();
-                   // dd($carierId);
+                    // dd($carierId);
                     $this->calculateTotalAmount($cartHed);
-                }  
-            }           
+                }
+            }
         } catch (\Exception $e) {
 
             throw $e;
         }
     }
-
 }
