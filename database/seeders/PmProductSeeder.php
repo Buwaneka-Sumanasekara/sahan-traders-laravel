@@ -78,9 +78,10 @@ class PmProductSeeder extends Seeder
                 "prop_width" => 10,
                 "prop_height" => 10,
                 "prop_depth" => 10,
-                'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                'prop_weight' => 10,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -96,11 +97,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "prop_width" => 11,
+                "prop_height" => 12,
+                "prop_depth" => 13,
+                'prop_weight' => 20,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -117,12 +120,13 @@ class PmProductSeeder extends Seeder
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
                 "is_featured_product" => true,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "prop_width" => 14,
+                "prop_height" => 15,
+                "prop_depth" => 16,
+                'prop_weight' => 30,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -138,12 +142,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-   
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>16342,"cost_price"=>10000]
+                "prop_width" => 17,
+                "prop_height" => 18,
+                "prop_depth" => 19,
+                'prop_weight' => 40,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -160,11 +165,13 @@ class PmProductSeeder extends Seeder
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => true,
                 'is_featured_product' => true,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>10118370,"cost_price"=>10015250]
+                "prop_width" => 20,
+                "prop_height" => 21,
+                "prop_depth" => 22,
+                'prop_weight' => 50,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -181,11 +188,13 @@ class PmProductSeeder extends Seeder
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => true,
                 'is_featured_product' => true,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>20118370,"cost_price"=>20015250]
+                "prop_width" => 23,
+                "prop_height" => 24,
+                "prop_depth" => 25,
+                'prop_weight' => 50,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -201,11 +210,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>20118370,"cost_price"=>20015250]
+                "prop_width" => 26,
+                "prop_height" => 27,
+                "prop_depth" => 28,
+                'prop_weight' => 60,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -223,11 +234,13 @@ class PmProductSeeder extends Seeder
                 "is_inquiry_item" => false,
                 "sell_price" => 24500,
                 "cost_price" => 15000,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>24500,"cost_price"=>15000]
+                "prop_width" => 29,
+                "prop_height" => 30,
+                "prop_depth" => 31,
+                'prop_weight' => 70,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -244,11 +257,14 @@ class PmProductSeeder extends Seeder
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
                 'is_featured_product' => true,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>48000,"cost_price"=>30000]
+                "prop_weight" => 32,
+                "prop_width" => 33,
+                "prop_height" => 34,
+                "prop_depth" => 35,
+                'prop_weight' => 80,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -264,11 +280,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>5500,"cost_price"=>3000]
+                "prop_width" => 36,
+                "prop_height" => 37,
+                "prop_depth" => 38,
+                'prop_weight' => 90,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -284,12 +302,13 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"Default","sell_price"=>4263.63,"cost_price"=>200.63]
+                "prop_width" => 39,
+                "prop_height" => 40,
+                "prop_depth" => 41,
+                'prop_weight' => 100,
+                "variant_group_id"=>0,
+                'ar_product_variants'=>[
+                    ["variant_id"=>0,"sell_price"=>16342,"cost_price"=>10000]
                 ]
             ],
             [
@@ -305,17 +324,19 @@ class PmProductSeeder extends Seeder
                 "md_by_user_id" => config("global.default_admin_user_id"),
                 "pm_unit_group_id" => config("global.default_unit_group_id"),
                 "is_inquiry_item" => false,
-                "prop_width" => 10,
-                "prop_height" => 10,
-                "prop_depth" => 10,
-                'prop_weight' => 0,
-                'ar_product_varients'=>[
-                    ["name"=>"White","sell_price"=>39500.63,"cost_price"=>32500.63],
-                    ["name"=>"Black","sell_price"=>38500.63,"cost_price"=>31500.63]
+                "prop_width" => 42,
+                "prop_height" => 43,
+                "prop_depth" => 44,
+                'prop_weight' => 110,
+                "variant_group_id"=>1,
+                'ar_product_variants'=>[
+                    ["variant_id"=>1,"sell_price"=>16342,"cost_price"=>10000],
+                    ["variant_id"=>2,"sell_price"=>16442,"cost_price"=>10000],
+                    ["variant_id"=>3,"sell_price"=>16542,"cost_price"=>10000]
                 ],
                 'ar_additional_costs'=>[
-                    ["name"=>"Normal wrap","amount"=>0],
-                    ["name"=>"Additional wrap","amount"=>10]
+                    ["name"=>"One Bubble wrap","amount"=>0],
+                    ["name"=>"Additional Bubble wrap","amount"=>100],
                 ]
             ],
         ];
@@ -341,9 +362,13 @@ class PmProductSeeder extends Seeder
             $prodObj->prop_depth = isset($prod["prop_depth"]) ? $prod["prop_depth"] : null;
             $prodObj->prop_weight = isset($prod["prop_weight"]) ? $prod["prop_weight"] : null;
 
-            $prodObj->ar_product_varients=isset($prod["ar_product_varients"])?$prod["ar_product_varients"]:[];
+            $prodObj->variant_group_id = $prod["variant_group_id"];
+            
+            $prodObj->ar_product_variants=isset($prod["ar_product_variants"])?$prod["ar_product_variants"]:[];
             $prodObj->ar_additional_costs=isset($prod["ar_additional_costs"])?$prod["ar_additional_costs"]:[];
 
+
+          
 
             $prodObj->is_from_seeds = true; //only for seeds
 

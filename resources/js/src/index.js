@@ -1,13 +1,22 @@
 
 
+//atoms
+import UIToast from './containers/UIToast'
 
-//components
+
+//molecules
 import UIProductInfo from './containers/UIProductInfo'
 import UIFeatureProducts from './containers/UIFeatureProducts'
 import UIHeaderCartSummary from './containers/UIHeaderCartSummary'
 
+//organisms
+import UICartStep1 from './containers/UICartStep1'
+
+
 export {
     UIProductInfo,
     UIFeatureProducts,
-    UIHeaderCartSummary
+    UIHeaderCartSummary,
+    UIToast,
+    UICartStep1
 }

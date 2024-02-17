@@ -4,11 +4,9 @@ namespace App\CustomModels;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use App\Models\CdmSiteSliders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
 use Intervention\Image\Facades\Image;
 
 class CusModel_Sliders extends Model

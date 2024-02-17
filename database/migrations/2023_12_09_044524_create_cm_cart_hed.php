@@ -22,12 +22,17 @@ return new class extends Migration
             $table->string('trn_ref_no', 100);
             $table->bigInteger('bm_buyer_id');
             $table->double('tax_per', 10, 2);
+            $table->double('tax_amount', 20, 2);
             $table->double('shipping_cost', 20, 2);
-            $table->integer('ship_address_id');
-            $table->integer('bill_address_id');
+
+            $table->json('ship_address')->nullable();
+            $table->integer('ship_address_country_id')->nullable();
+            $table->json('bill_address')->nullable();
+            $table->integer('bill_address_country_id')->nullable();
+
             $table->integer('cm_cart_status_id');
             $table->string('tracking_no', 200);
-
+            $table->json('carrier_info')->nullable();
            
             $table->bigInteger('cr_by_user_id');
             $table->bigInteger('md_by_user_id');
@@ -39,11 +44,12 @@ return new class extends Migration
             $table->foreign('stkm_trn_status_id')->references('id')->on('stkm_trn_status');
             $table->foreign('stkm_trn_setup_id')->references('id')->on('stkm_trn_setup');
             $table->foreign('bm_buyer_id')->references('id')->on('bm_buyer');
-            $table->foreign('ship_address_id')->references('id')->on('cm_cart_addresses');
-            $table->foreign('bill_address_id')->references('id')->on('cm_cart_addresses');
             $table->foreign('cm_cart_status_id')->references('id')->on('cm_cart_status');
             $table->foreign('cr_by_user_id')->references('id')->on('um_user');
             $table->foreign('md_by_user_id')->references('id')->on('um_user');
+
+            $table->foreign('ship_address_country_id')->references('id')->on('cdm_country');
+            $table->foreign('bill_address_country_id')->references('id')->on('cdm_country');
         });
     }
 

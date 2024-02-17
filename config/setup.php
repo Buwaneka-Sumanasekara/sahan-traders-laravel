@@ -31,6 +31,20 @@ return [
     'base_country_id' => env('COMMON_SETUP_BASE_COUNTRY_ID', "JPY"),
 
 
+    //ship and co
+    'ship_and_co_api_key' => env('SHIP_AND_CO_API_KEY', ""),
+    'ship_and_co_api_url' => env('SHIP_AND_CO_URL', "https://app.shipandco.com/api/v1"),
+    'ship_and_co_api_currency' => env('SHIP_AND_CO_CURRENCY', "JPY"),
 
+    'company_name' => "OSAKA SAHAN INTERNATIONAL TRADERS (PRIVATE) LIMITED",
+    'company_phone' => "+818090654212",
+    'company_country' => "JP",
+    'company_address1' => "909-910-1-3- Koya,",
+    'company_address2' => "Sosa City",
+    'company_city' => "Chiba",
+    'company_province' => "",
+    'company_zip' => "289-2135",
+    'company_email' => "info@sahantraders.com",
+    "company_courier_country_code" => "JP",
 
 ];

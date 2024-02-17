@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pm_product_varient', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('product_id', 60);
+        Schema::create('pm_product_variant_group', function (Blueprint $table) {
+            $table->integer('id')->primary();
             $table->string('name', 400);
             $table->boolean('active')->default(true);
-            
-            $table->primary(['id','product_id']);
-            $table->foreign('product_id')->references('id')->on('pm_product');
-
+            $table->integer('type_id');//color, size, etc
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pm_product_varient');
+        Schema::dropIfExists('pm_product_variant_group');
     }
 };

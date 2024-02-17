@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 400);
             $table->string('slug', 500);
             $table->boolean('is_inquiry_item')->default(false);
+            $table->boolean('is_taxable_item')->default(true);
             $table->text('note')->nullable();
             $table->text('note_html')->nullable();
             $table->boolean('active')->default(true);
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->double('prop_height')->nullable();
             $table->double('prop_depth')->nullable();
             $table->double('prop_weight')->nullable();
+            $table->integer('pm_product_variant_group_id');
 
             $table->foreign('pm_group1_id')->references('id')->on('pm_group1');
             $table->foreign('pm_group2_id')->references('id')->on('pm_group2');
@@ -44,6 +46,8 @@ return new class extends Migration
             $table->foreign('md_by_user_id')->references('id')->on('um_user');
 
             $table->foreign('pm_unit_group_id')->references('id')->on('pm_unit_group');
+
+            $table->foreign('pm_product_variant_group_id')->references('id')->on('pm_product_variant_group');
 
             $table->timestamps();
         });

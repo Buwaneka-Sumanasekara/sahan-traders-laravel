@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\PmProductAdditionalCost;
+
+use function App\Helpers\convertToDisplayPrice;
 
 class ProductResource extends JsonResource
 {
@@ -16,21 +19,60 @@ class ProductResource extends JsonResource
     {
        // dd($this);
        
-        $varientId=isset($this->varientId)?$this->varientId:$this->getDefaultProductVarient()->id;
+       $variantId="";
+       $stock=null;
+
+       $stockId="";
+       if(isset($this->variantId)){
+        $variantId=$this->variantId;
+        $stock=$this->getFIFOStockByVarientId($variantId);
+       
+       }else{
+        $stock=$this->getFIFOStockWithVariant();
+        $variantId=$stock->pm_product_variant_id;
+       }
+
+       $stockId=$stock->batch;
+       $sellPrice=$this->getSellPrice($stockId,$variantId);
+
+       $arVariants=[];
+
+         foreach($this->stocks as $stock){
+            $variantObj=$stock->variant;
+            $variantGroupObj=$stock->variantGroup;
+
+            $variant=new \stdClass();
+            $variant->stockId=$stockId;
+
+            $variant->sellPrice=$stock->sell_price;
+            $variant->displaySellPrice=convertToDisplayPrice($stock->sell_price);
+            $variant->costPrice=$stock->cost_price;
+            $variant->val=$variantObj->val;
+            $variant->id=$variantObj->id;
+            $variant->name=$variantObj->name;
+            $variant->typeId=$variantGroupObj->type_id;
+
+            $arVariants[]=$variant;
+         }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'note'=>$this->note,
             'slug' => $this->slug,
             'isInquiryItem' => $this->is_inquiry_item,
-            'isQtyAvailableInStock'=>$this->isQtyAvailableInStock(1,$varientId),//default varient id is 1
+            'isQtyAvailableInStock'=>!$this->isQtyOutOfStock($stockId,$variantId),
             'mainThumbnailImageUrl' => $this->mainThumbnailImageUrl(),
-            'displayPrice'=>$this->getDisplayPrice($varientId),
-            'price'=>$this->getFIFOStockPrice($varientId),
-            'varientId'=>$varientId,
-            'stockId'=>$this->getFIFOStockId($varientId),
+            'displayPrice'=>convertToDisplayPrice($sellPrice),
+            'price'=>$sellPrice,
+            'variantId'=>$variantId,
+            'stockId'=>$stockId,
             'unitId'=>$this->getDefaultSalesUnitId(),
             'unitGroupId'=>$this->pm_unit_group_id,
-            'avilableStockQty'=>$this->getAvailableStockQty($varientId),
+            'avilableStockQty'=>$stock->qty,
+            'varientGroup'=>$stock->variantGroup,
+            'variants'=>$arVariants,
+            'additionalCosts'=>$this->productAdditionalCosts()->get()->map(fn (PmProductAdditionalCost $item) => new AdditionalCostResource($item)),
         ];
     }
 }

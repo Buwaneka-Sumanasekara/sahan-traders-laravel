@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
@@ -40,19 +41,54 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product/{slug}', 'specificProductBySlugPage')->name('product.public.display');
 });
 
+Route::controller(CartController::class)->group(function () {
+    Route::get('/cart', 'cartStep1')->name('cart.step1');
+});
 
 
 
 //local api
 Route::prefix('web-api')->group(function () {
     Route::controller(ProductController::class)->group(function () {
-        Route::get('/product/{productId}/{varientId}', 'api_getProductInfoForVarient')->name('api.product.get-info-for-varient');
+        Route::get('/product/{productId}', 'api_getProductInfoForVarient')->name('api.product.get-info-for-variant');
         Route::get('/feature-products', 'api_getFeatureProducts')->name('api.product.get-feature-products');
     });
-    Route::prefix('action')->group(function () {
+
+    Route::controller(CartController::class)->group(function () {
         Route::prefix('cart')->group(function () {
-            Route::controller(CartController::class)->group(function () {
-                Route::post('/add', 'addToCart')->name('cart.action.add');
+            Route::get('/current', 'api_getCurrentCart')->name('api.cart.get-current-cart');
+        });
+    });
+
+    Route::controller(CartController::class)->group(function () {
+        Route::prefix('shipping')->group(function () {
+            Route::get('/carriers', 'api_getShippingCarriers')->name('api.shipping.carriers');
+            Route::get('/rates', 'api_getShippingRatesForCurrentCart')->name('api.shipping.carrier.costs');
+            Route::get('/countries', 'api_getAvilableCountries')->name('api.shipping.countries');
+        });
+    });
+
+    Route::prefix('action')->group(function () {
+        Route::controller(CartController::class)->group(function () {
+            Route::prefix('cart')->group(function () {
+                Route::prefix('item')->group(function () {
+                    Route::post('/add', 'api_addToCart')->name('action.cart.item.add');
+                    Route::put('/update', 'api_updateCartItem')->name('action.cart.item.update');
+                    Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');  
+                    
+                });
+                
+                Route::prefix('carrier')->group(function () {
+                  Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
+                });
+            });
+        });
+
+        Route::controller(BuyerController::class)->group(function () {
+            Route::prefix('buyer')->group(function () {
+                Route::prefix('address')->group(function () {
+                    Route::put('/update', 'api_updateBuyerAddress')->name('action.buyer.address.update'); 
+                });
             });
         });
     });

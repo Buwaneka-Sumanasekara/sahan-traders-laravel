@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
 use App\Models\StkmTrnSetup;
 use App\Models\UmUserRole;
 use App\Models\UmUserStatus;
@@ -26,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PmUnitSeeder::class);
         $this->call(PmGroupSeeder::class);
         $this->call(PromoPromotionTypeSeeder::class);
+        $this->call(PmProductVariantSeeder::class);
         
         $this->call(PmProductSeeder::class);
 

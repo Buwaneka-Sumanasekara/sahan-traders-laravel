@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('line_dis_per', 10, 2);
             $table->double('line_dis_amt', 10, 2);
             $table->double('amount', 20, 2);
+            $table->boolean('is_taxable_item')->default(true);
 
             $table->integer('pm_unit_group_id');
             $table->integer('pm_unit_id');
@@ -27,7 +28,8 @@ return new class extends Migration
             $table->string('product_id', 60);
             $table->string('stk_batch_id', 5);
 
-            $table->integer('pm_product_varient_id');
+            $table->integer('pm_product_variant_id');
+            $table->integer('pm_product_variant_group_id');
             $table->string('promo_promotions_id', 100)->nullable();
             $table->integer('additional_product_cost_id')->nullable();
             $table->double('additional_product_cost')->default(0);
@@ -43,7 +45,8 @@ return new class extends Migration
             $table->foreign('cm_cart_hed_id')->references('id')->on('cm_cart_hed');
             $table->foreign('product_id')->references('id')->on('pm_product');
             $table->foreign('promo_promotions_id')->references('id')->on('promo_promotions');
-            $table->foreign('pm_product_varient_id')->references('id')->on('pm_product_varient');
+            $table->foreign('pm_product_variant_group_id')->references('id')->on('pm_product_variant_group');
+            $table->foreign('pm_product_variant_id')->references('id')->on('pm_product_variant');
             $table->foreign('additional_product_cost_id')->references('id')->on('pm_product_additional_cost');
         });
     }

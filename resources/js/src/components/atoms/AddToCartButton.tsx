@@ -1,63 +1,89 @@
 import React from 'react';
 import { useAddToCart } from '../../hooks/cart/useMutateCart';
-import { GeneralServerError } from '../../types/Common';
+import { EventType, GeneralServerError } from '../../types/Common';
+import { AddCartButtonType } from '../../types/Cart';
+import { useMutateEventListener, useMutateToastEventListner } from '../../hooks/common/useEventsListner';
 
-type AddToCartButtonProps={
-    productId:string,
-    stockId:string,
-    varientId:string,
-    disabled:boolean,
-    isInqueryItem:boolean
-    qty:number
-    unitGroupId:string,
-    unitId:string,
-    additionalCostId?:string
+type AddToCartButtonProps = {
+    productId: string,
+    stockId: string,
+    variantId: string,
+    disabled: boolean,
+    isInqueryItem: boolean
+    qty: number
+    unitGroupId: string,
+    unitId: string,
+    additionalCostId?: string,
+    buttonType: AddCartButtonType
+    isIncrementingQty?: boolean
 }
-const AddToCartButton = ({ productId,stockId,varientId,disabled,isInqueryItem,qty,additionalCostId,unitGroupId,unitId }:AddToCartButtonProps) => {
+const AddToCartButton = ({ productId, stockId, variantId, disabled, 
+    isInqueryItem, qty, additionalCostId, unitGroupId, unitId, 
+    buttonType,isIncrementingQty }: AddToCartButtonProps) => {
 
-    const {mutate:onAddToCart}=useAddToCart(onSuccessAddToCart,onErrorAddToCart);
+    const { mutate: onAddToCart } = useAddToCart(onSuccessAddToCart, onErrorAddToCart);
 
+    const {onExecuteEvent:onExecuteEvent}=useMutateEventListener();
+    const {onShowWarningMessage:onShowWarningMessage,onShowSuccessMessage:onShowSuccessMessage}=useMutateToastEventListner();
 
+    function onSuccessAddToCart(data: object) {
+        onExecuteEvent(EventType.EVENT_CART_UPDATED,{
+            productId: productId,
+        })
 
+        onShowSuccessMessage({
+            message: "Item added to cart",
+        })
 
-    function onSuccessAddToCart(data: any) {
-       console.log("onSuccessAddToCart",data)
     }
 
-    function onErrorAddToCart(er:GeneralServerError){
-        console.log(er);
+    function onErrorAddToCart(er: GeneralServerError) {
+        onShowWarningMessage({
+            message: er.message,
+        })
+       
     }
 
 
     const onPressAddToCart = () => {
         onAddToCart({
-            productId:productId,
-            stockId:stockId,
-            varientId:varientId,
-            qty:qty,
-            additionalCostId:additionalCostId,
-            unitGroupId:unitGroupId,
-            unitId:unitId
+            productId: productId,
+            stockId: stockId,
+            variantId: variantId,
+            qty: qty,
+            additionalCostId: additionalCostId,
+            unitGroupId: unitGroupId,
+            unitId: unitId,
+            isIncrementingQty:isIncrementingQty
         })
     }
 
-    const onPressInquiry = (data:any) => {
+    const onPressInquiry = (data: any) => {
         console.log(data)
     }
 
-    if(isInqueryItem){
+    if (isInqueryItem) {
         return (
-            <button className="btn btn-danger" disabled={disabled} onClick={() =>onPressInquiry({
-                productId:productId,
-                stockId:stockId,
-                varientId:varientId
+            <button className="btn btn-danger" disabled={disabled} onClick={() => onPressInquiry({
+                productId: productId,
+                stockId: stockId,
+                variantId: variantId
             })}>Send Inquiry</button>
-        ) 
+        )
+    } else {
+        if (buttonType === AddCartButtonType.BuyNow) {
+            return (
+                <button className="btn  btn-outline-danger " disabled={disabled} onClick={() => onPressAddToCart()}>Buy Now</button>
+            )
+        }
+        return (
+            <button className={`btn btn btn-danger`} disabled={disabled} onClick={() => onPressAddToCart()}>{
+                'Add To Cart'
+            }</button>
+        )
     }
-    return (
-        <button className="btn btn-danger" disabled={disabled} onClick={() =>onPressAddToCart()}>Add to cart</button>
-    )
-    
+
+
 }
 
 export default AddToCartButton

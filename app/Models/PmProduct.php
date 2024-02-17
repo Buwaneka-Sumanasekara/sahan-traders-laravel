@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Number;
+
+
+use function App\Helpers\convertToDisplayPrice;
 
 class PmProduct extends Model
 {
@@ -39,7 +41,8 @@ class PmProduct extends Model
         'prop_height',
         'prop_depth',
         'prop_weight',
-        'pm_unit_group_id'
+        'pm_unit_group_id',
+        'pm_product_variant_group_id'
     ];
 
 
@@ -65,37 +68,13 @@ class PmProduct extends Model
     {
         return $this->hasMany(PmProductStock::class, 'pm_product_id', 'id')->where('active', true);
     }
-    public function productVarients()
-    {
-        return $this->hasMany(PmProductVarient::class, 'product_id', 'id')->where('active', true);
-    }
-
+   
+    
     public function productAdditionalCosts()
     {
         return $this->hasMany(PmProductAdditionalCost::class, 'product_id', 'id')->where('active', true);
     }
 
-    public function hasMultipleVarients(){
-        return $this->productVarients()->count()>1;
-    }
-    public function hasAdditionalCosts(){
-        return $this->productAdditionalCosts()->count()>0;
-    }
-
-
-
-    public function getDefaultProductVarient(){
-        return $this->productVarients()->first();
-    }
-
-    public function getFIFOStock($varientId)
-    {
-        if(isset($varientId)){
-            return $this->stocks()->where("qty", ">", 0)->where("pm_product_varient_id",$varientId)->orderBy('batch', 'asc')->first();     
-        }
-        $productDefaultVarient=$this->getDefaultProductVarient();
-        return $this->stocks()->where("qty", ">", 0)->where("pm_product_varient_id",$productDefaultVarient->id)->orderBy('batch', 'asc')->first();
-    }
 
     public function group1(): BelongsTo
     {
@@ -122,89 +101,76 @@ class PmProduct extends Model
         return $this->belongsTo(PmUnitGroup::class, 'pm_unit_group_id', "id");
     }
 
-
-    //Other getters
-
-    public function getAvailableStockQty($varientId)
-    { //oldest stock
-        return $this->getFIFOStock($varientId)->qty;
+    public function hasAdditionalCosts(){
+        return $this->productAdditionalCosts()->count()>0;
     }
 
-    public function getAvailableStockQtyByBatch($batch,$varientId)
+    public function getFIFOStock()
     {
-        $stock = $this->stocks()->where("batch", $batch)->where("pm_product_varient_id",$varientId)->first();
-        return $stock ? $stock->qty : 0;
+        return $this->stocks()->where("qty", ">", 0)->orderBy('batch', 'asc')->first();
     }
 
-    public function getFIFOStockId($varientId)
+
+
+
+
+    /*=======================Get defaults=====================================*/
+
+    //Default variant will be the first variant of avilable stocks
+    public function getFIFOStockWithVariant():PmProductStock
     {
-        $stock = $this->getFIFOStock($varientId);
-        return $stock ? $stock->batch : "";
+        return $this->stocks()->where("qty", ">", 0)->orderBy('pm_product_variant_id', 'asc')->first();
     }
-
-    public function getFIFOStockQty($varientId): float
+    
+    public function getFIFOStockByVarientId($variantId):PmProductStock
     {
-        $stock = $this->getFIFOStock($varientId);
-        return $stock ? $stock->qty : 0;
+        return $this->stocks()->where("qty", ">", 0)->where("pm_product_variant_id",$variantId)->orderBy('batch', 'asc')->first();
     }
 
-    public function getFIFOStockPrice($varientId)
+    public function getStockByIdAndVariantId($stockId,$variantId)
     {
-        $stock = $this->getFIFOStock($varientId);
-        return $stock ? $stock->sell_price : 0;
+        return $this->stocks()->where("batch", $stockId)->where("pm_product_variant_id",$variantId)->first();
     }
+    
 
-    public function getDisplayPrice($varientId)
+    public function isQtyAvailableInStock($stockId,$variantId,$qty=1): bool
     {
-        $price = $this->getFIFOStockPrice($varientId) ? $this->getFIFOStockPrice($varientId) : 0;
-        return  Number::currency($price, config("setup.base_country_id"));
+        $stock = $this->getStockByIdAndVariantId($stockId,$variantId);
+        return  $qty <= $stock->qty;
     }
-
-    public function getDisplaySKU($varientId=1)
+   
+    public function isQtyOutOfStock($stockId,$variantId): bool
     {
-        $stock = $this->getFIFOStock($varientId);
-        return $stock ? $this->id . "-" . $stock->batch : "";
+        $stock = $this->getStockByIdAndVariantId($stockId,$variantId);
+        return $stock->qty<=0;
     }
 
-    public function getDisplayCategoryValue()
+    public function getSellPrice($stockId,$variantId)
     {
-        return  strtoupper($this->group4->name);
+        $stock=$this->getStockByIdAndVariantId($stockId,$variantId);
+        return $stock->sell_price;
     }
-
-    public function getDisplayCategoryName()
+    public function getCostPrice($stockId,$variantId)
     {
-        return strtoupper(config("setup.product_group4_name"));
+        $stock=$this->getStockByIdAndVariantId($stockId,$variantId);
+        return $stock->cost_price;
     }
-    public function isOutOfStock($varientId): bool
-    {
-
-        $qty = $this->getFIFOStockQty($varientId);
-        return $qty <= 0;
-    }
-
-    public function isQtyAvailableInStock($checkQty = 1,$varientId): bool
-    {
-        $qty = $this->getFIFOStockQty($varientId);
-        return  $checkQty <= $qty;
-    }
-
-
-    /* ================== Default values ======================================= */
 
     public function getDefaultSalesUnitId()
     {
         return PmUnitHasPmUnitGroup::where("pm_unit_group_id", $this->pm_unit_group_id)
             ->where("active", true)->where("is_sales_unit", true)->first()->pm_unit_id;
     }
-    public function getDefaultStockIdOfDefaultVarient(){
-        return $this->getFIFOStockId($this->getDefaultProductVarient()->id);
+
+
+
+    //helpers
+    public function getDisplaySellingPrice($stockId,$variantId)
+    { 
+        return  convertToDisplayPrice($this->getSellPrice($stockId,$variantId));
     }
-    public function getIsDefaultQtyAvailableInTheStock($qty=1){
-        return $this->isQtyAvailableInStock($qty,$this->getDefaultProductVarient()->id);
-    }
-    public function getDefaultVarientPrice(){
-        return $this->getDisplayPrice($this->getDefaultProductVarient()->id);
-    }
+
+ 
     
    
 }

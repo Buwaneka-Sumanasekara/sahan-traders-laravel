@@ -4,200 +4,523 @@ namespace App\CustomModels;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use App\Models\CmCartHed;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\File as FileFacade;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
-use Intervention\Image\Facades\Image;
-use App\CustomModels\CusModel_Product;
-use App\Models\BmBuyerAddress;
 use App\Models\CmCartDet;
-use App\Models\StkmTrnSetup;
-use Exception;
+use App\Models\BmBuyer;
+use App\Models\PmProductAdditionalCost;
+
+use Illuminate\Support\Facades\DB;
+use stdClass;
+
+use function App\Helpers\getValueFromObjectArray;
 
 class CusModel_Cart extends Model
 {
-    /*=====================Helper functions===============================*/
+    use HasFactory;
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'bm_buyer_id',
+        'ar_cart_items', //array
+    ];
+
+
+    /*===========================Helper functions===========================================*/
 
     private function generateNextCartId()
     {
+        $prefix = "";
         $lastId = CmCartHed::max("id");
-        $nextId = 1;
         if ($lastId) {
-            $nextId = (int)$lastId + 1;
+            $lastNo = preg_replace("/[^0-9\.]/", '', $lastId);
+            return $prefix . "" . sprintf('%08d', $lastNo + 1);
+        } else {
+            return $prefix . "00000001";
         }
-        return "" . sprintf('%08d', $nextId);
     }
-    private function getCartItemNo($cartId)
+    private function generateNextCartItemId(string $cartId)
     {
         $lastId = CmCartDet::where('cm_cart_hed_id', $cartId)->max("id");
-        $nextId = 1;
         if ($lastId) {
-            $nextId = (int)$lastId + 1;
-        }
-        return $nextId;
-    }
-
-    /* ==============================  Get current cart   =========================================== */
-
-    private function getCurrentCart($buyerId)
-    {
-        $cart = CmCartHed::where('bm_buyer_id', $buyerId)->where('cm_cart_status_id', config("global.cart_status.pending"))->first();
-        return $cart;
-    }
-
-    private function createPendingCart($buyerId)
-    {
-        $cart = new CmCartHed();
-        $cart->id = $this->generateNextCartId();
-        $cart->gross_amount = 0;
-        $cart->dis_per = 0;
-        $cart->net_amount = 0;
-        $cart->trn_date = now();
-        $cart->stkm_trn_status_id = config("global.stk_trn_status.pending");
-        $cart->stkm_trn_setup_id = config("global.trn_setup_types.Cart");
-        $cart->trn_ref_no = "";
-        $cart->bm_buyer_id = $buyerId;
-        $cart->tax_per = 0;
-        $cart->shipping_cost = 0;
-        $cart->cm_cart_status_id = config("global.cart_status.pending");
-        $cart->tracking_no = "";
-
-        $cart->save();
-        return $cart;
-    }
-
-    private function updateCartHedCalculations($cartId)
-    {
-        $cart = CmCartHed::find($cartId);
-
-        $disPer = $cart->dis_per;
-
-        $cart->gross_amount = CmCartDet::where('cm_cart_hed_id', $cartId)->sum('net_amount');
-
-        $cart->net_amount = ($cart->gross_amount) - ($cart->gross_amount * $disPer / 100);
-        $cart->save();
-
-        if ($cart->buyer->hasShippingAddress()) {
-            $this->updateCartHedShipping($cartId, $cart->buyer->shippingAddress);
+            return $lastId + 1;
+        } else {
+            return 1;
         }
     }
 
 
-
-    private function createCartItem($cartId, $product,$varientId, $qty)
+    // ======================== Getters ====================================
+    private function getCartItemById(string $cartHedId, string $id)
     {
-        $price = $product->getFIFOStockPrice($varientId);
-        $amount = $price * $qty;
-
-        $cartItem = new CmCartDet();
-        $cartItem->id = $this->getCartItemNo($cartId);
-        $cartItem->cprice = 0;
-        $cartItem->sprice = $price;
-        $cartItem->qty = $qty;
-        $cartItem->free_qty = 0;
-        $cartItem->line_dis_per = 0;
-        $cartItem->line_dis_amt = 0;
-        $cartItem->net_amount = $amount;
-
-        $cartItem->pm_unit_group_id = $product->pm_unit_group_id;
-        $cartItem->pm_unit_id =  $product->getDefaultSalesUnitId();
-
-        $cartItem->cm_cart_hed_id = $cartId;
-        $cartItem->pm_product_id = $product->id;
-        $cartItem->stk_batch_id = $product->getFIFOStockId($varientId);
-
-        $cartItem->save();
-
-
-        $this->updateCartHedCalculations($cartId);
-
-        return $cartItem;
+        return CmCartDet::where('cm_cart_hed_id', $cartHedId)->where('id', $id)->first();
     }
 
-    public function isCheckQtyInTransaction()
+    private function getActiveCartHedByBuyerId(string $buyerId)
     {
-        return StkmTrnSetup::where("type", config("global.trn_setup_types.Cart"))->first()->en_check_qty;
+        return CmCartHed::where('bm_buyer_id', $buyerId)->where('cm_cart_status_id', config('global.cart_status.pending'))->first();
+    }
+
+    private function getActiveCartDetByProductIdAndHedId(
+        string $cartHedId,
+        string $productId,
+        string $stockId,
+        string $variantId
+    ) {
+        return CmCartDet::where('cm_cart_hed_id', $cartHedId)
+            ->where('product_id', $productId)
+            ->where('pm_product_variant_id', $variantId)
+            ->where('stk_batch_id', $stockId)
+            ->first();
+    }
+
+    private function getAddressFromBuyer(BmBuyer $buyer, string $addressType)
+    {
+        $buyerName = $buyer->user->first_name . " " . $buyer->user->last_name;
+
+
+
+        if ($addressType == "shipping") {
+            if ($buyer->shippingAddress !== null) {
+                $address = $buyer->shippingAddress;
+                $address->name = $buyerName;
+                $address->courier_country_code = $buyer->shippingAddress->country->courier_code;
+
+                return $address;
+            } else {
+                return null;
+            }
+        } else if ($addressType == "billing") {
+            if ($buyer->billingAddress !== null) {
+                $address = $buyer->billingAddress;
+                $address->name = $buyerName;
+                $address->courier_country_code = $buyer->billingAddress->country->courier_code;
+                return $address;
+            } else {
+                return null;
+            }
+        } else {
+            throw new \Exception("Invalid address type");
+        }
     }
 
 
-    /*============================== Cart Operation=======================================*/
+    //===========================GET functions : all items ===========================================
 
-    public function getCartItems($buyerId)
+    public static  function getActiveCartHedByUserId(string $userId)
     {
-        $cart = $this->getCurrentCart($buyerId);
-        if (!$cart) {
-            return [];
-        }
-        return CmCartDet::where('cm_cart_hed_id', $cart->id)->get();
+        $buyer = BmBuyer::find($userId);
+        $cartHed = CmCartHed::where('bm_buyer_id', $buyer->id)->where('cm_cart_status_id', config('global.cart_status.pending'))->first();
+        return $cartHed;
     }
 
+    //===========================CRUD functions : one item ===========================================
 
-    /*============================ Cart functionalities ==============================================*/
-    public function addItemToCart( $buyerId,$itemId,$varientId=1,$qty = 1): CmCartDet
+    private function deleteCartItem(string $cartHedId, string $id)
     {
-        $needToCheckQty = $this->isCheckQtyInTransaction();
-        $cart = $this->getCurrentCart($buyerId);
-        if (!$cart) {
-            $cart = $this->createPendingCart($buyerId);
-        }
-
-        $product = CusModel_Product::getCartProductById($itemId);
-        if (!$product) {
-            return new Exception("Product not found");
-        }
-        if ($needToCheckQty && $product->isQtyAvailableInStock($qty)) {
-            return new Exception("Product is out of stock");
-        }
-
-        return $this->createCartItem($cart->id, $product,$varientId, $qty);
+        return CmCartDet::where('cm_cart_hed_id', $cartHedId)->where('id', $id)->delete();
     }
 
-    public function removeItemFromCart($itemId, $buyerId)
+    private function calculateTotalAmount(CmCartHed $cartHed)
     {
-        $cart = $this->getCurrentCart($buyerId);
-        if (!$cart) {
-            return new Exception("Cart not found");
-        }
-        $cartItem = CmCartDet::where('cm_cart_hed_id', $cart->id)->where('pm_product_id', $itemId)->first();
-        if (!$cartItem) {
-            return new Exception("Cart item not found");
-        }
-        $cartItem->delete();
-        $this->updateCartHedCalculations($cart->id);
-    }
 
-    public function updateItemInCart($itemId, $buyerId, $qty = 1): CmCartDet
-    {
-        $needToCheckQty = $this->isCheckQtyInTransaction();
-        $cart = $this->getCurrentCart($buyerId);
-        if (!$cart) {
-            return new Exception("Cart not found");
-        }
-        $cartItem = CmCartDet::where('cm_cart_hed_id', $cart->id)->where('pm_product_id', $itemId)->first();
-        if (!$cartItem) {
-            return new Exception("Cart item not found");
-        }
-        $product = $cartItem->product;
-        if ($needToCheckQty && $product->isQtyAvailableInStock($qty)) {
-            return new Exception("Product is out of stock");
+        $cartDets = $cartHed->cartDetItems;
+
+
+        $taxPer = 0;
+        $isEnableTax = config("setup.en_tax");
+        if ($isEnableTax) {
+            $taxPer = config("setup.tax_per");
         }
 
-        $cartItem->qty = $qty;
-        $cartItem->save();
-        $this->updateCartHedCalculations($cart->id);
-        return $cartItem;
-    }
+        $totalAmount = 0;
+        $taxAmount = 0;
+        foreach ($cartDets as $cartDet) {
+            $totalAmount += $cartDet->amount;
+            if ($cartDet->is_taxable_item) {
+                $taxAmount += ($cartDet->amount * $taxPer / 100);
+            }
+        }
 
-    /*=========================Calculate shipping====================================*/
-    private function updateCartHedShipping(string $cartId, BmBuyerAddress $address)
-    {
-        $cartItems = CmCartDet::where('cm_cart_hed_id', $cartId)->get();
+        $cartHed->tax_per = $taxPer;
+        $cartHed->tax_amount = $taxAmount;
+
+
+        $disPer = isset($cartHed->dis_per) ? $cartHed->dis_per : 0;
+
+
+        $cartHed->gross_amount = $totalAmount;
+
+        //Tax will be calculate to gross amount
+        $netAmount = $totalAmount - ($totalAmount * $disPer / 100) + $taxAmount;
 
         $shippingCost = 0;
+
+        if ($cartHed->carrier_info !== null) {
+            $shipAndCo = new CusModel_ShipAndCoRates();
+            $shippingCost = $shipAndCo->calculateAndGetShippingCost($cartHed);
+            $cartHed->shipping_cost = $shippingCost;
+        }
+
+        $netAmount = $netAmount + $shippingCost;
+
+        $cartHed->net_amount = $netAmount;
+        $cartHed->update();
+    }
+
+
+
+    private function addCarrierOfCartHeader(CmCartHed $cartHed)
+    {
+
+        if ($cartHed->carrier_info === null) {
+            //check buyer has shipping address
+            if(isset($cartHed->buyer->address_ship_id)){
+                $this->updateCartHedAddress($cartHed->buyer);
+                $cartHedUpdated=CmCartHed::find($cartHed->id);
+                $shipAndCo = new CusModel_ShipAndCoRates();
+                $carriers = $shipAndCo->getShippingCarriersRateList($cartHedUpdated, $cartHedUpdated->cartDetItems);
+                //dd($carriers);
+                if (count($carriers) > 0) {
+                    $carrierInfo = $carriers[0];
+                    $cartHedUpdated->carrier_info = json_encode($carrierInfo);
+                    $cartHedUpdated->update();
+                }
+                $this->calculateTotalAmount($cartHedUpdated);
+            }else{
+                $this->calculateTotalAmount($cartHed);
+            }
+            
+           
+        }
+    }
+
+
+
+
+    private function createCartHed(BmBuyer $buyer)
+    {
+        $cartHedId = $this->generateNextCartId();
+
+        $buyerBillAddress = $this->getAddressFromBuyer($buyer, "billing");
+        $buyerShipAddress = $this->getAddressFromBuyer($buyer, "shipping");
+
+
+        $cartHed = new CmCartHed;
+
+        $cartHed->id = $cartHedId;
+        $cartHed->bm_buyer_id = $buyer->id;
+        $cartHed->cm_cart_status_id = config('global.cart_status.pending');
+        $cartHed->cr_by_user_id = $buyer->user_id;
+        $cartHed->md_by_user_id = $buyer->user_id;
+        $cartHed->trn_date = now();
+        $cartHed->stkm_trn_status_id = config('global.stk_trn_status.pending');
+        $cartHed->stkm_trn_setup_id = config('global.trn_setup_id.cart');
+        $cartHed->trn_ref_no = "";
+        $cartHed->gross_amount = 0;
+        if (config("setup.en_tax")) {
+            $cartHed->tax_per = config("setup.tax_per");
+        } else {
+            $cartHed->tax_per = 0;
+        }
+        $cartHed->tax_amount = 0;
+
+        $cartHed->tracking_no = "";
+        $cartHed->shipping_cost = 0;
+        $cartHed->dis_per = 0;
+        $cartHed->net_amount = 0;
+        $cartHed->ship_address = (isset($buyerShipAddress) ? $buyerShipAddress->toJSON() : null);
+        $cartHed->ship_address_country_id = (isset($buyerShipAddress) ? $buyerShipAddress->cdm_country_id : null);
+        $cartHed->bill_address = (isset($buyerBillAddress) ? $buyerBillAddress->toJSON() : null);
+        $cartHed->bill_address_country_id = (isset($buyerBillAddress->cdm_country_id) ? $buyerBillAddress->cdm_country_id : null);
+
+
+        $cartHed->save();
+
+        return $cartHedId;
+    }
+
+
+
+
+    /*===========================Public functions ================================================================*/
+    public function updateCartHedAddress(BmBuyer $buyer)
+    {
+        $cartHed = $this->getActiveCartHedByBuyerId($buyer->id);
+
+        $buyerBillAddress = $this->getAddressFromBuyer($buyer, "billing");
+        $buyerShipAddress = $this->getAddressFromBuyer($buyer, "shipping");
+
+        $cartHed->ship_address = (isset($buyerShipAddress) ? $buyerShipAddress->toJSON() : null);
+        $cartHed->ship_address_country_id = (isset($buyerShipAddress) ? $buyerShipAddress->cdm_country_id : null);
+        $cartHed->bill_address = (isset($buyerBillAddress) ? $buyerBillAddress->toJSON() : null);
+        $cartHed->bill_address_country_id = (isset($buyerBillAddress->cdm_country_id) ? $buyerBillAddress->cdm_country_id : null);
+        $cartHed->update();
+    }
+
+    public function deleteCartLine()
+    {
+        DB::beginTransaction();
+        try {
+            $buyer = BmBuyer::find($this->user_id);
+            $cartHed = $this->getActiveCartHedByBuyerId($buyer->id);
+
+            $cartHedId = "";
+            if ($cartHed !== null) {
+                $cartHedId = $cartHed->id;
+            } else {
+                throw new \Exception("Cart not found");
+            }
+            $arCartItems = isset($this->ar_cart_items) ? $this->ar_cart_items : [];
+
+            foreach ($arCartItems as $cartItem) {
+                $cartItemId = $cartItem['id'];
+                $isDeleted = $this->deleteCartItem($cartHedId, $cartItemId);
+
+                if (!$isDeleted) {
+                    throw new \Exception("Cart item not deleted");
+                }
+            }
+            DB::commit();
+            $cartHed = CmCartHed::find($cartHedId);
+            $this->calculateTotalAmount($cartHed);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function updateCartLine()
+    {
+        DB::beginTransaction();
+        try {
+            $buyer = BmBuyer::find($this->user_id);
+
+            if ($buyer === null) {
+                throw new \Exception("You are not a buyer");
+            }
+            $cartHed = $this->getActiveCartHedByBuyerId($buyer->id);
+
+            $cartHedId = "";
+            if ($cartHed !== null) {
+                $cartHedId = $cartHed->id;
+            } else {
+                throw new \Exception("Cart not found");
+            }
+
+            $arCartItems = isset($this->ar_cart_items) ? $this->ar_cart_items : [];
+
+            foreach ($arCartItems as $cartItem) {
+                $cartItemId = $cartItem['id'];
+                $qty = $cartItem['qty'];
+
+                $cartDet = $this->getCartItemById($cartHedId, $cartItemId);
+
+                if ($cartDet === null) {
+                    throw new \Exception("Cart item not found");
+                }
+
+                $lineDisPer = isset($cartDet->line_dis_per) ? $cartDet->line_dis_per : 0;
+                $lineDisAmt = isset($cartDet->line_dis_amt) ? $cartDet->line_dis_amt : 0;
+
+                //check stock qty
+                $productId = $cartDet->product_id;
+                $product = CusModel_Product::getCartProductById($productId);
+                $stockId = $cartDet->stk_batch_id;
+                $variantId = $cartDet->pm_product_variant_id;
+
+                if (!$product->isQtyAvailableInStock($stockId, $variantId, $qty)) {
+                    throw new \Exception("Product is out of stock");
+                }
+
+                $cartDet->qty = $qty;
+                $cartDet->line_dis_per = $lineDisPer;
+                $cartDet->line_dis_amt = $lineDisAmt;
+
+                $temAmount = $cartDet->sprice * $qty;
+
+                $cartDet->amount = $temAmount - ($lineDisAmt + ($temAmount * $lineDisPer / 100));
+                $cartDet->update();
+            }
+
+            DB::commit();
+            $cartHed = CmCartHed::find($cartHedId);
+            $this->calculateTotalAmount($cartHed);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function addToCart(bool $isIncrementingQty)
+    {
+        $isNew = false;
+        DB::beginTransaction();
+        try {
+            $buyer = BmBuyer::find($this->user_id);
+
+            if ($buyer === null) {
+                throw new \Exception("You are not a buyer");
+            }
+            $cartHed = $this->getActiveCartHedByBuyerId($buyer->id);
+
+            $cartHedId = "";
+            if ($cartHed !== null) {
+                $cartHedId = $cartHed->id;
+            } else {
+                $cartHedId = $this->createCartHed($buyer);
+                $isNew = true;
+            }
+
+            $arCartItems = isset($this->ar_cart_items) ? $this->ar_cart_items : [];
+
+            foreach ($arCartItems as $cartItem) {
+                $productId = $cartItem['product_id'];
+                $stockId = $cartItem['stock_id'];
+                $variantId = $cartItem['variant_id'];
+
+                $product = CusModel_Product::getCartProductById($productId);
+
+                if ($product === null) {
+                    throw new \Exception("Product not found");
+                }
+
+                $cartDet = $this->getActiveCartDetByProductIdAndHedId($cartHedId, $productId, $stockId, $variantId);
+
+                $qty = $cartItem['qty'];
+
+                if ($cartDet !== null && $isIncrementingQty) {
+                    $qty = $cartDet->qty + $qty;
+                } else {
+                    $qty = $qty;
+                }
+
+                if (!$product->isQtyAvailableInStock($stockId, $variantId, $qty)) {
+                    throw new \Exception("Product is out of stock");
+                }
+
+
+                //Check existing Cart det
+
+                $additionalCostId = isset($cartItem['additional_cost_id']) ? $cartItem['additional_cost_id'] : null;
+
+                $additionalCost = null;
+
+                if ($additionalCostId !== null) {
+                    $additionalCost = PmProductAdditionalCost::find($additionalCostId);
+                }
+
+
+                if ($cartDet !== null) { //has item
+                    $cartDet->qty = $qty;
+
+                    $temAmount = $cartDet->sprice * $qty;
+
+                    if ($additionalCost !== null) {
+                        $cartDet->additional_product_cost_id = $additionalCost->id;
+                        $cartDet->additional_product_cost = $additionalCost->amount;
+                    }
+
+                    $cartDet->amount = $temAmount - ($cartDet->line_dis_amt + ($temAmount * $cartDet->line_dis_per / 100));
+                    $cartDet->update();
+                } else {
+
+                    $unitGroupId = $cartItem['unit_group_id'];
+                    $unitId = $cartItem['unit_id'];
+
+                    $sellPrice = $product->getSellPrice($stockId, $variantId);
+                    $costPrice = $product->getCostPrice($stockId, $variantId);
+
+
+                    $cartItemId = $this->generateNextCartItemId($cartHedId);
+
+                    $cartDet = new CmCartDet;
+
+                    $cartDet->id = $cartItemId;
+                    $cartDet->cprice = $costPrice;
+                    $cartDet->sprice = $sellPrice;
+                    $cartDet->qty = $qty;
+                    $cartDet->free_qty = 0;
+                    $cartDet->line_dis_per = 0;
+                    $cartDet->line_dis_amt = 0;
+                    $cartDet->amount = $sellPrice * $qty;
+                    $cartDet->pm_unit_group_id = $unitGroupId;
+                    $cartDet->pm_unit_id = $unitId;
+                    $cartDet->cm_cart_hed_id = $cartHedId;
+                    $cartDet->product_id = $productId;
+                    $cartDet->stk_batch_id = $stockId;
+                    $cartDet->pm_product_variant_id = $variantId;
+                    $cartDet->pm_product_variant_group_id = $product->pm_product_variant_group_id;
+
+                    if ($additionalCost !== null) {
+                        $cartDet->additional_product_cost_id = $additionalCost->id;
+                        $cartDet->additional_product_cost = $additionalCost->amount;
+                    }
+
+                    $cartDet->save();
+                }
+            }
+
+            DB::commit();
+
+
+            $cartHed = CmCartHed::find($cartHedId);
+            if ($isNew) {
+                $this->addCarrierOfCartHeader($cartHed);
+            } else {
+                $this->calculateTotalAmount($cartHed);
+            }
+
+            //$this->addCarrierOfCartHeader($cartHed);
+
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function updateShippingCarrier($carierId, $cartHed)
+    {
+        try {
+            $shipAndCo = new CusModel_ShipAndCoRates();
+            $carriers = $shipAndCo->getShippingCarriersRateList($cartHed, $cartHed->cartDetItems);
+            if (count($carriers) > 0) {
+                $carrierInfo = getValueFromObjectArray($carriers, "uniqueId", $carierId);
+
+                if ($carrierInfo !== null) {
+                    $cartHed->carrier_info = json_encode($carrierInfo);
+                    $cartHed->update();
+                    // dd($carierId);
+                    $this->calculateTotalAmount($cartHed);
+                }
+            }
+        } catch (\Exception $e) {
+
+            throw $e;
+        }
+    }
+
+
+    public function updateCartAddressAndReCalculate(CmCartHed $cartHed)
+    {
+        try {
+          
+           
+            if($cartHed->carrier_info === null){
+                $this->addCarrierOfCartHeader($cartHed); 
+            }else{ 
+                $this->updateCartHedAddress($cartHed->buyer);  
+                $this->calculateTotalAmount($cartHed);
+            }
+        } catch (\Exception $e) {
+
+            throw $e;
+        }
     }
 }
