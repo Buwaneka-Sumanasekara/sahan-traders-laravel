@@ -27,9 +27,9 @@ class CartController extends Controller
     }
 
 
-    public function cartStep1()
+    public function cart()
     {
-        return view('pages.general.cart-step1');
+        return view('pages.general.cart');
     }
 
 

@@ -10,7 +10,7 @@ import UIFeatureProducts from './containers/UIFeatureProducts'
 import UIHeaderCartSummary from './containers/UIHeaderCartSummary'
 
 //organisms
-import UICartStep1 from './containers/UICartStep1'
+import UICart from './containers/UICart'
 
 
 export {
@@ -18,5 +18,5 @@ export {
     UIFeatureProducts,
     UIHeaderCartSummary,
     UIToast,
-    UICartStep1
+    UICart
 }

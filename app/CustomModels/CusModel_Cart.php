@@ -81,14 +81,10 @@ class CusModel_Cart extends Model
 
     private function getAddressFromBuyer(BmBuyer $buyer, string $addressType)
     {
-        $buyerName = $buyer->user->first_name . " " . $buyer->user->last_name;
-
-
-
+       
         if ($addressType == "shipping") {
             if ($buyer->shippingAddress !== null) {
                 $address = $buyer->shippingAddress;
-                $address->name = $buyerName;
                 $address->courier_country_code = $buyer->shippingAddress->country->courier_code;
 
                 return $address;
@@ -98,7 +94,6 @@ class CusModel_Cart extends Model
         } else if ($addressType == "billing") {
             if ($buyer->billingAddress !== null) {
                 $address = $buyer->billingAddress;
-                $address->name = $buyerName;
                 $address->courier_country_code = $buyer->billingAddress->country->courier_code;
                 return $address;
             } else {

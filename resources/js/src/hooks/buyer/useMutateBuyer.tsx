@@ -20,6 +20,7 @@ type updateBuyerAddressProps = {
   updateCart?:boolean,
 }
 const updateBuyerAddress = async (data: updateBuyerAddressProps) => {
+  console.log("data",data)
   return await api.put(`/action/buyer/address/update`, data)
 }
 

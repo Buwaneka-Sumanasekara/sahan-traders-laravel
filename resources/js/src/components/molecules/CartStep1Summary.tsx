@@ -9,6 +9,7 @@ import Overlay from 'react-bootstrap/Overlay';
 import Icon from '../atoms/Icon';
 import CartSummaryRowShipping from '../atoms/CartSummaryShipping';
 import BuyerAddressChangeModal from './BuyerAddressChangeModal';
+import { AddressType } from '../../types/Common';
 
 const CartSummaryHeader = () => {
     return (
@@ -82,17 +83,14 @@ const CartSummaryButton = (props: { lable: string, varient: string, onPress: () 
 
 type CartStep1SummaryProps = {
     cart: Cart,
+    onPressProceedToCheckout: () => void
+    onPressRedirectHome: () => void
 }
 const CartStep1Summary = (props: CartStep1SummaryProps) => {
 
-    const { cart } = props;
+    const { cart,onPressProceedToCheckout,onPressRedirectHome } = props;
 
     const [isVisibleAddressModal, setVisibleAddressModal] = useState(false);
-
-
-    const onClickRedirectToHome = () => {
-        window.open(`/`, '_self');
-    }
 
 
     return (
@@ -110,13 +108,13 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
             <hr />
             <CartSummaryRow label="Total" displayAmount={cart.displayNetAmount} />
           
-            <CartSummaryButton lable="Continue Shopping" varient="outline-primary" onPress={onClickRedirectToHome} />
+            <CartSummaryButton lable="Continue Shopping" varient="outline-primary" onPress={onPressRedirectHome} />
 
 
-            <CartSummaryButton lable="Proceed to Checkout" varient="primary" onPress={() => { }} />
+            <CartSummaryButton lable="Proceed to Checkout" varient="primary" onPress={onPressProceedToCheckout} />
 
 
-            <BuyerAddressChangeModal isVisible={isVisibleAddressModal} onHide={() => setVisibleAddressModal(false)} />
+            <BuyerAddressChangeModal addressType={AddressType.SHIPPING} isVisible={isVisibleAddressModal} onHide={() => setVisibleAddressModal(false)} />
         </Container>
     )
 

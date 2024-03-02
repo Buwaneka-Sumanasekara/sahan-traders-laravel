@@ -5,6 +5,11 @@ export enum AddCartButtonType {
     BuyNow = 1,
 }
 
+export enum CartSteps{
+    Step1=1,
+    Step2Summary=2,
+    Step3Payment=3
+}
 
 export interface Cart{
     id:string,
@@ -20,7 +25,10 @@ export interface Cart{
     displayShippingCost:string,
     displayTaxPer:string,
     displayTaxAmount:string,
-    shippingAddressCountry:Country,
+    shippingAddressCountry?:Country,
+    shippingAddress?:CartAddress,
+    billingAddress?:CartAddress,
+    billingAddressCountry?:Country,
 }
 
 export interface CartItem {
@@ -46,3 +54,16 @@ export interface ShippingCarrier {
     displayShippingCost: string;
 }
 
+
+
+export type CartAddress={
+    id:number,
+    name:string,
+    city:string,
+    country:Country,
+    zip_code:string,
+    address_1:string,
+    address_2:string,
+    province_name:string,
+    contact_number:string,
+}
