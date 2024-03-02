@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div class="row justify-content-between" id="jsx-cart-step1">
+<div class="row justify-content-between" id="jsx-cart">
    
 </div>
 

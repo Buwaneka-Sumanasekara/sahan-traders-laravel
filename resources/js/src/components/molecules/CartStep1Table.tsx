@@ -39,13 +39,14 @@ const CartHeader = () => {
 type CartRowProps = {
     item: CartItem,
     isUpdating?: boolean,
-    onChangeQty: (cartItemId: number,productId:string, qty: number, unitGroupId?:string,unitId?: string) => void
-    onDeleteItem: (cartItemId: number,productId:string) => void
+    onChangeQty?: (cartItemId: number, productId: string, qty: number, unitGroupId?: string, unitId?: string) => void
+    onDeleteItem?: (cartItemId: number, productId: string) => void
+    isEditable: boolean
 }
 const CartRow = (props: CartRowProps) => {
-    const { item, onChangeQty,onDeleteItem } = props;
+    const { item, onChangeQty, onDeleteItem, isEditable } = props;
 
-    const { id,productId, productSlug, productName, productThumbnailImageUrl, displaySellPrice, qty, displayAmount } = item
+    const { id, productId, productSlug, productName, productThumbnailImageUrl, displaySellPrice, qty, displayAmount } = item
     return (
         <Row className='border-bottom py-2'>
             <Col md={2}>
@@ -61,15 +62,18 @@ const CartRow = (props: CartRowProps) => {
                     <Col md={2} >
                         <span className="fw-bold text-body-secondary">{displaySellPrice}</span>
                     </Col>
-                    <Col md={3}><QtyInput
-                        qty={qty} disableIncrement={false} disableDecrement={false} onChange={(qty,unitGroupId, unitId) => onChangeQty(id,productId, qty, unitGroupId,unitId)} /></Col>
+                    <Col md={3}> <QtyInput
+                    isEditable={isEditable}
+                        qty={qty} disableIncrement={false} disableDecrement={false} onChange={(qty, unitGroupId, unitId) => onChangeQty?.(id, productId, qty, unitGroupId, unitId)} /></Col>
                     <Col md={3} className=' d-flex justify-content-end'><span>{displayAmount}</span></Col>
-                    <Col md={1}><Button variant="danger" onClick={()=>onDeleteItem(id,productId)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                        </svg>
-                    </Button></Col>
+                    <Col md={1}>
+                        {isEditable ? <Button variant="danger" onClick={() => onDeleteItem?.(id, productId)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                            </svg>
+                        </Button> : null}
+                    </Col>
                 </Row>
             </Col>
         </Row>
@@ -88,19 +92,20 @@ const CartRowLoading = () => {
 type CartStep1TableProps = {
     cartItems: CartItem[],
     isUpdating?: boolean,
-    onChangeQty: (cartItemId: number,productId:string, qty: number, unitGroupId?:string,unitId?: string) => void
-    onDeleteItem: (cartItemId: number,productId:string) => void
+    onChangeQty?: (cartItemId: number, productId: string, qty: number, unitGroupId?: string, unitId?: string) => void
+    onDeleteItem?: (cartItemId: number, productId: string) => void
+    isEditable?: boolean
 }
 const CartStep1Table = (props: CartStep1TableProps) => {
 
-    const { cartItems, isUpdating,onChangeQty,onDeleteItem } = props;
-    
+    const { cartItems, isUpdating, onChangeQty, onDeleteItem, isEditable } = props;
+
     return (
         <Container {...props}>
             <CartHeader />
-            
-            { cartItems.map((cartItem, index) => (
-                <CartRow key={index} item={cartItem} isUpdating={isUpdating} onChangeQty={onChangeQty} onDeleteItem={onDeleteItem} />
+
+            {cartItems.map((cartItem, index) => (
+                <CartRow isEditable={isEditable || false} key={index} item={cartItem} isUpdating={isUpdating} onChangeQty={onChangeQty} onDeleteItem={onDeleteItem} />
             ))}
             {isUpdating && <CartRowLoading />}
         </Container>

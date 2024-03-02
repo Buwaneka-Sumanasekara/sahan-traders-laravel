@@ -5,6 +5,11 @@ export enum AddCartButtonType {
     BuyNow = 1,
 }
 
+export enum CartSteps{
+    Step1=1,
+    Step2Summary=2,
+    Step3Payment=3
+}
 
 export interface Cart{
     id:string,

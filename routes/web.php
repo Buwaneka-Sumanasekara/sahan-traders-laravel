@@ -42,7 +42,7 @@ Route::controller(ProductController::class)->group(function () {
 });
 
 Route::controller(CartController::class)->group(function () {
-    Route::get('/cart', 'cartStep1')->name('cart.step1');
+    Route::get('/cart', 'cart')->name('cart.cart');
 });
 
 

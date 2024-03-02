@@ -35,7 +35,7 @@ const CartCarrierChangeModal = (props: CartCarrierChangeModalProps) => {
     return (
         <Modal show={isVisible} aria-labelledby="contained-modal-title-vcenter"
             centered>
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>Choose carrier</Modal.Title>
             </Modal.Header>
             <Modal.Body>
