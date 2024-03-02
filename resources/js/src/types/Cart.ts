@@ -65,4 +65,5 @@ export type CartAddress={
     address_1:string,
     address_2:string,
     province_name:string,
+    contact_number:string,
 }

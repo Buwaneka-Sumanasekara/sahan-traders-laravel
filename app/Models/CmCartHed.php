@@ -26,7 +26,15 @@ class CmCartHed extends Model
 
     protected $fillable = [
         "id",
-        'gross_amount'
+        'gross_amount',
+        'net_amount',
+        'tax_amount',
+        'dis_per',
+        'shipping_cost',
+        'ship_address',
+        'bill_address',
+        'ship_address_country_id',
+        'bill_address_country_id',
     ];
 
     public function cartDetItems(): HasMany
@@ -88,7 +96,7 @@ class CmCartHed extends Model
 
     public function getShippingAddress(){
         if($this->ship_address!==null){
-            return  json_decode($this->ship_address, true);;
+            return  json_decode($this->ship_address, true);
         }
         return  null;
     }

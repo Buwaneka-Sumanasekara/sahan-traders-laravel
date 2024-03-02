@@ -31,7 +31,7 @@ class BuyerController extends Controller
             if ($request->user()->hasVerifiedEmail()) {
                 $userId = $request->user()->id;
 
-
+                $id = $request->input('id');
                 $address1 = $request->input('address1');
                 $address2 = $request->input('address2');
                 $city = $request->input('city');
@@ -94,6 +94,7 @@ class BuyerController extends Controller
                 $address->cdm_country_id = $countryId;
                 $address->contact_number = $contactNumber;
                 $address->name = $personName;
+                $address->id=isset($id) ? $id : null;
 
 
 

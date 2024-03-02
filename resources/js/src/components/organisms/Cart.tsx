@@ -92,7 +92,7 @@ const CartStep2 = (props: CartStep2Props) => {
             <Col md={8} sm={12}>
                 <Row>
                     <Col>
-                        <CartStep2Address isSameAddress={isSameAddress} setIsSameAddress={setIsSameAddress} cart={data.hed} />
+                        <CartStep2Address  isSameAddress={isSameAddress} setIsSameAddress={setIsSameAddress} cart={data.hed} />
                     </Col>
                 </Row>
                 <br/>

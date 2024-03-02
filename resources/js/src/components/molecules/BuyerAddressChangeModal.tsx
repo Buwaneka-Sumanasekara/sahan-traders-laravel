@@ -7,8 +7,9 @@ import "yup-phone";
 import { useFetchShippingCountries } from '../../hooks/shipping/useFetchShipping';
 import { AddressType, Country, EventType } from '../../types/Common';
 import { useUpdateBuyerAddress } from '../../hooks/buyer/useMutateBuyer';
-import { useMutateEventListener } from '../../hooks/common/useEventsListner';
+import { useMutateEventListener, useMutateToastEventListner } from '../../hooks/common/useEventsListner';
 import Constants from '../../common/Constants';
+import { CartAddress } from '../../types/Cart';
 
 
 type BuyerAddressChangeModalProps = {
@@ -16,10 +17,12 @@ type BuyerAddressChangeModalProps = {
     onHide: () => void
     addressType: AddressType
     isUpdate?: boolean
+    address?:CartAddress
 }
 const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
-    const { isVisible, onHide, addressType, isUpdate } = props;
+    const { isVisible, onHide, addressType, isUpdate,address } = props;
 
+    const { onShowWarningMessage: onShowWarningMessage } = useMutateToastEventListner();
 
 
     const { Formik } = formik;
@@ -42,6 +45,10 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
     const { mutate: updateBuyerAddress, isLoading: isUpdating } = useUpdateBuyerAddress(() => {
         onHide();
         onExecuteEvent(EventType.EVENT_CART_UPDATED, {})
+    },(error)=>{
+        onShowWarningMessage({
+            message: error.message
+        })
     });
 
     const countries = data || [];
@@ -49,28 +56,30 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
 
 
 
+    const addressTypeName=addressType===AddressType.BILLING?"Billing":addressType===AddressType.SHIPPING?"Shipping":"Shipping and Billing";
     return (
 
         <Modal show={isVisible} aria-labelledby="contained-modal-title-vcenter"
             centered onHide={() => onHide()}>
             <Modal.Header closeButton >
-                <Modal.Title>{`${isUpdate ? "Update shipping Address" : "Add shipping Address"}`}</Modal.Title>
+                <Modal.Title>{`${isUpdate ? `Update ${addressTypeName}  Address` : `Add ${addressTypeName} Address`}`}</Modal.Title>
 
             </Modal.Header>
             <Modal.Body>
 
                 <Formik
                     validationSchema={schema}
-                    onSubmit={(values: any) => { updateBuyerAddress({ ...values, addressType: addressType, updateCart: true }) }}
+                    onSubmit={(values: any) => { updateBuyerAddress({ ...values, addressType: addressType, updateCart: true,isUpdateMultiple:(addressType===AddressType.BOTH) }) }}
                     initialValues={{
-                        address1: '',
-                        address2: '',
-                        city: '',
-                        zipCode: '',
-                        province: '',
-                        countryId: '',
-                        contactNumber: '',
-                        name: '',
+                        id: address?.id || 0,
+                        address1: address?.address_1 || '',
+                        address2: address?.address_2 || '',
+                        city: address?.city || '',
+                        zipCode: address?.zip_code || '',
+                        province: address?.province_name || '',
+                        countryId: address?.country.id || '',
+                        contactNumber: address?.contact_number || '',
+                        name: address?.name || '',
                     }}
                 >
                     {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -107,7 +116,7 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
 
                             <Form.Group className="mb-3" controlId="AddressForm.Address1">
                                 <Form.Label>Address 1</Form.Label>
-                                <Form.Control type="text" placeholder="Address1"
+                                <Form.Control type="text" placeholder="Address 1"
                                     name='address1'
                                     onChange={handleChange}
                                     isInvalid={!!errors.address1}
@@ -119,7 +128,7 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="AddressForm.Address2">
                                 <Form.Label>Address 2</Form.Label>
-                                <Form.Control type="text" placeholder="Address2" value={values.address2}
+                                <Form.Control type="text" placeholder="Address 2" value={values.address2}
                                     onChange={handleChange}
                                     name='address2'
                                     isInvalid={!!errors.address2} />

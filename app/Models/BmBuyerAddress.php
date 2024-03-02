@@ -18,7 +18,17 @@ class BmBuyerAddress extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
-    
+    protected $fillable = [
+        'id', // 'id' is the primary key, so it should be included in the fillable array
+        'name',
+        'address_1',
+        'address_2',
+        'city',
+        'zip_code',
+        'cdm_country_id',
+        'province_name',
+        'contact_number',
+    ];
 
 
 
