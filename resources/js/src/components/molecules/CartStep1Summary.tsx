@@ -9,6 +9,7 @@ import Overlay from 'react-bootstrap/Overlay';
 import Icon from '../atoms/Icon';
 import CartSummaryRowShipping from '../atoms/CartSummaryShipping';
 import BuyerAddressChangeModal from './BuyerAddressChangeModal';
+import { AddressType } from '../../types/Common';
 
 const CartSummaryHeader = () => {
     return (
@@ -113,7 +114,7 @@ const CartStep1Summary = (props: CartStep1SummaryProps) => {
             <CartSummaryButton lable="Proceed to Checkout" varient="primary" onPress={onPressProceedToCheckout} />
 
 
-            <BuyerAddressChangeModal isVisible={isVisibleAddressModal} onHide={() => setVisibleAddressModal(false)} />
+            <BuyerAddressChangeModal addressType={AddressType.SHIPPING} isVisible={isVisibleAddressModal} onHide={() => setVisibleAddressModal(false)} />
         </Container>
     )
 

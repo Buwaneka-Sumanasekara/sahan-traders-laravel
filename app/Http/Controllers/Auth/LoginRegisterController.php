@@ -63,7 +63,22 @@ class LoginRegisterController extends Controller
             "um_user_role_id" => config("global.user_role_buyer"),
         ]);
         $user->id = $userId;
+
+
+        //register buyer
+        $buyer = new \App\Models\BmBuyer();
+        $buyer->id = $userId;
+        $buyer->user_id = $userId;
+        $buyer->total_orders = 0;
+        $buyer->contact_1 = "";
+        $buyer->contact_2 = "";
+        $buyer->save();
+
         event(new Registered($user));
+
+     
+
+
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);

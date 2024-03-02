@@ -26,7 +26,7 @@
     </div>
 
     <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-        <p>&copy; 2023 Osaka Sahan International Traders, Inc. All rights reserved.</p>
+        <p>&copy; 2024 Osaka Sahan International Traders, Inc. All rights reserved.</p>
         <ul class="list-unstyled d-flex">
             <li class="ms-3 bi bi-facebook h1"><a class="link-dark " href="#"></a></li>
             <li class="ms-3 bi bi-instagram h1"><a class="link-dark " href="#"></a></li>

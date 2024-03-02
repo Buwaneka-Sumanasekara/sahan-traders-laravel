@@ -43,6 +43,9 @@ class BuyerController extends Controller
 
                 $updateCart = $request->input('updateCart');
 
+                $contactNumber = $request->input('contactNumber');
+                $personName = $request->input('name');
+
                 $isUpdateMultiple = (isset($addressType) ? false : true);
 
                 $needToUpdateCart = (isset($updateCart) ? true : false);
@@ -74,6 +77,10 @@ class BuyerController extends Controller
                     throw new \Exception("Zip Code is required");
                 } else if (!isset($province)) {
                     throw new \Exception("Province is required");
+                }else if (!isset($personName)) {
+                    throw new \Exception("Name is required");
+                }else if (!isset($contactNumber)) {
+                    throw new \Exception("Contact number is required");
                 }
 
                 $buyerModel = new CusModel_Buyer();
@@ -85,6 +92,8 @@ class BuyerController extends Controller
                 $address->zip_code = $zipCode;
                 $address->province_name = $province;
                 $address->cdm_country_id = $countryId;
+                $address->contact_number = $contactNumber;
+                $address->name = $personName;
 
 
 

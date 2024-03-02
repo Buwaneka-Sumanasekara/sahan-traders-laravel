@@ -25,7 +25,10 @@ export interface Cart{
     displayShippingCost:string,
     displayTaxPer:string,
     displayTaxAmount:string,
-    shippingAddressCountry:Country,
+    shippingAddressCountry?:Country,
+    shippingAddress?:CartAddress,
+    billingAddress?:CartAddress,
+    billingAddressCountry?:Country,
 }
 
 export interface CartItem {
@@ -51,3 +54,15 @@ export interface ShippingCarrier {
     displayShippingCost: string;
 }
 
+
+
+export type CartAddress={
+    id:number,
+    name:string,
+    city:string,
+    country:Country,
+    zip_code:string,
+    address_1:string,
+    address_2:string,
+    province_name:string,
+}

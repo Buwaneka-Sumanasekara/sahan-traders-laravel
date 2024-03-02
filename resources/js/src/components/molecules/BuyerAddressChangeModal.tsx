@@ -2,36 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 import * as formik from 'formik';
 import * as yup from 'yup';
+import "yup-phone";
 
 import { useFetchShippingCountries } from '../../hooks/shipping/useFetchShipping';
 import { AddressType, Country, EventType } from '../../types/Common';
 import { useUpdateBuyerAddress } from '../../hooks/buyer/useMutateBuyer';
 import { useMutateEventListener } from '../../hooks/common/useEventsListner';
+import Constants from '../../common/Constants';
 
 
 type BuyerAddressChangeModalProps = {
     isVisible: boolean,
     onHide: () => void
+    addressType: AddressType
+    isUpdate?: boolean
 }
 const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
-    const { isVisible, onHide } = props;
+    const { isVisible, onHide, addressType, isUpdate } = props;
 
-    const [address1, setAddress1] = useState('');
-    const [address2, setAddress2] = useState('');
-    const [city, setCity] = useState('');
-    const [zipCode, setZipCode] = useState('');
-    const [province, setProvince] = useState('');
-    const [countryId, setCountryId] = useState('');
+
 
     const { Formik } = formik;
 
     const schema = yup.object().shape({
-        address1: yup.string().required(),
-        address2: yup.string().required(),
-        city: yup.string().required(),
-        zipCode: yup.string().required(),
-        province: yup.string().required(),
-        countryId: yup.number().required(),
+        address1: yup.string().required().label("Address 1"),
+        address2: yup.string().required().label("Address 2"),
+        city: yup.string().required().label("City"),
+        zipCode: yup.string().required().label("Zip code"),
+        province: yup.string().required().label("Province"),
+        countryId: yup.number().required().label("Country"),
+        name: yup.string().required().label("Name"),
+        contactNumber: yup.string().matches(Constants.REG_EXPRESSIONS.MOBILE_NUMBER, "Invalid mobile number").required().label("Mobile number")
     });
 
 
@@ -46,21 +47,21 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
     const countries = data || [];
 
 
-  
+
 
     return (
 
         <Modal show={isVisible} aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title>Add your shipping Address</Modal.Title>
+            centered onHide={() => onHide()}>
+            <Modal.Header closeButton >
+                <Modal.Title>{`${isUpdate ? "Update shipping Address" : "Add shipping Address"}`}</Modal.Title>
 
             </Modal.Header>
             <Modal.Body>
 
                 <Formik
                     validationSchema={schema}
-                    onSubmit={(values: any) => { updateBuyerAddress({ ...values, addressType: AddressType.SHIPPING,updateCart:true })}}
+                    onSubmit={(values: any) => { updateBuyerAddress({ ...values, addressType: addressType, updateCart: true }) }}
                     initialValues={{
                         address1: '',
                         address2: '',
@@ -68,12 +69,42 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
                         zipCode: '',
                         province: '',
                         countryId: '',
+                        contactNumber: '',
+                        name: '',
                     }}
                 >
                     {({ handleSubmit, handleChange, values, touched, errors }) => (
                         <Form onSubmit={handleSubmit}
                             noValidate
                         >
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="AddressForm.ContactNo">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control type="text"
+                                        name='name'
+                                        placeholder="Name" value={values.name}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.name} />
+
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.name as string}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="AddressForm.ContactNo">
+                                    <Form.Label>Contact Number (Mobile)</Form.Label>
+                                    <Form.Control type="text"
+                                        name='contactNumber'
+                                        placeholder="Contact Number" value={values.contactNumber}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.contactNumber} />
+
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.contactNumber as string}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
+
+
                             <Form.Group className="mb-3" controlId="AddressForm.Address1">
                                 <Form.Label>Address 1</Form.Label>
                                 <Form.Control type="text" placeholder="Address1"
@@ -96,60 +127,67 @@ const BuyerAddressChangeModal = (props: BuyerAddressChangeModalProps) => {
                                     {errors.address2 as string}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="AddressForm.City">
-                                <Form.Label>City</Form.Label>
-                                <Form.Control type="text"
-                                    name='city'
-                                    placeholder="City" value={values.city}
-                                    onChange={handleChange}
-                                    isInvalid={!!errors.city} />
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="AddressForm.City">
+                                    <Form.Label>City</Form.Label>
+                                    <Form.Control type="text"
+                                        name='city'
+                                        placeholder="City" value={values.city}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.city} />
 
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.city as string}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="AddressForm.ZipCode">
-                                <Form.Label>Zip code</Form.Label>
-                                <Form.Control type="text" name='zipCode' placeholder="Zip code" value={values.zipCode}
-                                    onChange={handleChange}
-                                    isInvalid={!!errors.zipCode} />
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.zipCode as string}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="AddressForm.Province">
-                                <Form.Label>Province name</Form.Label>
-                                <Form.Control type="text" name='province' placeholder="Province" value={values.province}
-                                    onChange={handleChange}
-                                    isInvalid={!!errors.province} />
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.province as string}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="AddressForm.Country">
-                                <Form.Label>Country</Form.Label>
-                                <Form.Select aria-label="Select country" name='countryId' value={values.countryId}
-                                    isInvalid={!!errors.countryId}
-                                    onChange={handleChange}
-                                    isValid={touched.countryId && !errors.countryId} >
-                                    {countries.map((country: Country) => (
-                                        <option value={`${country.id}`}>{country.name}</option>
-                                    ))}
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.city as string}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="AddressForm.ZipCode">
+                                    <Form.Label>Zip code</Form.Label>
+                                    <Form.Control type="text" name='zipCode' placeholder="Zip code" value={values.zipCode}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.zipCode} />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.zipCode as string}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="AddressForm.Province">
+                                    <Form.Label>Province name</Form.Label>
+                                    <Form.Control type="text" name='province' placeholder="Province" value={values.province}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.province} />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.province as string}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="AddressForm.Country">
+                                    <Form.Label>Country</Form.Label>
+                                    <Form.Select aria-label="Select country" name='countryId' value={values.countryId}
+                                        isInvalid={!!errors.countryId}
+                                        onChange={handleChange}
+                                        isValid={touched.countryId && !errors.countryId} >
+                                        {countries.map((country: Country) => (
+                                            <option value={`${country.id}`}>{country.name}</option>
+                                        ))}
 
-                                </Form.Select>
+                                    </Form.Select>
 
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.countryId as string}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            {!isUpdating ? <React.Fragment>
-                                <Button variant="secondary" className='me-2' type='button' onClick={() => onHide()}>
-                                    Close
-                                </Button>
-                                <Button variant="primary" type='submit'  >
-                                    Save Changes
-                                </Button>
-                            </React.Fragment> : <Spinner animation="border" variant="primary" />}
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.countryId as string}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
+
+                            <Row className='mt-4'>
+                                            <Col>
+                                    {!isUpdating ? <React.Fragment>
+
+                                        <Button variant="primary" type='submit'  >
+                                            Save Changes
+                                        </Button>
+                                    </React.Fragment> : <Spinner animation="border" variant="primary" />}
+                                    </Col>
+                            </Row>
                         </Form>
                     )}
                 </Formik >

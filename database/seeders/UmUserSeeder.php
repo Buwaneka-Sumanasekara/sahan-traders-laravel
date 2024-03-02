@@ -85,6 +85,8 @@ class UmUserSeeder extends Seeder
         $buyerAddress_1->id = 1;
         $buyerAddress_1->address_1 = "No 88/10C";
         $buyerAddress_1->address_2 = "Samidu Lane, Mavithara";
+        $buyerAddress_1->contact_number = "+94776666612";
+        $buyerAddress_1->name = "Buwaneka Sumanasekara";
         $buyerAddress_1->city = "Piliyandala";
         $buyerAddress_1->zip_code = "10300";
         $buyerAddress_1->cdm_country_id = 2; //Sri Lanka
@@ -95,6 +97,8 @@ class UmUserSeeder extends Seeder
         $buyerAddress_2->id = 2;
         $buyerAddress_2->address_1 = "909-910-1-3";
         $buyerAddress_2->address_2 = "Koya, Sosa City";
+        $buyerAddress_2->contact_number = "+8012345678";
+        $buyerAddress_2->name = "Sam Perera";
         $buyerAddress_2->city = "Chiba";
         $buyerAddress_2->zip_code = "289-2135";
         $buyerAddress_2->cdm_country_id = 1; //Japan
@@ -105,6 +109,8 @@ class UmUserSeeder extends Seeder
         $buyerAddress_3->id = 3;
         $buyerAddress_3->address_1 = "Rua Maria Matos, 32";
         $buyerAddress_3->address_2 = "";
+        $buyerAddress_3->contact_number = "+8012345678";
+        $buyerAddress_3->name = "Ramis e Silva";
         $buyerAddress_3->city = "CHARNECA DA CAPARICA";
         $buyerAddress_3->zip_code = "2820-344";
         $buyerAddress_3->cdm_country_id = 4; //Portugal
@@ -115,6 +121,8 @@ class UmUserSeeder extends Seeder
         $buyerAddress_4->id = 4;
         $buyerAddress_4->address_1 = "OSAKAFU";
         $buyerAddress_4->address_2 = "OTECHO";
+        $buyerAddress_4->contact_number = "+94773239123";
+        $buyerAddress_4->name = "Shan Perera";
         $buyerAddress_4->city = "IBARAKI SHI";
         $buyerAddress_4->zip_code = "5670883";
         $buyerAddress_4->cdm_country_id = 1; //Japan

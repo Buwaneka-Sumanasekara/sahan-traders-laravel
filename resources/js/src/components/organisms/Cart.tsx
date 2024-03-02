@@ -10,6 +10,8 @@ import CartStep1Empty from '../molecules/CartStep1Empty';
 import CartStep1Summary from '../molecules/CartStep1Summary';
 import { useDeleteCartItem, useUpdateCartItem } from '../../hooks/cart/useMutateCart';
 import { CartSteps } from '../../types/Cart';
+import CartStep2Summary from '../molecules/CartStep2Summary';
+import CartStep2Address from '../molecules/CartStep2Address';
 
 
 
@@ -75,21 +77,33 @@ type CartStep2Props = {
     data: any,
     onExecuteEvent: (type: EventType, data: any) => void
     onShowWarningMessage: (props: ToastProps) => void
-    onPressRedirectHome: () => void
+    onPressGoBack: () => void
     onPressProceedToCheckout: () => void
 }
 
 const CartStep2 = (props: CartStep2Props) => {
-    const { data, onExecuteEvent, onPressProceedToCheckout, onPressRedirectHome } = props;
+    const { data, onExecuteEvent, onPressProceedToCheckout, onPressGoBack } = props;
 
+
+    const [isSameAddress, setIsSameAddress] = useState(true);
 
     return (<Container>
         <Row className="justify-content-md-space-between">
             <Col md={8} sm={12}>
-                <CartStep1Table cartItems={data.det} isEditable={false} />
+                <Row>
+                    <Col>
+                        <CartStep2Address isSameAddress={isSameAddress} setIsSameAddress={setIsSameAddress} cart={data.hed} />
+                    </Col>
+                </Row>
+                <br/>
+                <Row>
+                    <Col>
+                        <CartStep1Table cartItems={data.det} isEditable={false} />
+                    </Col>
+                </Row>
             </Col>
             <Col md={{ span: 3, offset: 1 }} sm={12} >
-
+                <CartStep2Summary  cart={data.hed} isSameAddress={isSameAddress} onPressProceedToCheckout={onPressProceedToCheckout} onPressGoBack={onPressGoBack} />
             </Col>
         </Row>
     </Container>)
@@ -123,7 +137,7 @@ const Cart = () => {
         } else if (cartSteps === CartSteps.Step2Summary) {
             return (<CartStep2 data={data}
                 onExecuteEvent={onExecuteEvent}
-                onPressRedirectHome={onPressRedirectHome}
+                onPressGoBack={() => setCartSetp(CartSteps.Step1)}
                 onShowWarningMessage={onShowWarningMessage}
                 onPressProceedToCheckout={() => setCartSetp(CartSteps.Step3Payment)}
 

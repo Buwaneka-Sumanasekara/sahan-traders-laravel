@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('zip_code', 20);
             $table->integer('cdm_country_id');
             $table->string('province_name', 100);
+            $table->string('contact_number', 20);
+            $table->string('name', 100);
             $table->timestamps();
 
             $table->foreign('cdm_country_id')->references('id')->on('cdm_country');
