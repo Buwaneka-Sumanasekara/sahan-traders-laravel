@@ -5,19 +5,31 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class VerificationController extends Controller
+class VerificationController extends Controller implements HasMiddleware
 {
     /**
      * Instantiate a new VerificationController instance.
      */
     public function __construct()
     {
-        $this->middleware('auth')->except([
-            'verify'
-        ]);
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+        // $this->middleware('auth')->except([
+        //     'verify'
+        // ]);
+        // $this->middleware('signed')->only('verify');
+        // $this->middleware('throttle:6,1')->only('verify', 'resend');
+    }
+
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['verify']),
+            new Middleware('signed', only: ['verify']),
+            new Middleware('throttle:6,1', only: ['verify','resend']),
+        ];
     }
 
     /**

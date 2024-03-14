@@ -10,21 +10,30 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\UserTrait;
 use Illuminate\Auth\Events\Registered;
 use App\CustomModels\CusModel_Product;
-use App\Models\PmProduct;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LoginRegisterController extends Controller
+class LoginRegisterController extends Controller implements HasMiddleware
 {
     use userTrait;
     /**
      * Instantiate a new LoginRegisterController instance.
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     // $this->middleware('guest')->except([
+    //     //     'logout', 'verify'
+    //     // ]);
+    //     // $this->middleware('auth')->only('logout', 'verify');
+    //     // // $this->middleware('verified')->only('homePage');
+    // }
+
+    public static function middleware(): array
     {
-        $this->middleware('guest')->except([
-            'logout', 'verify'
-        ]);
-        $this->middleware('auth')->only('logout', 'verify');
-        // $this->middleware('verified')->only('homePage');
+        return [
+            new Middleware('guest', except: ['logout']),
+            new Middleware('auth', only: ['logout','verify']),
+        ];
     }
 
     /**

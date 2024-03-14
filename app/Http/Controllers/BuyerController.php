@@ -10,19 +10,25 @@ use App\Http\Resources\ErrorResource;
 use App\Models\BmBuyerAddress;
 use App\Models\CdmCountry;
 use Illuminate\Http\Request;
-use stdClass;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class BuyerController extends Controller
+class BuyerController extends Controller implements HasMiddleware
 {
     /**
      * Instantiate a new VerificationController instance.
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
+    public static function middleware(): array
     {
-        $this->middleware('auth');
+        return [
+            new Middleware('auth', only: ['api_getCurrentCart']),
+        ];
     }
-
-
 
     public function api_updateBuyerAddress(Request $request)
     {

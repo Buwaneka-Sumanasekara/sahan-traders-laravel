@@ -13,19 +13,27 @@ use App\Http\Resources\ErrorResource;
 use App\Models\CdmCountry;
 use App\Models\CmCartHed;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class CartController extends Controller
+class CartController extends Controller implements HasMiddleware
 {
     /**
      * Instantiate a new VerificationController instance.
      */
-    public function __construct()
-    {
-        $this->middleware('auth')->except([
-            'api_getCurrentCart'
-        ]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth')->except([
+    //         'api_getCurrentCart'
+    //     ]);
+    // }
 
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except:['api_getCurrentCart']),
+        ];
+    }
 
     public function cart()
     {
