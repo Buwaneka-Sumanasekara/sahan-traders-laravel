@@ -9,12 +9,13 @@
 
 ## run this very first time (soon after checkout) - only one time
 
+Note: https://laravel.com/docs/11.x/sail#installing-composer-dependencies-for-existing-projects
 ```
 docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v "$(pwd):/var/www/html" \
     -w /var/www/html \
-    laravelsail/php82-composer:latest \
+    laravelsail/php83-composer:latest \
     composer install --ignore-platform-reqs
 ```
 
@@ -32,6 +33,12 @@ or add it to env
 
 https://laravel.com/docs/11.x/sail#configuring-a-shell-alias
 
+
+install node modules
+
+```
+sail yarn install 
+```
 
 run this command separate cmd line to dev mode watch js files
 
