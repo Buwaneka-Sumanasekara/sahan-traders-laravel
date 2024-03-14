@@ -12,7 +12,7 @@ use App\Models\PmProductImages;
 use App\Models\PmProductAdditionalCost;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 class CusModel_Product extends Model
 {
@@ -146,22 +146,22 @@ class CusModel_Product extends Model
 
             $product_path = 'public/images/products/' . $prodId;
             $product_thumbnails_path = 'public/images/products/' . $prodId . "/thumbnails";
-            $img = Image::make($file_path);
+            $img = Image::read($file_path);
 
             //save thumbnail
             $image_thumbnail = $img->resize(config("global.product_image_sizes.thumbnail.width"), config("global.product_image_sizes.thumbnail.height"), function ($constraint) {
                 $constraint->aspectRatio();
             });
 
-            Storage::put($product_thumbnails_path . "/" . $file_name, $image_thumbnail->stream());
+            Storage::put($product_thumbnails_path . "/" . $file_name, $image_thumbnail->toJpeg()->toFilePointer());
 
             //save medium images
 
             $image_medium = $img->resize(config("global.product_image_sizes.medium.width"), config("global.product_image_sizes.medium.height"), function ($constraint) {
                 $constraint->aspectRatio();
-            })->insert(public_path('img/water_mark.png'), 'bottom-right', 10, 10);
+            })->place(public_path('img/water_mark.png'), 'bottom-right', 10, 10);
 
-            Storage::put($product_path . "/" . $file_name, $image_medium->stream());
+            Storage::put($product_path . "/" . $file_name, $image_medium->toJpeg()->toFilePointer());
         }
 
         $this->saveProductImagesToTable($prodId, $images);

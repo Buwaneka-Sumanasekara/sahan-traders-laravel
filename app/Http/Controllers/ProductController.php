@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\CustomModels\CusModel_Product;
 use App\Http\Resources\ErrorResource;
-use App\Http\Resources\CommonResponseResource;
-use App\Http\Resources\CommonResponseCollectionResource;
 use App\Exceptions\ResourceNotFoundException;
 use App\Http\Resources\ProductCollectionResource;
 use App\Http\Resources\ProductResource;

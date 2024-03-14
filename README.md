@@ -7,7 +7,7 @@
 - Check out from repo (checkout `main` branch for dev and checkout `prod` branch for production changes)
 
 
-## run this very first time (soon after checkout)
+## run this very first time (soon after checkout) - only one time
 
 ```
 docker run --rm \
@@ -30,7 +30,7 @@ docker run --rm \
 ```
 or add it to env
 
-https://laravel.com/docs/10.x/sail#configuring-a-shell-alias
+https://laravel.com/docs/11.x/sail#configuring-a-shell-alias
 
 
 run this command separate cmd line to dev mode watch js files
@@ -47,7 +47,7 @@ sail yarn dev
 ```
 or add it to env
 
-https://laravel.com/docs/10.x/sail#configuring-a-shell-alias
+https://laravel.com/docs/11.x/sail#configuring-a-shell-alias
 
 
 https://www.itsolutionstuff.com/post/laravel-9-resize-image-before-upload-exampleexample.html

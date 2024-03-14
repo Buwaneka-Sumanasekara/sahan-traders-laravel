@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\CdmSiteSliders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 class CusModel_Sliders extends Model
 {
@@ -86,7 +86,7 @@ class CusModel_Sliders extends Model
 
 
             $image_path = 'public/images/sliders';
-            $img = Image::make($file_path);
+            $img = Image::read($file_path);
 
             //save sliders
             $img->resize(config("global.slider_image_sizes.home.width"), config("global.slider_image_sizes.home.height"), function ($constraint) {
@@ -95,7 +95,7 @@ class CusModel_Sliders extends Model
 
             $generated_path = $image_path . "/" . $file_name;
 
-            $status = Storage::put($generated_path, $img->stream());
+            $status = Storage::put($generated_path, $img->toJpeg()->toFilePointer());
 
             if ($status) {
                 $slide["img_path"] =  $file_name;
