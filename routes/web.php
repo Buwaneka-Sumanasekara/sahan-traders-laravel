@@ -7,6 +7,7 @@ use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CartPaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,9 +42,15 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product/{slug}', 'specificProductBySlugPage')->name('product.public.display');
 });
 
-Route::controller(CartController::class)->group(function () {
-    Route::get('/cart', 'cart')->name('cart.cart');
+Route::prefix('cart')->group(function () {
+    Route::controller(CartController::class)->group(function () {
+        Route::get('/', 'cart')->name('cart.cart');
+    });
+    Route::controller(CartPaymentController::class)->group(function () {
+        Route::get('/payment', 'cart_payment')->name('cart.payment');
+    });
 });
+
 
 
 
@@ -74,12 +81,11 @@ Route::prefix('web-api')->group(function () {
                 Route::prefix('item')->group(function () {
                     Route::post('/add', 'api_addToCart')->name('action.cart.item.add');
                     Route::put('/update', 'api_updateCartItem')->name('action.cart.item.update');
-                    Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');  
-                    
+                    Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');
                 });
-                
+
                 Route::prefix('carrier')->group(function () {
-                  Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
+                    Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
                 });
             });
         });
@@ -87,7 +93,7 @@ Route::prefix('web-api')->group(function () {
         Route::controller(BuyerController::class)->group(function () {
             Route::prefix('buyer')->group(function () {
                 Route::prefix('address')->group(function () {
-                    Route::put('/update', 'api_updateBuyerAddress')->name('action.buyer.address.update'); 
+                    Route::put('/update', 'api_updateBuyerAddress')->name('action.buyer.address.update');
                 });
             });
         });
