@@ -147,3 +147,31 @@ export const useUpdateCartCarrier = (
     },
   })
 }
+
+
+
+
+const generateCartPaymentLink = async (cartId:string) => {
+  return await api.post(`/action/cart/${cartId}/gen-payment-url`)
+}
+
+export const useGenerateCartPaymentLink = (
+  onSuccessCallback?: (data: any, variables: string) => void,
+  onErrorCallback?: (x: GeneralServerError) => void
+) => {
+  return useMutation(generateCartPaymentLink, {
+    onError: (error, variables, context) => {
+
+      const errorObj = error?.response || {};
+      authenticationRedirectHandler({
+        errorObject: errorObj,
+        onErrorCallBack: onErrorCallback
+      });
+
+    },
+    onSuccess: (data, variables) => {
+      onSuccessCallback?.(data, variables)
+    },
+  })
+}
+

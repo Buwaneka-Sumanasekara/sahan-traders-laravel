@@ -7,7 +7,7 @@ use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CartPaymentController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,11 +46,13 @@ Route::prefix('cart')->group(function () {
     Route::controller(CartController::class)->group(function () {
         Route::get('/', 'cart')->name('cart.cart');
     });
-    Route::controller(CartPaymentController::class)->group(function () {
-        Route::get('/payment', 'cart_payment')->name('cart.payment');
-    });
 });
 
+Route::prefix('payment')->group(function () {
+    Route::controller(PaymentController::class)->group(function () {
+        Route::get('/checkout/{sessionId}', 'stripe_payments')->name('payment.checkout');
+    });
+});
 
 
 
@@ -64,6 +66,13 @@ Route::prefix('web-api')->group(function () {
     Route::controller(CartController::class)->group(function () {
         Route::prefix('cart')->group(function () {
             Route::get('/current', 'api_getCurrentCart')->name('api.cart.get-current-cart');
+        });
+       
+    });
+
+    Route::controller(PaymentController::class)->group(function () {
+        Route::prefix('payment')->group(function () {
+            Route::get('/checkout/{sessionId}', 'api_getPaymentCheckoutInfo')->name('api.cart.payment.checkout');
         });
     });
 
@@ -87,6 +96,11 @@ Route::prefix('web-api')->group(function () {
                 Route::prefix('carrier')->group(function () {
                     Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
                 });
+
+                Route::prefix('{cartId}')->group(function () {
+                    Route::post('gen-payment-url', 'api_generate_cart_payment_session_url')->name('action.cart.address.update');
+                });
+                
             });
         });
 

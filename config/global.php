@@ -96,5 +96,20 @@ return [
     ],
     "trn_setup_id"=>[
         "cart"=>"T00001",
-    ]
+    ],
+
+    //payment link type
+
+    "payment_link_type"=>[
+        "cart"=>"CART",
+        "inq"=>"INQ",
+    ],
+
+    "payment_hed_type"=>[
+        "stripe"=>"STRIPE",
+    ],
+    "payment_det_type"=>[
+        "online"=>"ONLINE",
+    ],
+
 ];

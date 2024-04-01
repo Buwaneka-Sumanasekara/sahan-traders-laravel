@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cdm_pay_det', function (Blueprint $table) {
-            $table->string('id', 5)->primary();
+            $table->string('id', 10);
             $table->string('name');
             $table->boolean('active')->default(true);
-            $table->string('cdm_pay_hed_id', 5);
+            $table->string('cdm_pay_hed_id', 10);
+
+            $table->primary(['id', 'cdm_pay_hed_id']);
 
             $table->foreign('cdm_pay_hed_id')->references('id')->on('cdm_pay_hed');
         });

@@ -17,10 +17,11 @@ return new class extends Migration
             $table->double('frg_amount', 20, 2);
             $table->double('paid_amount', 20, 2);
             $table->double('balance_amount', 20, 2);
-            $table->string('ref_no', 200);
+            $table->string('ref_no', 200);//stripe
+            
 
-            $table->string('cdm_pay_hed_id', 5);
-            $table->string('cdm_pay_det_id', 5);
+            $table->string('cdm_pay_hed_id', 10);
+            $table->string('cdm_pay_det_id', 10);
             $table->integer('cm_cart_pay_status_id');
 
             $table->timestamps();

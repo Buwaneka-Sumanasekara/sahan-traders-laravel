@@ -20,6 +20,8 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->integer('address_ship_id')->nullable();
             $table->integer('address_bill_id')->nullable();
+
+            $table->string('stripe_cus_id', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('um_user');

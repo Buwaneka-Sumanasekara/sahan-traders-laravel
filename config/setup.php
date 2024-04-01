@@ -26,6 +26,7 @@ return [
 
 
     'base_currency_id' => env('COMMON_SETUP_BASE_CUR_ID', "YEN"), //this will use for transactions
+    'base_currency_id_stripe' => env('COMMON_SETUP_BASE_CUR_ID_STRIPE', "jpy"), //this will use for stripe
     'base_currency_name' => env('COMMON_SETUP_BASE_CUR_NAME', "Yen"),
     'base_currency_symbol' => env('COMMON_SETUP_BASE_CUR_SYMBOL', "¥"),
     'base_country_id' => env('COMMON_SETUP_BASE_COUNTRY_ID', "JPY"),
@@ -46,5 +47,9 @@ return [
     'company_zip' => "289-2135",
     'company_email' => "info@sahantraders.com",
     "company_courier_country_code" => "JP",
+
+    //stripe
+    'stripe_key' => env('STRIPE_KEY', ''),
+    'stripe_secret' => env('STRIPE_SECRET', ''),
 
 ];
