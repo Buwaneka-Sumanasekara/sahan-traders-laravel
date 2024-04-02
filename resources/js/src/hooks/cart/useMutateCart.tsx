@@ -6,6 +6,7 @@ import {
 } from 'react-query'
 import { GeneralServerError } from "../../types/Common";
 import { authenticationRedirectHandler } from "../../common/CommonUtil";
+import { CartGeneratePaymentLink } from "../../types/Cart";
 
 const api = getAxios();
 
@@ -156,7 +157,7 @@ const generateCartPaymentLink = async (cartId:string) => {
 }
 
 export const useGenerateCartPaymentLink = (
-  onSuccessCallback?: (data: any, variables: string) => void,
+  onSuccessCallback?: (data: CartGeneratePaymentLink, variables: string) => void,
   onErrorCallback?: (x: GeneralServerError) => void
 ) => {
   return useMutation(generateCartPaymentLink, {
@@ -170,7 +171,7 @@ export const useGenerateCartPaymentLink = (
 
     },
     onSuccess: (data, variables) => {
-      onSuccessCallback?.(data, variables)
+      onSuccessCallback?.(data?.data, variables)
     },
   })
 }

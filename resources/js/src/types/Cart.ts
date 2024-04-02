@@ -67,3 +67,8 @@ export type CartAddress={
     province_name:string,
     contact_number:string,
 }
+
+export type CartGeneratePaymentLink={
+    url:string,
+    sessionId:string
+}

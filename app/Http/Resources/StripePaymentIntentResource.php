@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StripePaymentInitResource extends JsonResource
+class StripePaymentIntentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,13 +14,12 @@ class StripePaymentInitResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-      
-  
-        $resoruce=$this->resource;
+        $resource=$this->resource;
         return [
-            'sessionId' => $resoruce['sessionId'],
-            'amount'=>$resoruce['amount'],
-            'currency'=>config('setup.base_currency_id_stripe'),
+            'clientSecret' => $resource->client_secret,
+            'successUrl'=>$resource->urls['success'],
+            'cancelUrl'=>$resource->urls['cancel'],
+            "billingAddress"=>$resource->billing_address,
         ];
     }
 }

@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CmCartPay;
 
-use Illuminate\Support\Facades\DB;
-
-use function App\Helpers\convertToPrice;
-use function App\Helpers\getValueFromObjectArray;
 
 class CusModel_Payments extends Model
 {
@@ -38,8 +34,8 @@ class CusModel_Payments extends Model
 
         $decodedArr = explode("-", $removeFirstThreeAndLastThreeChar);
 
-    
-       
+
+
         return [
             "type" => $decodedArr[0],
             "id" => $decodedArr[1],
@@ -110,7 +106,7 @@ class CusModel_Payments extends Model
                 }
                 $cartPayDet = $this->saveNewPaymentDet($cartHed);
 
-                $sessionId = $this->getEncodedPaymentSessionId( $type,$cartHed->id, $cartPayDet->id,);
+                $sessionId = $this->getEncodedPaymentSessionId($type, $cartHed->id, $cartPayDet->id,);
             } else {
                 throw new \Exception("Invalid payment link type");
             }
@@ -148,10 +144,11 @@ class CusModel_Payments extends Model
 
     public function getPaymentInfoFromSessionId($id)
     {
+        $amount=0;
+        $address=null;
         $info = $this->getDecodedPaymentSessionId($id);
-       // dd($info);
         if (config("global.payment_link_type.cart") == $info["type"]) {
-         
+
             $cartPay = CmCartPay::where("id", $info["subId"])->where("cm_cart_hed_id", $info["id"])->first();
 
             if (!$cartPay) {
@@ -159,14 +156,62 @@ class CusModel_Payments extends Model
             }
 
             $cartHed = CmCartHed::where("id", $info["id"])->first();
+ 
+            $amount=$cartHed->net_amount;
 
-
-            return new StripePaymentInitResource([
-                "sessionId" => $id,
-                "amount" =>$cartHed->net_amount,
-            ]);
+            $address=$cartHed->getBillingAddress();
+           
         } else {
             throw new \Exception("Invalid payment link type");
         }
+
+        $resp= [
+            "sessionId" => $id,
+            "amount" => $amount*100,//in stripe payments need to be in cents
+            "currency" => config('setup.base_currency_id_stripe'),
+            "address"=>$address,
+            ...$info
+        ];
+        return $resp;
     }
+
+    public function getRedirectUrlsFromPaymentType($info)
+    {
+        $successUrl = "";
+        $cancelUrl = "";
+
+        $type=$info["type"];
+        if (config("global.payment_link_type.cart") == $type) {
+            $successUrl = "order/".$info["id"]."/success";
+            $cancelUrl = "order/".$info["id"]."/cancel";
+        } else {
+            throw new \Exception("Invalid payment link type");
+        }
+        return [
+            "success" => url($successUrl),
+            "cancel" => url($cancelUrl),
+        ];
+    }
+
+    public function createStripePaymentIntent($sessionId,$userId)
+    {
+
+        $info = $this->getPaymentInfoFromSessionId($sessionId);
+        $stripe = new \Stripe\StripeClient(config('setup.stripe_secret'));
+        $response=$stripe->paymentIntents->create([
+            'amount' => $info["amount"],
+            'currency' => $info["currency"],
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        //TODO:update paydet info with payment intent id
+        
+        $urls=$this->getRedirectUrlsFromPaymentType($info);
+        $resp=$response;
+        $resp["urls"]=$urls;
+        $resp["billing_address"]=$info["address"];
+        return $response;
+    }
+
+
 }

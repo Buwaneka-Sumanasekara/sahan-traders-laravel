@@ -72,7 +72,7 @@ Route::prefix('web-api')->group(function () {
 
     Route::controller(PaymentController::class)->group(function () {
         Route::prefix('payment')->group(function () {
-            Route::get('/checkout/{sessionId}', 'api_getPaymentCheckoutInfo')->name('api.cart.payment.checkout');
+            Route::get('/checkout/{sessionId}', 'api_getPaymentCheckoutInfo')->name('api.payment.checkout');
         });
     });
 
@@ -84,6 +84,7 @@ Route::prefix('web-api')->group(function () {
         });
     });
 
+    //All actions api
     Route::prefix('action')->group(function () {
         Route::controller(CartController::class)->group(function () {
             Route::prefix('cart')->group(function () {
@@ -109,6 +110,12 @@ Route::prefix('web-api')->group(function () {
                 Route::prefix('address')->group(function () {
                     Route::put('/update', 'api_updateBuyerAddress')->name('action.buyer.address.update');
                 });
+            });
+        });
+
+        Route::controller(PaymentController::class)->group(function () {
+            Route::prefix('payment')->group(function () {
+                Route::post('/create-stripe-intent', 'api_createStripePaymentIntent')->name('action.payment.create.stripe.intent');
             });
         });
     });

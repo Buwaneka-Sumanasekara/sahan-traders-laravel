@@ -9,7 +9,7 @@ import CartStep1Table from '../molecules/CartStep1Table';
 import CartStep1Empty from '../molecules/CartStep1Empty';
 import CartStep1Summary from '../molecules/CartStep1Summary';
 import { useDeleteCartItem, useGenerateCartPaymentLink, useUpdateCartItem } from '../../hooks/cart/useMutateCart';
-import { Cart, CartItem, CartSteps } from '../../types/Cart';
+import { Cart, CartGeneratePaymentLink, CartItem, CartSteps } from '../../types/Cart';
 import CartStep2Summary from '../molecules/CartStep2Summary';
 import CartStep2Address from '../molecules/CartStep2Address';
 
@@ -122,7 +122,7 @@ const Cart = () => {
 
     const { onShowWarningMessage: onShowWarningMessage } = useMutateToastEventListner();
 
-    const {mutate:onGenerateCartPaymentLink}=useGenerateCartPaymentLink()
+    const {mutate:onGenerateCartPaymentLink}=useGenerateCartPaymentLink((data)=>onSuccessCallBack(data),(er)=>onErrorCallBack(er))
 
 
     const onPressRedirectHome = () => {
@@ -131,6 +131,17 @@ const Cart = () => {
 
     const onPressProceedToCheckout = (cartId:string) => {
         onGenerateCartPaymentLink(cartId)
+    }
+
+    const onSuccessCallBack=(data:CartGeneratePaymentLink)=>{
+        console.log('data',data)
+        window.open(data.url, '_self');
+    }
+
+    const onErrorCallBack=(er:any)=>{
+        onShowWarningMessage({
+            message: er.message,
+        })
     }
 
     if (isLoading) {
