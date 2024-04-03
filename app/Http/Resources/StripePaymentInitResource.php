@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use function App\Helpers\convertToDisplayPrice;
+
 class StripePaymentInitResource extends JsonResource
 {
     /**
@@ -21,6 +23,7 @@ class StripePaymentInitResource extends JsonResource
             'sessionId' => $resoruce['sessionId'],
             'amount'=>$resoruce['amount'],
             'currency'=>config('setup.base_currency_id_stripe'),
+            'amount_display'=> convertToDisplayPrice($resoruce['amount']/100),
         ];
     }
 }

@@ -16,7 +16,7 @@ import { createStripePaymentIntent } from "../../hooks/payment/useMutatePayment"
 
 
 const StripePaymentForm = (props) => {
-  const { sessionId } = props;
+  const { sessionId, amountDisplay } = props;
   const stripe = useStripe();
   const elements = useElements();
 
@@ -28,9 +28,6 @@ const StripePaymentForm = (props) => {
   const onSubmit = async (event: FormEvent) => {
 
     try {
-
-
-
       event.preventDefault();
 
       if (elements == null) {
@@ -49,36 +46,36 @@ const StripePaymentForm = (props) => {
       }
 
       const resp = await createStripePaymentIntent(sessionId)
-      if(resp?.status===200){
+      if (resp?.status === 200) {
         console.log('submit', resp?.data?.data)
-        const { clientSecret,successUrl,billingAddress
+        const { clientSecret, successUrl, billingAddress
         } = resp?.data?.data;
-        if(!stripe){
+        if (!stripe) {
           throw new Error("Stripe is not initialized")
         }
         console.log('successUrl', successUrl)
-        const {error} = await stripe.confirmPayment({
+        const { error } = await stripe.confirmPayment({
           //`Elements` instance that was used to create the Payment Element
           elements,
           clientSecret,
           confirmParams: {
-            return_url:successUrl,
-            payment_method_data:{
-              billing_details:{
-                address:{
-                  country:billingAddress?.country?.payment_code
+            return_url: successUrl,
+            payment_method_data: {
+              billing_details: {
+                address: {
+                  country: billingAddress?.country?.payment_code
                 }
               }
             }
-            
+
           },
         });
-    
+
         if (error) {
           // This point will only be reached if there is an immediate error when
           // confirming the payment. Show error to your customer (for example, payment
           // details incomplete)
-          
+
           throw new Error(error.message || "An error occurred in payment")
         } else {
           // Your customer will be redirected to your `return_url`. For some payment
@@ -86,13 +83,13 @@ const StripePaymentForm = (props) => {
           // site first to authorize the payment, then redirected to the `return_url`.
         }
 
-      }else{
+      } else {
         throw new Error(resp?.data?.error?.message || "An error occurred in payment")
       }
-      
+
     } catch (error) {
-   
-      const message=error?.response?.data?.error?.message || error.message || "An error occurred in payment"
+
+      const message = error?.response?.data?.error?.message || error.message || "An error occurred in payment"
       console.log('error', message)
       onShowWarningMessage({
         message: message,
@@ -103,7 +100,13 @@ const StripePaymentForm = (props) => {
   return (
     <Form onSubmit={onSubmit}>
       <Container>
-        <Row className='justify-content-center mb-2'>
+        <Row className='justify-content-center mb-3'>
+          <Col className='col-md-auto bg-dark text-center py-2' style={{ width: 480 }}>
+            <p className="text-white">{`To Pay`}</p>
+            <h3 className="text-white">{`${amountDisplay}`}</h3>
+          </Col>
+        </Row>
+        <Row className='justify-content-center mb-2 '>
           <Col className='col-md-auto' style={{ width: 500 }} >
 
             <PaymentElement
@@ -117,10 +120,6 @@ const StripePaymentForm = (props) => {
                 },
                 layout: 'tabs'
               }}
-              onChange={(event) => {
-                console.log('onChange', event)
-              }}
-
             />
 
           </Col>
@@ -151,14 +150,13 @@ const StripePayment = (props) => {
     const options: StripeElementsOptions = {
       mode: 'payment',
       currency: data.currency,
-      amount: 100,
+      amount: data?.amount || 0,
       appearance: {},
-
     };
     return (
       <Elements stripe={stripe} options={options}>
 
-        <StripePaymentForm sessionId={sessionId} />
+        <StripePaymentForm sessionId={sessionId} amount={data?.amount} amountDisplay={data?.amount_display} />
       </Elements>
     )
   }
