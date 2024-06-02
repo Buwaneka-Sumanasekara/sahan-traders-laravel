@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\CustomModels\CusModel_Payments;
 use App\Exceptions\EmailNotVerifiedException;
+use App\Http\Resources\CommonResponseResource;
 use App\Http\Resources\ErrorResource;
 use App\Http\Resources\StripePaymentInitResource;
 use App\Http\Resources\StripePaymentIntentResource;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
-use Intervention\Image\Colors\Rgb\Channels\Red;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends Controller implements HasMiddleware
 {
@@ -20,25 +22,23 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     // View
-    public function stripe_payments(Request $request,$sessionId)
+    public function stripe_payments(Request $request, $sessionId)
     {
         try {
             if ($request->user()->hasVerifiedEmail()) {
-                
+
                 $cartPay = new CusModel_Payments();
 
-                $paymentInfo=$cartPay->getVerifyPaymentInfoFromSessionId($sessionId);
+                $paymentInfo = $cartPay->getVerifyPaymentInfoFromSessionId($sessionId);
 
-                if($paymentInfo){
-                    return view('pages.general.stripe-payment',['sessionId'=>$sessionId,'stripe_pk'=>config('setup.stripe_key')]);
-                }else{
+                if ($paymentInfo) {
+                    return view('pages.general.stripe-payment', ['sessionId' => $sessionId, 'stripe_pk' => config('setup.stripe_key')]);
+                } else {
                     throw new \Exception("Invalid Payment Session");
                 }
-               
             } else {
                 throw new EmailNotVerifiedException();
             }
-            
         } catch (\Exception $e) {
             dd($e->getMessage());
             return back()->withErrors([
@@ -50,17 +50,18 @@ class PaymentController extends Controller implements HasMiddleware
 
     /* ============================ API ============================================ */
 
-    public function api_getPaymentCheckoutInfo(Request $request,$sessionId){
+    public function api_getPaymentCheckoutInfo(Request $request, $sessionId)
+    {
         try {
             if ($request->user()->hasVerifiedEmail()) {
                 $cartPay = new CusModel_Payments();
 
-                $paymentInfo=$cartPay->getPaymentInfoFromSessionId($sessionId);
-                if($paymentInfo){
+                $paymentInfo = $cartPay->getPaymentInfoFromSessionId($sessionId);
+                if ($paymentInfo) {
                     return (new StripePaymentInitResource($paymentInfo));
-                }else{
+                } else {
                     throw new \Exception("Invalid Payment Session");
-                }      
+                }
             } else {
                 throw new EmailNotVerifiedException();
             }
@@ -70,25 +71,26 @@ class PaymentController extends Controller implements HasMiddleware
         }
     }
 
-    public function api_createStripePaymentIntent(Request $request){
+    public function api_createStripePaymentIntent(Request $request)
+    {
         try {
-           
+
             if ($request->user()->hasVerifiedEmail()) {
                 $cartPay = new CusModel_Payments();
-                $userId=$request->user()->id;
+                $userId = $request->user()->id;
 
                 $sessionId = $request->string('sessionId')->trim();
 
-                if(!$sessionId){
+                if (!$sessionId) {
                     throw new \Exception("Invalid Session Id");
                 }
 
-                $paymentInfo=$cartPay->createStripePaymentIntent($sessionId,$userId);
-                if($paymentInfo){
+                $paymentInfo = $cartPay->createStripePaymentIntent($sessionId, $userId);
+                if ($paymentInfo) {
                     return (new StripePaymentIntentResource($paymentInfo));
-                }else{
+                } else {
                     throw new \Exception("Invalid Payment Session");
-                }      
+                }
             } else {
                 throw new EmailNotVerifiedException();
             }
@@ -97,5 +99,60 @@ class PaymentController extends Controller implements HasMiddleware
             return $errorResponse;
         }
     }
-   
+
+
+    /* =============== Webhook handle ======================================== */
+
+    public function webhook_stripe(Request $request)
+    {
+        try {
+            $payload = json_decode($request->getContent(), true);
+            $method = 'handle' . Str::studly(str_replace('.', '_', $payload['type']));
+
+            if (method_exists($this, $method)) {
+                $response = $this->{$method}($payload);
+                return $response;
+            }
+
+            return $this->missingMethod();
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+    }
+
+
+    /*============== Webhook handle: Stripe methods ===================*/
+
+    /**
+     * Handle calls to missing methods on the controller.
+     *
+     * @param  array  $parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function missingMethod($parameters = [])
+    {
+        return new Response;
+    }
+
+    /**
+     * Handle successful calls on the controller.
+     *
+     * @param  array  $parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function successMethod($parameters = [])
+    {
+        return new Response('Webhook Handled', 200);
+    }
+
+
+    protected function handlePaymentIntentSucceeded(array $payload)
+    {
+        return  $payload;
+    }
+
+    protected function handlePaymentIntentPaymentFaild(array $payload)
+    {
+    }
 }

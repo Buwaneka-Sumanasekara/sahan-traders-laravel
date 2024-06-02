@@ -155,7 +155,6 @@ const StripePayment = (props) => {
     };
     return (
       <Elements stripe={stripe} options={options}>
-
         <StripePaymentForm sessionId={sessionId} amount={data?.amount} amountDisplay={data?.amount_display} />
       </Elements>
     )

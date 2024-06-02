@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,3 +15,10 @@ use App\Http\Controllers\AuthController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::prefix('webhook')->group(function () {
+    Route::prefix('stripe')->group(function () {
+        Route::controller(PaymentController::class)->group(function () {
+            Route::post('/', 'webhook_stripe')->name('webhook.stripe');
+        });
+    });
+});
