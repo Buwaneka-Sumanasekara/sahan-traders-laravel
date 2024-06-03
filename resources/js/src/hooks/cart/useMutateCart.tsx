@@ -6,6 +6,7 @@ import {
 } from 'react-query'
 import { GeneralServerError } from "../../types/Common";
 import { authenticationRedirectHandler } from "../../common/CommonUtil";
+import { CartGeneratePaymentLink } from "../../types/Cart";
 
 const api = getAxios();
 
@@ -147,3 +148,31 @@ export const useUpdateCartCarrier = (
     },
   })
 }
+
+
+
+
+const generateCartPaymentLink = async (cartId:string) => {
+  return await api.post(`/action/cart/${cartId}/gen-payment-url`)
+}
+
+export const useGenerateCartPaymentLink = (
+  onSuccessCallback?: (data: CartGeneratePaymentLink, variables: string) => void,
+  onErrorCallback?: (x: GeneralServerError) => void
+) => {
+  return useMutation(generateCartPaymentLink, {
+    onError: (error, variables, context) => {
+
+      const errorObj = error?.response || {};
+      authenticationRedirectHandler({
+        errorObject: errorObj,
+        onErrorCallBack: onErrorCallback
+      });
+
+    },
+    onSuccess: (data, variables) => {
+      onSuccessCallback?.(data?.data, variables)
+    },
+  })
+}
+

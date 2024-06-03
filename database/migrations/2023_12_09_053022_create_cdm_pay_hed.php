@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cdm_pay_hed', function (Blueprint $table) {
-            $table->string('id', 5)->primary();
+            $table->string('id', 10)->primary();
             $table->string('name');
             $table->boolean('active')->default(true);
             $table->boolean('has_det')->default(false);

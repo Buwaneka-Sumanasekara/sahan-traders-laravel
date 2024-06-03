@@ -81,7 +81,7 @@ class CusModel_Cart extends Model
 
     private function getAddressFromBuyer(BmBuyer $buyer, string $addressType)
     {
-       
+
         if ($addressType == "shipping") {
             if ($buyer->shippingAddress !== null) {
                 $address = $buyer->shippingAddress;
@@ -175,9 +175,9 @@ class CusModel_Cart extends Model
 
         if ($cartHed->carrier_info === null) {
             //check buyer has shipping address
-            if(isset($cartHed->buyer->address_ship_id)){
+            if (isset($cartHed->buyer->address_ship_id)) {
                 $this->updateCartHedAddress($cartHed->buyer);
-                $cartHedUpdated=CmCartHed::find($cartHed->id);
+                $cartHedUpdated = CmCartHed::find($cartHed->id);
                 $shipAndCo = new CusModel_ShipAndCoRates();
                 $carriers = $shipAndCo->getShippingCarriersRateList($cartHedUpdated, $cartHedUpdated->cartDetItems);
                 //dd($carriers);
@@ -187,11 +187,9 @@ class CusModel_Cart extends Model
                     $cartHedUpdated->update();
                 }
                 $this->calculateTotalAmount($cartHedUpdated);
-            }else{
+            } else {
                 $this->calculateTotalAmount($cartHed);
             }
-            
-           
         }
     }
 
@@ -505,12 +503,12 @@ class CusModel_Cart extends Model
     public function updateCartAddressAndReCalculate(CmCartHed $cartHed)
     {
         try {
-          
-           
-            if($cartHed->carrier_info === null){
-                $this->addCarrierOfCartHeader($cartHed); 
-            }else{ 
-                $this->updateCartHedAddress($cartHed->buyer);  
+
+
+            if ($cartHed->carrier_info === null) {
+                $this->addCarrierOfCartHeader($cartHed);
+            } else {
+                $this->updateCartHedAddress($cartHed->buyer);
                 $this->calculateTotalAmount($cartHed);
             }
         } catch (\Exception $e) {

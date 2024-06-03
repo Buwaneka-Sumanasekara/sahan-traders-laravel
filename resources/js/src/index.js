@@ -9,8 +9,10 @@ import UIProductInfo from './containers/UIProductInfo'
 import UIFeatureProducts from './containers/UIFeatureProducts'
 import UIHeaderCartSummary from './containers/UIHeaderCartSummary'
 
+
 //organisms
 import UICart from './containers/UICart'
+import UIStripePayment from './containers/UIStripePayment'
 
 
 export {
@@ -18,5 +20,6 @@ export {
     UIFeatureProducts,
     UIHeaderCartSummary,
     UIToast,
-    UICart
+    UICart,
+    UIStripePayment
 }

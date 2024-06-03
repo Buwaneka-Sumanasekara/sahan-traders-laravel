@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CmCartPayStatus;
 use App\Models\StkmTrnSetup;
 use App\Models\UmUserRole;
 use App\Models\UmUserStatus;
@@ -31,7 +32,10 @@ class DatabaseSeeder extends Seeder
 
         
         $this->call(CmCartStatusSeeder::class);
+        $this->call(CmCartPayStatusSeeder::class);
+
         $this->call(StkmTrnStatusSeeder::class);
         $this->call(StkmTrnSetupSeeder::class);
+        $this->call(CdmPaySeeder::class);
     }
 }

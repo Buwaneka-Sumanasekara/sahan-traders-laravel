@@ -115,5 +115,18 @@ class CmCartHed extends Model
         }
         return  null;
     }
+
+    public function isElegableToGenPayLink(){
+        $status=false;
+
+        if($this->cm_cart_status_id===config("global.cart_status.pending") ||
+        $this->cm_cart_status_id===config("global.cart_status.payment_pending") ||
+        $this->cm_cart_status_id===config("global.cart_status.payment_rejected")
+        ){
+            $status=true;
+        }
+
+        return $status;
+    }
    
 }

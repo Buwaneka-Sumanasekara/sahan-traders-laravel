@@ -8,8 +8,8 @@ import { EventType, GeneralServerError, ToastProps } from '../../types/Common';
 import CartStep1Table from '../molecules/CartStep1Table';
 import CartStep1Empty from '../molecules/CartStep1Empty';
 import CartStep1Summary from '../molecules/CartStep1Summary';
-import { useDeleteCartItem, useUpdateCartItem } from '../../hooks/cart/useMutateCart';
-import { CartSteps } from '../../types/Cart';
+import { useDeleteCartItem, useGenerateCartPaymentLink, useUpdateCartItem } from '../../hooks/cart/useMutateCart';
+import { Cart, CartGeneratePaymentLink, CartItem, CartSteps } from '../../types/Cart';
 import CartStep2Summary from '../molecules/CartStep2Summary';
 import CartStep2Address from '../molecules/CartStep2Address';
 
@@ -74,15 +74,18 @@ const CartStep1 = (props: CartStep1Props) => {
 
 /*========================== Cart Step 2===================================*/
 type CartStep2Props = {
-    data: any,
+    data: {
+        hed: Cart,
+        det: CartItem[]
+    },
     onExecuteEvent: (type: EventType, data: any) => void
     onShowWarningMessage: (props: ToastProps) => void
     onPressGoBack: () => void
-    onPressProceedToCheckout: () => void
+    onPressProceedToCheckout: (cartId:string) => void
 }
 
 const CartStep2 = (props: CartStep2Props) => {
-    const { data, onExecuteEvent, onPressProceedToCheckout, onPressGoBack } = props;
+    const { data, onPressProceedToCheckout, onPressGoBack } = props;
 
 
     const [isSameAddress, setIsSameAddress] = useState(true);
@@ -103,7 +106,7 @@ const CartStep2 = (props: CartStep2Props) => {
                 </Row>
             </Col>
             <Col md={{ span: 3, offset: 1 }} sm={12} >
-                <CartStep2Summary  cart={data.hed} isSameAddress={isSameAddress} onPressProceedToCheckout={onPressProceedToCheckout} onPressGoBack={onPressGoBack} />
+                <CartStep2Summary  cart={data.hed} isSameAddress={isSameAddress} onPressProceedToCheckout={()=>onPressProceedToCheckout(data.hed.id)} onPressGoBack={onPressGoBack} />
             </Col>
         </Row>
     </Container>)
@@ -119,9 +122,26 @@ const Cart = () => {
 
     const { onShowWarningMessage: onShowWarningMessage } = useMutateToastEventListner();
 
+    const {mutate:onGenerateCartPaymentLink}=useGenerateCartPaymentLink((data)=>onSuccessCallBack(data),(er)=>onErrorCallBack(er))
+
 
     const onPressRedirectHome = () => {
         window.open(`/`, '_self');
+    }
+
+    const onPressProceedToCheckout = (cartId:string) => {
+        onGenerateCartPaymentLink(cartId)
+    }
+
+    const onSuccessCallBack=(data:CartGeneratePaymentLink)=>{
+        console.log('data',data)
+        window.open(data.url, '_self');
+    }
+
+    const onErrorCallBack=(er:any)=>{
+        onShowWarningMessage({
+            message: er.message,
+        })
     }
 
     if (isLoading) {
@@ -139,7 +159,7 @@ const Cart = () => {
                 onExecuteEvent={onExecuteEvent}
                 onPressGoBack={() => setCartSetp(CartSteps.Step1)}
                 onShowWarningMessage={onShowWarningMessage}
-                onPressProceedToCheckout={() => setCartSetp(CartSteps.Step3Payment)}
+                onPressProceedToCheckout={(cartId) => onPressProceedToCheckout(cartId)}
 
             />)
         } else {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CustomModels\CusModel_Cart;
+use App\CustomModels\CusModel_Cart_Payments;
+use App\CustomModels\CusModel_Payments;
 use App\CustomModels\CusModel_ShipAndCoRates;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\EmailNotVerifiedException;
@@ -35,7 +37,7 @@ class CartController extends Controller implements HasMiddleware
         ];
     }
 
-    public function cart()
+    public function cart(Request $request)
     {
         return view('pages.general.cart');
     }
@@ -243,6 +245,26 @@ class CartController extends Controller implements HasMiddleware
 
     }
     
-   
+
+
+ //======================= Payment ==================================
+    public function api_generate_cart_payment_session_url(Request $request,$cartId)
+    {
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                $cartId = $cartId?$cartId:$request->input('cartId')->trim();
+
+               
+                $cartPay = new CusModel_Payments();
+                return $cartPay->generatePaymentLink(config("global.payment_link_type.cart"),$cartId);
+
+            } else {
+                throw new EmailNotVerifiedException();
+            }
+        } catch (\Exception $e) {
+            $errorResponse = new ErrorResource($e);
+            return $errorResponse;
+        }
+    }
 
 }

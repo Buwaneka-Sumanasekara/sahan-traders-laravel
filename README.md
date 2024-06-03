@@ -129,3 +129,26 @@ stripe
 https://www.youtube.com/watch?v=J13Xe939Bh8
 
 ```
+
+
+# stripe
+
+```
+docker run --rm -it stripe/stripe-cli:latest listen --api-key rk_test_51MgDCzAOnE9oXiC8RvJdoEBUzselznUZs5QFXOHCjRoaxoxAyTIYL6YMSzaooU1vIj8cgqVQuo3OjhQKbCz3Rr1L00NLIG5tjg --forward-to http://localhost:80/api/webhook/stripe 
+
+```
+
+
+## Stripe Use this to check reponses
+
+https://docs.stripe.com/stripe-cli#install
+
+## setup stripe cli via homebrew
+```
+ brew install stripe/stripe-cli/stripe
+ ```
+
+- login to stripe
+```
+stripe login
+```

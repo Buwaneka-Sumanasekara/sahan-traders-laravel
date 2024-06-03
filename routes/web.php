@@ -7,6 +7,7 @@ use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,8 +42,16 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product/{slug}', 'specificProductBySlugPage')->name('product.public.display');
 });
 
-Route::controller(CartController::class)->group(function () {
-    Route::get('/cart', 'cart')->name('cart.cart');
+Route::prefix('cart')->group(function () {
+    Route::controller(CartController::class)->group(function () {
+        Route::get('/', 'cart')->name('cart.cart');
+    });
+});
+
+Route::prefix('payment')->group(function () {
+    Route::controller(PaymentController::class)->group(function () {
+        Route::get('/checkout/{sessionId}', 'stripe_payments')->name('payment.checkout');
+    });
 });
 
 
@@ -58,6 +67,13 @@ Route::prefix('web-api')->group(function () {
         Route::prefix('cart')->group(function () {
             Route::get('/current', 'api_getCurrentCart')->name('api.cart.get-current-cart');
         });
+       
+    });
+
+    Route::controller(PaymentController::class)->group(function () {
+        Route::prefix('payment')->group(function () {
+            Route::get('/checkout/{sessionId}', 'api_getPaymentCheckoutInfo')->name('api.payment.checkout');
+        });
     });
 
     Route::controller(CartController::class)->group(function () {
@@ -68,27 +84,38 @@ Route::prefix('web-api')->group(function () {
         });
     });
 
+    //All actions api
     Route::prefix('action')->group(function () {
         Route::controller(CartController::class)->group(function () {
             Route::prefix('cart')->group(function () {
                 Route::prefix('item')->group(function () {
                     Route::post('/add', 'api_addToCart')->name('action.cart.item.add');
                     Route::put('/update', 'api_updateCartItem')->name('action.cart.item.update');
-                    Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');  
-                    
+                    Route::post('/delete', 'api_deleteCartItem')->name('action.cart.item.delete');
+                });
+
+                Route::prefix('carrier')->group(function () {
+                    Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
+                });
+
+                Route::prefix('{cartId}')->group(function () {
+                    Route::post('gen-payment-url', 'api_generate_cart_payment_session_url')->name('action.cart.address.update');
                 });
                 
-                Route::prefix('carrier')->group(function () {
-                  Route::put('/update', 'api_changeShippingCarrier')->name('action.cart.carrier.update');
-                });
             });
         });
 
         Route::controller(BuyerController::class)->group(function () {
             Route::prefix('buyer')->group(function () {
                 Route::prefix('address')->group(function () {
-                    Route::put('/update', 'api_updateBuyerAddress')->name('action.buyer.address.update'); 
+                    Route::put('/update', 'api_updateBuyerAddress')->name('action.buyer.address.update');
                 });
+            });
+        });
+
+        Route::controller(PaymentController::class)->group(function () {
+            Route::prefix('payment')->group(function () {
+                Route::post('/create-stripe-intent', 'api_createStripePaymentIntent')->name('action.payment.create.stripe.intent');
             });
         });
     });
